@@ -8,9 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "roles")
+@Getter
+@Setter
 public class Role {
 
     @Id
@@ -20,4 +25,11 @@ public class Role {
     @Column(nullable = false, unique = true, length = 50)
     @NotBlank
     private String roleName;
+
+	@Override
+	public String toString() {
+		return "Role [roleName=" + roleName + "]";
+	}
+    
+    
 }
