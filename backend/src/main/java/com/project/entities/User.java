@@ -18,6 +18,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(
@@ -27,13 +29,15 @@ import jakarta.validation.constraints.Size;
         @UniqueConstraint(columnNames = "phone")
     }
 )
+@Getter
+@Setter
 public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
@@ -60,4 +64,27 @@ public class User extends BaseEntity {
     
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private Professional professional;
+    
+    public User() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public User(@NotBlank @Size(max = 100) String fullName, @Email @NotBlank String email,
+			@NotBlank String passwordHash,
+			@Pattern(regexp = "^[6-9]\\d{9}$", message = "Invalid phone number") String phone) {
+		super();
+		this.fullName = fullName;
+		this.email = email;
+		this.passwordHash = passwordHash;
+		this.phone = phone;
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", role=" + role + ", fullName=" + fullName + ", email=" + email
+				+ ", passwordHash=" + passwordHash + ", phone=" + phone + ", gender=" + gender + ", isActive="
+				+ isActive + ", isDeleted=" + isDeleted + ", professional=" + professional + "]";
+	}
+	
+    
 }
