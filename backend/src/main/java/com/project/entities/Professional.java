@@ -1,8 +1,12 @@
 package com.project.entities;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import jakarta.persistence.Column;
+import com.project.enums.Specialization;
+import com.project.enums.SpokenLanguage;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,20 +16,27 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@NoArgsConstructor 
 @Table(
     name = "professionals",
     uniqueConstraints = {
         @UniqueConstraint(columnNames = "user_id")
     }
 )
+@Getter
+@Setter
 public class Professional extends BaseEntity {
 
     @Id
@@ -35,14 +46,13 @@ public class Professional extends BaseEntity {
     /**
      * User account linked to this professional
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     @NotNull
-    private ProfessionalSpecialization specialization;
+    private Specialization specialization;
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -59,7 +69,29 @@ public class Professional extends BaseEntity {
 
     @DecimalMin("0.0")
     private BigDecimal consultationFee;
-
     private boolean isVerified = false;
-}
+    
+	@OneToMany(
+		    mappedBy = "professional",
+		    cascade = CascadeType.ALL,
+		    orphanRemoval = true
+		)
+		private List<ProfessionalAvailability> availabilities;
 
+	public Professional(User user,  @NotNull SpokenLanguage spokenLanguage,
+			@Min(0) int experienceYears, String qualification, String bio,
+			@DecimalMin("0.0") BigDecimal consultationFee) {
+		super();
+		this.user = user;
+		this.spokenLanguage = spokenLanguage;
+		this.experienceYears = experienceYears;
+		this.qualification = qualification;
+		this.bio = bio;
+		this.consultationFee = consultationFee;
+	}
+	
+
+
+    
+    
+}
