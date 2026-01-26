@@ -5,3 +5,4 @@ public class MoodNotFoundException extends RuntimeException {
         super(msg);
     }
 }
+
