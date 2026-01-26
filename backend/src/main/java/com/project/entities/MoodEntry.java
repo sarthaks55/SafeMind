@@ -37,3 +37,4 @@ public class MoodEntry extends BaseEntity {
     @Column(name = "entry_date", nullable = false)
     private LocalDate entryDate;
 }
+

@@ -2,6 +2,8 @@ package com.project.entities;
 
 import java.time.LocalDateTime;
 
+import com.project.enums.AppointmentStatus;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,12 +16,18 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "appointments",
-       indexes = {
-           @Index(columnList = "professional_id,startTime")
-       })
+@Table(
+    name = "appointments",
+    indexes = {
+        @Index(columnList = "professional_id,startTime")
+    }
+)
 public class Appointment extends BaseEntity {
 
     @Id
@@ -46,4 +54,3 @@ public class Appointment extends BaseEntity {
     @Size(max = 255)
     private String cancellationReason;
 }
-
