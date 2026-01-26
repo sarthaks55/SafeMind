@@ -1,6 +1,8 @@
 package com.project.entities;
 
 
+import com.project.enums.Gender;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

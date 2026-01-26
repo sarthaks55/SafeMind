@@ -27,7 +27,11 @@ public class SpringSecurityConfig {
                 "/swagger-ui/**",
                 "/v3/api-docs/**").permitAll()
 				.requestMatchers("/admin/**").hasRole("ADMIN")
-				.requestMatchers("/user/**").hasRole("USER")
+				.requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+				.requestMatchers("/api/moods/**").hasAuthority("ROLE_USER")
+				.requestMatchers("/api/user/**").hasAuthority("ROLE_USER")
+				.requestMatchers("/api/professional/**")
+				.hasAuthority("ROLE_PROFESSIONAL").requestMatchers("/user/**").hasRole("USER")
 				.requestMatchers("/professional/**").hasRole("PROFESSIONAL")
 				.anyRequest().authenticated())
 		.addFilterBefore(
