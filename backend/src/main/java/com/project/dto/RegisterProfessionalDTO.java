@@ -4,8 +4,9 @@ package com.project.dto;
 
 import java.math.BigDecimal;
 
-import com.project.entities.SpokenLanguage;
+import com.project.enums.Gender;
 import com.project.enums.Specialization;
+import com.project.enums.SpokenLanguage;
 
 import lombok.Data;
 @Data
@@ -14,6 +15,7 @@ public class RegisterProfessionalDTO {
 	 private String email;
 	 private String password;
 	 private String phone;
+	 private Gender gender;
 	 private String role= "ROLE_PROFESSIONAL"; // USER / THERAPIST / ADMIN
 	 
 	 private String specialization;

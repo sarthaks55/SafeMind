@@ -1,6 +1,7 @@
 package com.project.dto;
 
-import com.project.entities.Gender;
+import com.project.enums.Gender;
+
 
 import lombok.Data;
 

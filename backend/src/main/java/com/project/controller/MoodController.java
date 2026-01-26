@@ -33,7 +33,7 @@ public class MoodController {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
-        System.out.println("Anushka Chavan \"Anushka Chavan\"*************************"+user.getUserId());
+
         return moodService.addTodayMood(
                 dto, user.getUserId());
     }
@@ -45,7 +45,7 @@ public class MoodController {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
-     
+
         return moodService.updateTodayMood(
                 dto, user.getUserId());
     }
@@ -92,4 +92,5 @@ public class MoodController {
                         user.getUserId(), year, month);
     }
     
+
 }

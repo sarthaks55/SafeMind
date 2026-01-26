@@ -7,4 +7,5 @@ import lombok.Data;
 public class MoodRequestDTO {
     private Mood mood;
     private String notes;
+
 }

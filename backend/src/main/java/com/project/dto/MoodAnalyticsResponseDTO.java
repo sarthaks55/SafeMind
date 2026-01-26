@@ -18,4 +18,5 @@ public class MoodAnalyticsResponseDTO {
 
     // For pie charts
     private Map<String, Long> moodDistribution;
+
 }
