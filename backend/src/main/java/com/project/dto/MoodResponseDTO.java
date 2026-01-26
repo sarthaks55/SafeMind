@@ -13,4 +13,6 @@ public class MoodResponseDTO {
     private Mood mood;
     private String notes;
     private LocalDate entryDate;
+
 }
+

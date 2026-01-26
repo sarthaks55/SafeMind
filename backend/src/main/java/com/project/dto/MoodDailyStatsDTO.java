@@ -10,4 +10,5 @@ import lombok.Data;
 public class MoodDailyStatsDTO {
     private LocalDate date;
     private int moodScore;
+
 }
