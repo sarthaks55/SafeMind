@@ -20,6 +20,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(
@@ -31,6 +32,7 @@ import lombok.Setter;
 )
 @Getter
 @Setter
+@ToString
 public class User extends BaseEntity {
 
     @Id

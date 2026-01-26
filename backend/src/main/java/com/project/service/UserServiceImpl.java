@@ -77,7 +77,6 @@ public class UserServiceImpl implements UserService {
 		String hashPassword = passwordEncoder.encode(dto.getPassword());
 		user.setPasswordHash(hashPassword);
 		user.setRole(role);
-		userRepository.save(user);
 		Professional professional = new Professional(user, dto.getSpokenLanguage(), dto.getExperienceYears(), dto.getQualification(), dto.getBio(), dto.getConsultationFee());
 		professional.setSpecialization(specialization);
 		return professionalRepo.save(professional);
