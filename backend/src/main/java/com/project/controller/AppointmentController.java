@@ -34,7 +34,7 @@ public class AppointmentController {
                         dto, user.getUserId()));
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Void> cancel(
             @PathVariable Long id,
             Authentication auth) {
