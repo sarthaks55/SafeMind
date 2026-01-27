@@ -27,16 +27,7 @@ public class DiaryEntry extends BaseEntity {
     @Column(name = "is_deleted")
     private boolean deleted = false;
 
-	public LocalDateTime getUpdatedAt() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
    
 
 }
+	

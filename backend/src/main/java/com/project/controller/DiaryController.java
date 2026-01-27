@@ -52,3 +52,4 @@ public class DiaryController {
         return diaryService.getAll(user.getUserId());
     }
 }
+
