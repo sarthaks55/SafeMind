@@ -36,6 +36,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final ProfessionalAvailabilityRepository availabilityRepo;
     private final UserRepository userRepo;
     private final ProfessionalRepo professionalRepo;
+    private static final long APPOINTMENT_DURATION_MINUTES = 55;
 
     /* ================= USER BOOK APPOINTMENT ================= */
 
@@ -54,26 +55,31 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new RuntimeException("Professional not verified");
         }
 
-        // Double booking check
-        if (appointmentRepo.existsByProfessionalAndStartTime(
-                professional, dto.getStartTime())) {
+        LocalDateTime startTime = dto.getStartTime();
+        LocalDateTime endTime = startTime.plusMinutes(55);
+
+        // 🚨 Double booking check
+        if (appointmentRepo.existsOverlappingAppointment(
+                professional, startTime, endTime)) {
             throw new SlotAlreadyBookedException("Slot already booked");
         }
 
-        // Availability check
-        validateAvailability(professional, dto);
+
+        // ✅ Availability check (now uses computed endTime)
+        validateAvailability(professional, startTime, endTime);
 
         Appointment appointment = new Appointment();
         appointment.setUser(user);
         appointment.setProfessional(professional);
-        appointment.setStartTime(dto.getStartTime());
-        appointment.setEndTime(dto.getEndTime());
+        appointment.setStartTime(startTime);
+        appointment.setEndTime(endTime);
         appointment.setStatus(AppointmentStatus.PENDING);
 
         appointmentRepo.save(appointment);
 
         return mapToDTO(appointment);
     }
+
 
     /* ================= USER CANCEL ================= */
 
@@ -145,17 +151,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private void validateAvailability(
             Professional professional,
-            AppointmentRequestDTO dto) {
-
-        LocalDateTime start = dto.getStartTime();
-        LocalDateTime end = dto.getEndTime();
+            LocalDateTime start,
+            LocalDateTime end) {
 
         if (start.isAfter(end) || start.isEqual(end)) {
-            throw new IllegalArgumentException(
-                    "Invalid appointment time range");
+            throw new IllegalArgumentException("Invalid appointment time");
         }
 
-        /* 🚨 SAME DAY ENFORCEMENT */
         if (!start.toLocalDate().equals(end.toLocalDate())) {
             throw new IllegalArgumentException(
                     "Appointment must be on same day");
@@ -170,26 +172,27 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         List<ProfessionalAvailability> availabilities =
                 availabilityRepo
-                        .findByProfessional_ProfessionalIdAndDayOfWeek(
-                                professional.getProfessionalId(),
-                                dayOfWeek);
+                    .findByProfessional_ProfessionalIdAndDayOfWeek(
+                            professional.getProfessionalId(),
+                            dayOfWeek);
 
         if (availabilities.isEmpty()) {
             throw new IllegalArgumentException(
                     "Professional not available on " + dayOfWeek);
         }
 
-        boolean fitsAnySlot = availabilities.stream()
+        boolean fitsSlot = availabilities.stream()
                 .anyMatch(a ->
                         !appointmentStart.isBefore(a.getStartTime()) &&
                         !appointmentEnd.isAfter(a.getEndTime())
                 );
 
-        if (!fitsAnySlot) {
+        if (!fitsSlot) {
             throw new IllegalArgumentException(
-                    "Appointment time outside professional availability");
+                    "Appointment time outside availability");
         }
     }
+
 
 
     private AppointmentResponseDTO mapToDTO(Appointment a) {
