@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import com.project.dto.AdminProfessionalViewDTO;
 import com.project.dto.AdminUpdateDTO;
 import com.project.dto.AdminUserViewDTO;
 import com.project.dto.AppointmentResponseDTO;
+import com.project.dto.PasswordUpdateDTO;
 import com.project.dto.ProfessionalVerificationDTO;
 import com.project.dto.UserActivationDTO;
 import com.project.enums.AppointmentStatus;
@@ -45,6 +47,20 @@ public class AdminController {
     	CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
         adminService.updateOwnProfile(user.getUserId(), dto);
+    }
+    
+    @PutMapping("/password")
+    public ResponseEntity<Void> updatePassword(
+            @RequestBody PasswordUpdateDTO dto,
+            Authentication auth) {
+
+        CustomUserDetails user =
+                (CustomUserDetails) auth.getPrincipal();
+
+        adminService.updatePassword(
+                user.getUserId(), dto);
+
+        return ResponseEntity.noContent().build();
     }
 
     // -------- Users --------

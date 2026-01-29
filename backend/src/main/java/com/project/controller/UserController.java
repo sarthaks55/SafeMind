@@ -1,10 +1,18 @@
 package com.project.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.project.dto.PasswordUpdateDTO;
+import com.project.dto.ProfessionalViewDTO;
 import com.project.dto.UserUpdateDTO;
 import com.project.entities.User;
 import com.project.security.CustomUserDetails;
@@ -65,4 +73,11 @@ public class UserController {
 
         return ResponseEntity.noContent().build();
     }
+    
+    
+    @GetMapping("/professionals")
+    public List<ProfessionalViewDTO> getProfessionals() {
+        return userService.getAllProfessionals();
+    }
+    
 }

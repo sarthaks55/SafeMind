@@ -46,7 +46,7 @@ const Login = () => {
 
       const payload = JSON.parse(atob(token.split(".")[1]));
 
-      if (payload.role === "ROLE_ADMIN") navigate("/admin/dashboard");
+      if (payload.role === "ROLE_ADMIN") navigate("/admin");
       else if (payload.role === "ROLE_PROFESSIONAL")
         navigate("/professional");
       else navigate("/user");
