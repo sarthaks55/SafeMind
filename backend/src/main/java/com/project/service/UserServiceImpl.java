@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.dto.PasswordUpdateDTO;
+import com.project.dto.ProfessionalViewDTO;
 import com.project.dto.RegisterDTO;
 import com.project.dto.RegisterProfessionalDTO;
 import com.project.dto.UserUpdateDTO;
@@ -258,6 +259,33 @@ public class UserServiceImpl implements UserService {
         appointment.setStatus(
                 AppointmentStatus.CANCELLED);
     }
+    
+    
+    
+    @Override
+    public List<ProfessionalViewDTO> getAllProfessionals() {
+
+        return professionalRepo.findAllVerifiedProfessionalsWithUser()
+                .stream()
+                .map(this::mapProfessional)
+                .toList();
+    }
+    private ProfessionalViewDTO mapProfessional(Professional p) {
+    	ProfessionalViewDTO dto = new ProfessionalViewDTO();
+        dto.setProfessionalId(p.getProfessionalId());
+        dto.setUserId(p.getUser().getUserId());
+        dto.setFullName(p.getUser().getFullName());
+        dto.setGender(p.getUser().getGender());
+        dto.setSpecialization(p.getSpecialization());
+        dto.setExperienceYears(p.getExperienceYears());
+        dto.setQualification(p.getQualification());
+        dto.setBio(p.getBio());
+        dto.setConsultationFee(p.getConsultationFee());
+        dto.setSpokenLanguage(p.getSpokenLanguage());
+        dto.setVerified(p.isVerified());
+        return dto;
+    }
+    
 }
 	
 	
