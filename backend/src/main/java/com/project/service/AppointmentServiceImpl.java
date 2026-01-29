@@ -36,6 +36,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final ProfessionalAvailabilityRepository availabilityRepo;
     private final UserRepository userRepo;
     private final ProfessionalRepo professionalRepo;
+    private final NotificationService notificationService;
     private static final long APPOINTMENT_DURATION_MINUTES = 55;
 
     /* ================= USER BOOK APPOINTMENT ================= */
@@ -77,7 +78,19 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentRepo.save(appointment);
 
-        return mapToDTO(appointment);
+        notificationService.sendInAppNotification(
+        	    professional.getUser().getUserId(),
+        	    "New Appointment Booked",
+        	    "A patient has booked an appointment on " + startTime
+        	);
+
+        	notificationService.sendEmailNotification(
+        	    professional.getUser().getEmail(),
+        	    "New Appointment Booking",
+        	    "You have received a new appointment request scheduled at " + startTime
+        	);
+
+        	return mapToDTO(appointment);
     }
 
 
