@@ -1,6 +1,9 @@
 package com.project.service;
 
 
+
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,6 +51,11 @@ public class UserServiceImpl implements UserService {
 	private ModelMapper modelMapper;
 	@Autowired
 	private final AppointmentRepository appointmentRepo;
+	@Autowired
+    private final NotificationService notificationService;
+	@Autowired
+	private final EmailService emailService;
+
 	
 	@Override
 	public User registerUser(RegisterDTO dto) {
@@ -71,32 +79,85 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Professional registerProfessional(RegisterProfessionalDTO dto) {
-		if(userRepository.existsByEmail(dto.getEmail())){
-			throw new DuplicateEmailException("Email Already Exists");
-		}
-		
-		Role role = roleRepo.findByRoleName(dto.getRole());
 
-		if (role == null) {
-			throw new RoleNotFoundException("Invalid Role");
-		}
-		
-		Specialization specialization = null;
-		try {
-			specialization = Specialization.valueOf(dto.getSpecialization());
-		} catch (IllegalArgumentException ex) {
-			throw new SpecializationNotFoundException("Invalid Specialization");
-		}
-		System.out.println(specialization);
+	    if (userRepository.existsByEmail(dto.getEmail())) {
+	        throw new DuplicateEmailException("Email Already Exists");
+	    }
 
-		User user = modelMapper.map(dto, User.class);
-		String hashPassword = passwordEncoder.encode(dto.getPassword());
-		user.setPasswordHash(hashPassword);
-		user.setRole(role);
-		Professional professional = new Professional(user, dto.getSpokenLanguage(), dto.getExperienceYears(), dto.getQualification(), dto.getBio(), dto.getConsultationFee());
-		professional.setSpecialization(specialization);
-		return professionalRepo.save(professional);
+	    Role role = roleRepo.findByRoleName(dto.getRole());
+	    if (role == null) {
+	        throw new RoleNotFoundException("Invalid Role");
+	    }
+
+	    Specialization specialization;
+	    try {
+	        specialization = Specialization.valueOf(dto.getSpecialization());
+	    } catch (IllegalArgumentException ex) {
+	        throw new SpecializationNotFoundException("Invalid Specialization");
+	    }
+
+	    User user = modelMapper.map(dto, User.class);
+	    user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
+	    user.setRole(role);
+
+	    Professional professional = new Professional(
+	            user,
+	            dto.getSpokenLanguage(),
+	            dto.getExperienceYears(),
+	            dto.getQualification(),
+	            dto.getBio(),
+	            dto.getConsultationFee()
+	    );
+	    professional.setSpecialization(specialization);
+
+	    Professional savedProfessional = professionalRepo.save(professional);
+
+	    /* 🔔 NOTIFY ADMINS */
+	    List<User> admins = userRepository.findByRole_RoleName("ROLE_ADMIN");
+
+	    for (User admin : admins) {
+
+	        // 🔔 In-app notification
+	        notificationService.sendInAppNotification(
+	                admin.getUserId(),
+	                "New Professional Registration",
+	                "A new professional (" + user.getFullName() + 
+	                ") has registered and is awaiting verification."
+	        );
+
+	        // 📧 Email notification
+	        try {
+	            emailService.sendEmail(
+	                    admin.getEmail(),
+	                    "New Professional Registration",
+	                    """
+	                    Hello Admin,
+
+	                    A new professional has registered and is awaiting verification.
+
+	                    Name: %s
+	                    Email: %s
+	                    Specialization: %s
+
+	                    Please log in to the admin panel to review and verify.
+
+	                    Regards,
+	                    Team
+	                    """.formatted(
+	                            user.getFullName(),
+	                            user.getEmail(),
+	                            specialization.name()
+	                    )
+	            );
+	        } catch (Exception e) {
+	            // ❗ NEVER fail registration due to email failure
+	            System.out.println("Failed to send admin email notification"+e);
+	        }
+	    }
+
+	    return savedProfessional;
 	}
+
 	
 	
 	

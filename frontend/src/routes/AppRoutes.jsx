@@ -16,6 +16,13 @@ import ProfessionalHome from "../pages/professional/DashboardHome";
 import ProfessionalProfile from "../pages/professional/Profile";
 import ProfessionalAppointments from "../pages/professional/Appointments";
 import ProfessionalAvailability from "../pages/professional/Availability";
+import AdminDashboard from "../pages/admin/AdminDashboard";
+import AdminDashboardHome from "../pages/admin/DashboardHome";
+import AdminProfile from "../pages/admin/Profile";
+import Users from "../pages/admin/Users";
+import Professionals from "../pages/admin/Professionals";
+import AdminAppointments from "../pages/admin/Appointments";
+import Notifications from "../pages/admin/Notifications";
 
 
 
@@ -49,6 +56,7 @@ const AppRoutes = () => {
           <Route path="book" element={<BookAppointment />} />
           <Route path="moods" element={<MoodDashboard />} />
           <Route path="diary" element={<DiaryDashboard />} />
+          <Route path="notifications" element={<Notifications />} />
         </Route>
 
         
@@ -70,8 +78,25 @@ const AppRoutes = () => {
   <Route path="profile" element={<ProfessionalProfile />} />
   <Route path="appointments" element={<ProfessionalAppointments />} />
   <Route path="availability" element={<ProfessionalAvailability />} />
+  <Route path="notifications" element={<Notifications />} />
 
 
+</Route>
+
+<Route
+  path="/admin"
+  element={
+    <ProtectedRoute role="ROLE_ADMIN">
+      <AdminDashboard />
+    </ProtectedRoute>
+  }
+>
+  <Route index element={<AdminDashboardHome />} />
+  <Route path="profile" element={<AdminProfile />} />
+  <Route path="users" element={<Users />} />
+  <Route path="professionals" element={<Professionals />} />
+  <Route path="appointments" element={<AdminAppointments />} />
+  <Route path="notifications" element={<Notifications />} />
 </Route>
 
 
