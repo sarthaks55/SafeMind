@@ -56,7 +56,10 @@ const Sidebar = () => {
           Profile
         </NavLink>
 
-        <NavLink to="/user/notifications">
+        <NavLink to="/user/notifications" className="text-decoration-none text-white p-3 mb-2 rounded"
+          style={{ transition: "all 0.3s", backgroundColor: "transparent" }}
+          onMouseOver={(e) => e.target.style.backgroundColor = "#B39DDB"}
+          onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}> 
             Notifications
             {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
           </NavLink>
