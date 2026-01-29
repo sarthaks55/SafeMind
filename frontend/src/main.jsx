@@ -6,8 +6,11 @@ import { AuthProvider } from "./context/AuthContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./api/chartjsSetup";
 
+import ScrollToTop from "./components/ScrollToTop";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
+    <ScrollToTop />
     <AuthProvider>
       <App />
     </AuthProvider>
