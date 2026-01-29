@@ -46,73 +46,108 @@ const Profile = () => {
   };
 
   return (
-    <div className="container">
-      <h2 className="mb-4">My Profile</h2>
+    <div className="container" style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px" }}>
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm" style={{ background: "linear-gradient(135deg, #8E6EC8 0%, #7A5BC7 100%)", color: "white", borderRadius: "15px" }}>
+            <div className="card-body text-center py-4">
+              <h2 className="mb-0">My Profile</h2>
+              <p className="mb-0 opacity-90">Manage your account settings</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      {/* PROFILE UPDATE */}
-      <form onSubmit={submitProfile} className="mb-5">
-        <h5>Update Information</h5>
+      <div className="row g-4">
+        <div className="col-md-6">
+          <div className="card border-0 shadow-sm" style={{ backgroundColor: "#FFFFFF", borderRadius: "15px", borderTop: "4px solid #F3A6A1" }}>
+            <div className="card-header bg-transparent border-0 pt-4">
+              <h5 className="mb-0" style={{ color: "#8E6EC8" }}>
+                <i className="fas fa-user-edit me-2" style={{ color: "#F3A6A1" }}></i>
+                Update Information
+              </h5>
+            </div>
+            <div className="card-body">
+              <form onSubmit={submitProfile}>
+                <div className="mb-3">
+                  <label className="form-label fw-bold" style={{ color: "#8E6EC8" }}>Full Name</label>
+                  <input
+                    type="text"
+                    name="fullName"
+                    className="form-control border-0 shadow-sm"
+                    style={{ backgroundColor: "#C6B7E2", color: "#8E6EC8" }}
+                    value={profile.fullName}
+                    onChange={handleProfileChange}
+                    required
+                  />
+                </div>
 
-        <div className="mb-3">
-          <label>Full Name</label>
-          <input
-            type="text"
-            name="fullName"
-            className="form-control"
-            value={profile.fullName}
-            onChange={handleProfileChange}
-            required
-          />
+                <div className="mb-4">
+                  <label className="form-label fw-bold" style={{ color: "#8E6EC8" }}>Phone</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    className="form-control border-0 shadow-sm"
+                    style={{ backgroundColor: "#C6B7E2", color: "#8E6EC8" }}
+                    value={profile.phone}
+                    onChange={handleProfileChange}
+                  />
+                </div>
+
+                <button className="btn px-4 py-2" style={{ backgroundColor: "#8E6EC8", color: "white", border: "none", borderRadius: "8px" }}>
+                  <i className="fas fa-save me-2"></i>
+                  Update Profile
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
 
-        <div className="mb-3">
-          <label>Phone</label>
-          <input
-            type="text"
-            name="phone"
-            className="form-control"
-            value={profile.phone}
-            onChange={handleProfileChange}
-          />
+        <div className="col-md-6">
+          <div className="card border-0 shadow-sm" style={{ backgroundColor: "#FFFFFF", borderRadius: "15px", borderTop: "4px solid #F6C453" }}>
+            <div className="card-header bg-transparent border-0 pt-4">
+              <h5 className="mb-0" style={{ color: "#8E6EC8" }}>
+                <i className="fas fa-lock me-2" style={{ color: "#F6C453" }}></i>
+                Change Password
+              </h5>
+            </div>
+            <div className="card-body">
+              <form onSubmit={submitPassword}>
+                <div className="mb-3">
+                  <label className="form-label fw-bold" style={{ color: "#8E6EC8" }}>Old Password</label>
+                  <input
+                    type="password"
+                    name="oldPassword"
+                    className="form-control border-0 shadow-sm"
+                    style={{ backgroundColor: "#C6B7E2", color: "#8E6EC8" }}
+                    value={passwords.oldPassword}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="form-label fw-bold" style={{ color: "#8E6EC8" }}>New Password</label>
+                  <input
+                    type="password"
+                    name="newPassword"
+                    className="form-control border-0 shadow-sm"
+                    style={{ backgroundColor: "#C6B7E2", color: "#8E6EC8" }}
+                    value={passwords.newPassword}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                </div>
+
+                <button className="btn px-4 py-2" style={{ backgroundColor: "#7A5BC7", color: "white", border: "none", borderRadius: "8px" }}>
+                  <i className="fas fa-key me-2"></i>
+                  Change Password
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
-
-        <button className="btn btn-primary">
-          Update Profile
-        </button>
-      </form>
-
-      {/* PASSWORD CHANGE */}
-      <form onSubmit={submitPassword}>
-        <h5>Change Password</h5>
-
-        <div className="mb-3">
-          <label>Old Password</label>
-          <input
-            type="password"
-            name="oldPassword"
-            className="form-control"
-            value={passwords.oldPassword}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label>New Password</label>
-          <input
-            type="password"
-            name="newPassword"
-            className="form-control"
-            value={passwords.newPassword}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-
-        <button className="btn btn-warning">
-          Change Password
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
