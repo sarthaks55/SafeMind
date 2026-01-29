@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Login from "../auth/Login";
+import Register from "../auth/Register";
 import RegisterUser from "../auth/RegisterUser";
 import RegisterProfessional from "../auth/RegisterProfessional";
 //import UserDashboard from "./pages/user/UserDashboard";
@@ -16,7 +17,9 @@ import ProfessionalHome from "../pages/professional/DashboardHome";
 import ProfessionalProfile from "../pages/professional/Profile";
 import ProfessionalAppointments from "../pages/professional/Appointments";
 import ProfessionalAvailability from "../pages/professional/Availability";
-
+import Home from "../pages/Home";
+import AboutUs from "../pages/AboutUs";
+import Services from "../pages/Services";
 
 
 
@@ -25,9 +28,14 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Public Routes */}
+       <Route path="/" element={<Home />} />
+      <Route path="/about" element={<AboutUs />} /> {/* Add AboutUs route */}
+      <Route path="/services" element={<Services />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
       <Route path="/register-user" element={<RegisterUser />} />
       <Route path="/register-professional" element={<RegisterProfessional />} />
+
       {/* <Route
           path="/user/dashboard"
           element={

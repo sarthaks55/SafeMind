@@ -24,8 +24,32 @@ const MonthlyChart = () => {
           labels: data.dailyStats.map(d => d.date),
           datasets: [{
             label: "Mood",
-            data: data.dailyStats.map(d => d.moodScore)
+            data: data.dailyStats.map(d => d.moodScore),
+            backgroundColor: "rgba(156, 127, 209, 0.6)",
+            borderColor: "#9C7FD1",
+            borderWidth: 2
           }]
+        }}
+        options={{
+          plugins: {
+            legend: {
+              labels: {
+                color: "#8E6EC8"
+              }
+            }
+          },
+          scales: {
+            y: {
+              ticks: {
+                color: "#8E6EC8"
+              }
+            },
+            x: {
+              ticks: {
+                color: "#8E6EC8"
+              }
+            }
+          }
         }}
       />
 
@@ -33,8 +57,26 @@ const MonthlyChart = () => {
         data={{
           labels: Object.keys(data.moodDistribution),
           datasets: [{
-            data: Object.values(data.moodDistribution)
+            data: Object.values(data.moodDistribution),
+            backgroundColor: [
+              "#9C7FD1",
+              "#B39DDB",
+              "#C6B7E2",
+              "#D1C4E9",
+              "#E1BEE7"
+            ],
+            borderColor: "#8E6EC8",
+            borderWidth: 2
           }]
+        }}
+        options={{
+          plugins: {
+            legend: {
+              labels: {
+                color: "#8E6EC8"
+              }
+            }
+          }
         }}
       />
     </div>

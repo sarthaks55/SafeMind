@@ -39,7 +39,7 @@ const MoodForm = () => {
         onChange={e => setNotes(e.target.value)}
       />
 
-      <button className="btn btn-primary">
+      <button className="btn" style={{ backgroundColor: "#8E6EC8", color: "white", border: "none" }}>
         Save Mood
       </button>
     </form>

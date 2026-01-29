@@ -1,0 +1,373 @@
+/* Home.css */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;500;700&display=swap');
+
+:root {
+  /* Purple Theme Palette */
+  --bg-lavender: #C6B7E2;
+  --bg-white: #FFFFFF;
+  --bg-off-white: #FAF9F7;
+
+  --primary-violet: #8E6EC8;
+  --primary-violet-hover: #7A5BC7;
+
+  --accent-peach: #F3A6A1;
+  --accent-pink: #E8A1B0;
+  --accent-rose: #D9899A;
+
+  --highlight-yellow: #F6C453;
+  --highlight-mustard: #E6B44C;
+  --highlight-orange: #F29C50;
+
+  --text-dark: #4A4A4A;
+  /* Softer dark for text */
+  --text-white: #FFFFFF;
+
+  --shadow-soft: 0 10px 30px rgba(122, 91, 199, 0.15);
+  /* Purple-tinted shadow */
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  color: var(--text-dark);
+  background-color: var(--bg-off-white);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.safemind-brand {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Navbar Customization */
+.safemind-navbar {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(142, 110, 200, 0.1);
+  padding: 1rem 0;
+}
+
+.safemind-brand {
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--primary-violet) !important;
+  letter-spacing: -0.5px;
+}
+
+.safemind-nav-link {
+  color: var(--text-dark) !important;
+  font-weight: 500;
+  margin-left: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.safemind-nav-link:hover {
+  color: var(--primary-violet) !important;
+}
+
+/* Buttons */
+.btn-primary-custom {
+  background-color: var(--primary-violet) !important;
+  border-color: var(--primary-violet) !important;
+  color: var(--text-white) !important;
+  padding: 0.7rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+  background-color: var(--primary-violet-hover) !important;
+  border-color: var(--primary-violet-hover) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(142, 110, 200, 0.4);
+}
+
+.btn-outline-custom {
+  color: var(--primary-violet) !important;
+  border-color: var(--primary-violet) !important;
+  padding: 0.7rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-right: 1rem;
+  background-color: transparent !important;
+}
+
+.btn-outline-custom:hover {
+  background-color: var(--primary-violet) !important;
+  color: var(--text-white) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(142, 110, 200, 0.2);
+}
+
+/* Hero Section */
+.hero-section {
+  padding: 10rem 0 6rem;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  /* Beautiful soft gradient background */
+  background: linear-gradient(135deg, var(--bg-off-white) 0%, #EFE8FA 50%, #FDF3F3 100%);
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 50%;
+  height: 80%;
+  background: radial-gradient(circle, rgba(198, 183, 226, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+  z-index: 0;
+}
+
+.hero-title {
+  font-size: 4rem;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  color: var(--text-dark);
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  color: #666;
+  margin-bottom: 3rem;
+  line-height: 1.7;
+  max-width: 90%;
+}
+
+.hero-image {
+  border-radius: 30px;
+  box-shadow: 20px 20px 0px rgba(243, 166, 161, 0.3);
+  /* Peach shadow */
+  position: relative;
+  z-index: 1;
+  border: 5px solid var(--bg-white);
+}
+
+/* Section Common */
+.section-padding {
+  padding: 6rem 0;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  text-align: center;
+  color: var(--primary-violet);
+}
+
+.section-title span {
+  position: relative;
+  z-index: 1;
+}
+
+.section-title span::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background-color: var(--highlight-yellow);
+  /* Yellow highlight underline */
+  z-index: -1;
+  opacity: 0.6;
+  border-radius: 4px;
+}
+
+/* Concern Cards */
+.concern-card {
+  background: var(--bg-white);
+  border: 1px solid rgba(142, 110, 200, 0.1);
+  border-radius: 20px;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  height: 100%;
+  box-shadow: var(--shadow-soft);
+}
+
+.concern-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(142, 110, 200, 0.2);
+  border-color: var(--primary-violet);
+  background: linear-gradient(180deg, var(--bg-white) 0%, #FAF5FF 100%);
+}
+
+.concern-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+  padding: 1rem;
+  background: rgba(243, 166, 161, 0.2);
+  /* Peach Tint */
+  border-radius: 50%;
+  color: var(--primary-violet);
+}
+
+/* Expertise Section */
+.expertise-section {
+  background-color: #FFF9F0;
+  /* Very light peach/cream background */
+}
+
+.expertise-image {
+  border-radius: 30px;
+  box-shadow: -20px 20px 0px rgba(246, 196, 83, 0.3);
+  /* Yellow shadow */
+  border: 5px solid var(--bg-white);
+}
+
+.expertise-list li {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.expertise-list li::before {
+  content: '🌸';
+  /* Flower bullet point fitting the theme */
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}
+
+/* Footer */
+.safemind-footer {
+  background: linear-gradient(135deg, #4A3B69 0%, #2E2442 100%);
+  /* Deep Purple Gradient */
+  color: #E0D6F0;
+  /* Light Lavender Text */
+  padding: 4rem 0 2rem;
+}
+
+.footer-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--accent-pink);
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.footer-link {
+  color: #C6B7E2;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 0.8rem;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: var(--highlight-yellow);
+}
+
+.social-icon {
+  font-size: 1.5rem;
+  color: var(--bg-lavender);
+  margin-right: 1.5rem;
+  transition: transform 0.2s;
+}
+
+.social-icon:hover {
+  color: var(--accent-peach);
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+/* Concern Cards - Amaha Style */
+.concern-card {
+  background: var(--bg-white);
+  border: 1px solid #f0f0f0;
+  /* Very subtle border */
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  text-align: left;
+  /* Align text left as per screenshot */
+  transition: all 0.3s ease;
+  height: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.concern-card:hover {
+  background-color: #FFF5F3;
+  /* Light peach background on hover (similar to Anxiety card in SS) */
+  border-color: var(--accent-peach);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(231, 111, 81, 0.15);
+}
+
+.concern-icon-wrapper {
+  margin-bottom: 1.5rem;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Styled React Icons */
+.concern-react-icon {
+  font-size: 2.5rem;
+  color: var(--primary-violet);
+  background-color: rgba(243, 166, 161, 0.2);
+  /* Soft Peach tint */
+  padding: 1rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  transition: all 0.3s ease;
+}
+
+.concern-card:hover .concern-react-icon {
+  background-color: var(--accent-peach);
+  color: var(--text-white);
+  transform: rotate(5deg);
+}
+
+.concern-img {
+  max-height: 70px;
+  width: auto;
+  opacity: 0.9;
+}
+
+.concern-card h5 {
+  color: var(--highlight-orange);
+  /* Orange/Terracotta Title */
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  font-family: 'Lato', sans-serif;
+  /* Clean sans-serif for title */
+}
+
+.concern-text {
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  flex-grow: 1;
+}
+
+.concern-arrow {
+  color: var(--highlight-orange);
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: auto;
+  transition: transform 0.3s ease;
+}
+
+.concern-card:hover .concern-arrow {
+  transform: translateX(5px);
+}
