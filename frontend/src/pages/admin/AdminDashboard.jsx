@@ -2,7 +2,7 @@
 import { Outlet, NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
-import { getUnreadCount } from "../../api/adminService";
+import { getUnreadCount } from "../../api/notificationService";
 
 const AdminDashboard = () => {
   const { logout } = useAuth();
