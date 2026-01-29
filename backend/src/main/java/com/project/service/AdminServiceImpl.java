@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.dto.AdminProfessionalViewDTO;
 import com.project.dto.AdminUpdateDTO;
 import com.project.dto.AdminUserViewDTO;
+import com.project.dto.PasswordUpdateDTO;
 import com.project.entities.Professional;
 import com.project.entities.User;
 import com.project.exception.AdminNotFoundException;
@@ -24,6 +26,7 @@ public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepo;
     private final ProfessionalRepo professionalRepo;
     private final PasswordEncoder passwordEncoder;
+    private final NotificationService notificationService;
 
     @Override
     public void updateOwnProfile(Long adminId, AdminUpdateDTO dto) {
@@ -40,12 +43,43 @@ public class AdminServiceImpl implements AdminService {
         if (dto.getPhone() != null) admin.setPhone(dto.getPhone());
         if (dto.getGender() != null) admin.setGender(dto.getGender());
 
-        if (dto.getPassword() != null) {
-            admin.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
-        }
+    
 
         userRepo.save(admin);
     }
+    
+    
+    /* ================= PASSWORD UPDATE ================= */
+
+    @Transactional
+    @Override
+    public void updatePassword(
+            Long userId,
+            PasswordUpdateDTO dto) {
+
+        User user = userRepo.findById(userId)
+                .orElseThrow(() ->
+                        new AdminNotFoundException("Admin not found"));
+
+        if (!passwordEncoder.matches(
+                dto.getOldPassword(),
+                user.getPasswordHash())) {
+
+            throw new RuntimeException(
+                    "Old password incorrect");
+        }
+
+ 
+
+
+        user.setPasswordHash(
+                passwordEncoder.encode(
+                        dto.getNewPassword()));
+        System.out.println("Updated passssssss");
+    }
+    
+    
+    
 
     @Override
     public List<AdminUserViewDTO> getAllUsers() {
@@ -79,6 +113,7 @@ public class AdminServiceImpl implements AdminService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public void updateProfessionalVerification(Long userId, boolean isVerified) {
 
@@ -88,6 +123,23 @@ public class AdminServiceImpl implements AdminService {
 
         professional.setVerified(isVerified);
         professionalRepo.save(professional);
+
+        /*  NOTIFY PROFESSIONAL */
+        String message = isVerified
+                ? "Your professional account has been verified."
+                : "Your professional account has been rejected.";
+
+        notificationService.sendInAppNotification(
+            professional.getUser().getUserId(),
+            "Account Verification Status",
+            message
+        );
+
+        notificationService.sendEmailNotification(
+            professional.getUser().getEmail(),
+            "Verification Update",
+            message
+        );
     }
 
     private AdminUserViewDTO mapUser(User u) {

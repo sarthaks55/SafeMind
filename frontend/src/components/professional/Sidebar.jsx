@@ -1,6 +1,11 @@
 import { NavLink } from "react-router-dom";
+import "./Sidebar.css";
+import { useEffect, useState } from "react";
+import { getUnreadCount } from "../../api/notificationService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+  
+  
 
 const Sidebar = () => {
   const { logout } = useAuth();
@@ -11,7 +16,17 @@ const Sidebar = () => {
     navigate("/login");
   };
 
-  return (
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    const loadCount = async () => {
+      const res = await getUnreadCount();
+      setUnreadCount(res.data);
+    };
+    loadCount();
+  }, []);
+
+   return (
     <aside style={{ width: "250px", background: "linear-gradient(180deg, #8E6EC8 0%, #7A5BC7 100%)", color: "#fff", minHeight: "100vh" }}>
       <div style={{ padding: "25px 20px", borderBottom: "1px solid #B39DDB" }}>
         <h4 className="mb-0" style={{ color: "#FFFFFF" }}>
@@ -31,6 +46,14 @@ const Sidebar = () => {
         >
           <i className="fas fa-home me-3" style={{ color: "#F3A6A1" }}></i>
           Dashboard
+        </NavLink>
+
+        <NavLink to="/professional/notifications" className="text-decoration-none text-white p-3 mb-2 rounded" 
+          style={{ transition: "all 0.3s", backgroundColor: "transparent" }}
+          onMouseOver={(e) => e.target.style.backgroundColor = "#B39DDB"}
+          onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}>
+            Notifications
+            {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
         </NavLink>
         
         <NavLink 
@@ -82,3 +105,7 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+
+
+

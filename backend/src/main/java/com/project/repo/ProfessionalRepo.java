@@ -19,6 +19,12 @@ public interface ProfessionalRepo extends JpaRepository<Professional, Long>{
 		""")
 		List<Professional> findAllProfessionalsWithUser();
 
-	
+	@Query("""
+		    SELECT p
+		    FROM Professional p
+		    JOIN FETCH p.user
+		    WHERE p.isVerified = true
+		""")
+		List<Professional> findAllVerifiedProfessionalsWithUser();
 
 }

@@ -38,6 +38,7 @@ public class ProfessionalServiceImpl implements ProfessionalService {
     private final AppointmentRepository appointmentRepo;
     private final PasswordEncoder passwordEncoder;
     private final ProfessionalAvailabilityRepository availabilityRepo;
+    private final NotificationService notificationService;
 
 
     /* ================= PROFILE UPDATE ================= */
@@ -178,6 +179,28 @@ public class ProfessionalServiceImpl implements ProfessionalService {
                     "Invalid status transition");
 
         appointment.setStatus(next);
+        appointmentRepo.save(appointment);
+
+        /*  NOTIFY USER */
+        String title = "Appointment Update";
+        String message = switch (next) {
+            case CONFIRMED -> "Your appointment has been confirmed.";
+            case CANCELLED -> "Your appointment has been cancelled by the professional.";
+            case COMPLETED -> "Your appointment has been marked as completed.";
+            case NO_SHOW -> "You were marked as no-show for the appointment.";
+            default -> "Appointment status updated.";
+        };
+
+        notificationService.sendInAppNotification(
+            appointment.getUser().getUserId(),
+            title,
+            message
+        );
+
+        notificationService.sendEmailNotification(
+            appointment.getUser().getEmail(),
+            title,
+            message);
     }
     
     
