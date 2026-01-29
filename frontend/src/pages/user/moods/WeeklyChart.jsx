@@ -22,8 +22,36 @@ const WeeklyChart = () => {
           datasets: [{
             label: "Mood Score",
             data: data.dailyStats.map(d => d.moodScore),
-            borderWidth: 2
+            borderColor: "#9C7FD1",
+            backgroundColor: "rgba(156, 127, 209, 0.1)",
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: "#8E6EC8",
+            pointBorderColor: "#9C7FD1",
+            pointRadius: 5
           }]
+        }}
+        options={{
+          plugins: {
+            legend: {
+              labels: {
+                color: "#8E6EC8"
+              }
+            }
+          },
+          scales: {
+            y: {
+              ticks: {
+                color: "#8E6EC8"
+              }
+            },
+            x: {
+              ticks: {
+                color: "#8E6EC8"
+              }
+            }
+          }
         }}
       />
     </div>
