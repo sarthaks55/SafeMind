@@ -50,6 +50,16 @@ const Sidebar = () => {
       </div>
       <nav className="d-flex flex-column p-3">
         <NavLink 
+          to="/" 
+          className="text-decoration-none text-white p-3 mb-2 rounded"
+          style={{ transition: "all 0.3s", backgroundColor: "transparent" }}
+          onMouseOver={(e) => e.target.style.backgroundColor = "#B39DDB"}
+          onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
+        >
+          <i className="fas fa-book me-3" style={{ color: "#8E6EC8" }}></i>
+          Home
+        </NavLink>
+        <NavLink 
           to="/user" 
           className="text-decoration-none text-white p-3 mb-2 rounded" 
           style={{ transition: "all 0.3s", backgroundColor: "transparent" }}
@@ -121,6 +131,17 @@ const Sidebar = () => {
         >
           <i className="fas fa-book me-3" style={{ color: "#8E6EC8" }}></i>
           Diary
+        </NavLink>
+
+        <NavLink 
+          to="/assessments" 
+          className="text-decoration-none text-white p-3 mb-2 rounded"
+          style={{ transition: "all 0.3s", backgroundColor: "transparent" }}
+          onMouseOver={(e) => e.target.style.backgroundColor = "#B39DDB"}
+          onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
+        >
+          <i className="fas fa-user me-3" style={{ color: "#F6C453" }}></i>
+          Assessments
         </NavLink>
         
         <button 
