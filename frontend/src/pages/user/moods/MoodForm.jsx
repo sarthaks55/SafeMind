@@ -29,7 +29,7 @@ const MoodForm = () => {
         <option value="BAD">BAD</option>
         <option value="NEUTRAL">NEUTRAL</option>
         <option value="GOOD">GOOD</option>
-        <option value="VERY_GOODY">VERY GOOD</option>
+        <option value="VERY_GOOD">VERY GOOD</option>
       </select>
 
       <textarea

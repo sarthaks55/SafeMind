@@ -22,10 +22,11 @@ export const updateUserActivation = (userId, isActive) =>
 export const getAllProfessionals = () =>
   api.get("/admin/professionals");
 
-export const updateProfessionalVerification = (userId, isVerified) =>
+export const updateProfessionalVerification = (userId, verified) =>
   api.put(`/admin/professionals/${userId}/verification`, {
-    isVerified,
+    verified,
   });
+
 
 export const getAppointmentsByProfessional = (professionalId) =>
   api.get(`/admin/appointments/professional/${professionalId}`);

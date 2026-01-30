@@ -32,7 +32,7 @@ const Professionals = () => {
       await updateProfessionalVerification(userId, !currentStatus);
       setProfessionals((prev) =>
         prev.map((p) =>
-          p.userId === userId ? { ...p, isVerified: !currentStatus } : p,
+          p.userId === userId ? { ...p, verified: !currentStatus } : p,
         ),
       );
     } catch {
@@ -88,7 +88,7 @@ const Professionals = () => {
 
               <tbody>
                 {professionals.map((p) => {
-                  const verificationStyle = getVerificationBadge(p.isVerified);
+                  const verificationStyle = getVerificationBadge(p.verified );
                   return (
                     <tr key={p.professionalId} className="border-bottom">
                       <td className="py-3 px-4">
@@ -116,17 +116,17 @@ const Professionals = () => {
                       <td className="py-3 px-4">
                         <div className="d-flex gap-2">
                           <button
-                            onClick={() => toggleVerification(p.userId, p.isVerified)}
+                            onClick={() => toggleVerification(p.userId, p.verified )}
                             className="btn btn-sm px-3"
                             style={{
-                              backgroundColor: p.isVerified ? "#D9899A" : "#F3A6A1",
+                              backgroundColor: p.verified  ? "#D9899A" : "#F3A6A1",
                               color: "white",
                               border: "none",
                               borderRadius: "8px"
                             }}
                           >
-                            <i className={`fas ${p.isVerified ? 'fa-times' : 'fa-check'} me-1`}></i>
-                            {p.isVerified ? "Unverify" : "Verify"}
+                            <i className={`fas ${p.verified  ? 'fa-times' : 'fa-check'} me-1`}></i>
+                            {p.verified  ? "Unverify" : "Verify"}
                           </button>
                           <button
                             onClick={() => navigate(`/admin/appointments?professionalId=${p.professionalId}`)}
