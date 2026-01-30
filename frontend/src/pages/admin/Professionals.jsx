@@ -32,7 +32,7 @@ const Professionals = () => {
       await updateProfessionalVerification(userId, !currentStatus);
       setProfessionals((prev) =>
         prev.map((p) =>
-          p.userId === userId ? { ...p, isVerified: !currentStatus } : p,
+          p.userId === userId ? { ...p, verified: !currentStatus } : p,
         ),
       );
     } catch {
@@ -66,12 +66,12 @@ const Professionals = () => {
               <td>{p.userId}</td>
               <td>{p.fullName}</td>
               <td>{p.email}</td>
-              <td>{p.isVerified ? "Verified" : "Unverified"}</td>
+              <td>{p.verified ? "Verified" : "Unverified"}</td>
               <td>
                 <button
-                  onClick={() => toggleVerification(p.userId, p.isVerified)}
+                  onClick={() => toggleVerification(p.userId, p.verified)}
                   style={{
-                    background: p.isVerified ? "red" : "green",
+                    background: p.verified ? "red" : "green",
                     color: "white",
                     padding: "5px 10px",
                     border: "none",
@@ -79,7 +79,7 @@ const Professionals = () => {
                     marginRight: "8px",
                   }}
                 >
-                  {p.isVerified ? "Unverify" : "Verify"}
+                  {p.verified ? "Unverify" : "Verify"}
                 </button>
               </td>
               <td>
