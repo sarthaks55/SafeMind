@@ -37,7 +37,7 @@ const DiaryEditor = ({ selected, onSaved }) => {
         required
       />
 
-      <button className="btn btn-primary">
+      <button className="btn" style={{ backgroundColor: "#8E6EC8", color: "white", border: "none" }}>
         {selected ? "Update" : "Save"}
       </button>
     </form>
