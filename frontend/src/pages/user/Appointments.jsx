@@ -24,7 +24,7 @@ const Appointments = () => {
 
   const getStatusBadge = (status) => {
     const badges = {
-      PENDING: { bg: "#F6C453", color: "white" },
+      PENDING: { bg: "#B39DDB", color: "white" },
       CONFIRMED: { bg: "#8E6EC8", color: "white" },
       CANCELLED: { bg: "#D9899A", color: "white" },
       COMPLETED: { bg: "#F3A6A1", color: "white" }

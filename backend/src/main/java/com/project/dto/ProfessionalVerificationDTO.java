@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class ProfessionalVerificationDTO {
-    private boolean isVerified;
+    private boolean verified;
 }

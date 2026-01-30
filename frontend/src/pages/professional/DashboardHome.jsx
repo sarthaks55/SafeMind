@@ -11,12 +11,6 @@ const DashboardHome = () => {
             <div className="position-absolute" style={{ top: "-50px", right: "-50px", width: "200px", height: "200px", background: "rgba(255,255,255,0.1)", borderRadius: "50%" }}></div>
             <div className="position-absolute" style={{ bottom: "-30px", left: "-30px", width: "150px", height: "150px", background: "rgba(255,255,255,0.05)", borderRadius: "50%" }}></div>
             <div className="card-body text-center py-5 position-relative">
-              <div className="mb-4">
-                <img src="https://medazhospital.com/storage/2025/10/Mental.webp" 
-                     alt="Mental Health Professional" 
-                     className="rounded-circle shadow-lg" 
-                     style={{ width: "100px", height: "100px", objectFit: "cover", border: "4px solid rgba(255,255,255,0.3)" }} />
-              </div>
               <h1 className="display-4 mb-3 fw-bold">Welcome back, Dr. {auth?.fullName || 'Professional'}!</h1>
               <p className="lead opacity-90 mb-0">Your professional practice dashboard</p>
               <div className="mt-3">
@@ -41,9 +35,9 @@ const DashboardHome = () => {
                 <div className="position-relative d-inline-block">
                   <img src="https://www.eclinicalworks.com/wp-content/uploads/2025/08/eCW-blog-Digital-Scheduling-1024x575.png" 
                        alt="Client Appointments" 
-                       className="rounded-3 shadow" 
-                       style={{ width: "100%", height: "140px", objectFit: "cover" }} />
-                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-3" style={{ background: "linear-gradient(45deg, rgba(243,166,161,0.2) 0%, rgba(232,161,176,0.2) 100%)" }}></div>
+                       className="rounded-circle shadow" 
+                       style={{ width: "140px", height: "140px", objectFit: "cover" }} />
+                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-circle" style={{ background: "linear-gradient(45deg, rgba(243,166,161,0.2) 0%, rgba(232,161,176,0.2) 100%)" }}></div>
                 </div>
               </div>
               <div className="d-flex align-items-center mb-3">
@@ -78,9 +72,9 @@ const DashboardHome = () => {
                 <div className="position-relative d-inline-block">
                   <img src="https://media.licdn.com/dms/image/v2/D4E12AQFIpR9Jum9WYQ/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1667657902268?e=2147483647&v=beta&t=oys4Y8WxnC0T9zErFda_JZznYOjavTq8LUfXD3wo8Ek" 
                        alt="Schedule Management" 
-                       className="rounded-3 shadow" 
-                       style={{ width: "100%", height: "140px", objectFit: "cover" }} />
-                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-3" style={{ background: "linear-gradient(45deg, rgba(179,157,219,0.2) 0%, rgba(142,110,200,0.2) 100%)" }}></div>
+                       className="rounded-circle shadow" 
+                       style={{ width: "140px", height: "140px", objectFit: "cover" }} />
+                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-circle" style={{ background: "linear-gradient(45deg, rgba(179,157,219,0.2) 0%, rgba(142,110,200,0.2) 100%)" }}></div>
                 </div>
               </div>
               <div className="d-flex align-items-center mb-3">
@@ -119,9 +113,9 @@ const DashboardHome = () => {
                 <div className="position-relative d-inline-block">
                   <img src="https://media.istockphoto.com/id/653832634/photo/portrait-of-male-doctor-standing-with-arms-crossed.jpg?s=612x612&w=0&k=20&c=YKusn_UfkRfMdBWJR1thZOaJtMlZsNNf-cA2jlRbtGQ=" 
                        alt="Professional Profile" 
-                       className="rounded-3 shadow" 
-                       style={{ width: "100%", height: "140px", objectFit: "cover" }} />
-                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-3" style={{ background: "linear-gradient(45deg, rgba(232,161,176,0.2) 0%, rgba(217,137,154,0.2) 100%)" }}></div>
+                       className="rounded-circle shadow" 
+                       style={{ width: "140px", height: "140px", objectFit: "cover" }} />
+                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-circle" style={{ background: "linear-gradient(45deg, rgba(232,161,176,0.2) 0%, rgba(217,137,154,0.2) 100%)" }}></div>
                 </div>
               </div>
               <div className="d-flex align-items-center mb-3">

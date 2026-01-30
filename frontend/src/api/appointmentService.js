@@ -8,3 +8,6 @@ export const bookAppointment = (data) =>
 
 export const cancelAppointment = (id) =>
   api.put(`/appointments/${id}`);
+
+export const getProfessionals = () =>
+  api.get("/user/professionals");

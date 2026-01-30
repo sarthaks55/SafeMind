@@ -27,6 +27,9 @@ import Notifications from "../pages/admin/Notifications";
 import Home from "../pages/Home";
 import AboutUs from "../pages/AboutUs";
 import Services from "../pages/Services";
+import AssessmentList from "../pages/assessments/AssessmentList";
+import AssessmentDetail from "../pages/assessments/AssessmentDetail";
+import AssessmentResult from "../pages/assessments/AssessmentResult";
 
 const AppRoutes = () => {
   return (
@@ -39,6 +42,9 @@ const AppRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/register-user" element={<RegisterUser />} />
       <Route path="/register-professional" element={<RegisterProfessional />} />
+      <Route path="/assessments" element={<AssessmentList />} />
+      <Route path="/assessments/:id" element={<AssessmentDetail />} />
+      <Route path="/assessments/:id/result" element={<AssessmentResult />} />
       <Route path="/user" element={<UserDashboard />}>
         <Route index element={<DashboardHome />} />
         <Route path="profile" element={<Profile />} />
