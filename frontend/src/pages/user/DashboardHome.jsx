@@ -11,12 +11,6 @@ const DashboardHome = () => {
             <div className="position-absolute" style={{ top: "-50px", right: "-50px", width: "200px", height: "200px", background: "rgba(255,255,255,0.1)", borderRadius: "50%" }}></div>
             <div className="position-absolute" style={{ bottom: "-30px", left: "-30px", width: "150px", height: "150px", background: "rgba(255,255,255,0.05)", borderRadius: "50%" }}></div>
             <div className="card-body text-center py-5 position-relative">
-              <div className="mb-4">
-                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=120&h=120&fit=crop" 
-                     alt="Mental Wellness" 
-                     className="rounded-circle shadow-lg" 
-                     style={{ width: "100px", height: "100px", objectFit: "cover", border: "4px solid rgba(255,255,255,0.3)" }} />
-              </div>
               <h1 className="display-4 mb-3 fw-bold">Welcome back, {auth.fullName}!</h1>
               <p className="lead opacity-90 mb-0">Your mental wellness journey continues here</p>
               <div className="mt-3">
@@ -39,11 +33,11 @@ const DashboardHome = () => {
             <div className="card-body p-4">
               <div className="text-center mb-4">
                 <div className="position-relative d-inline-block">
-                  <img src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?w=280&h=160&fit=crop" 
+                  <img src="https://npr.brightspotcdn.com/dims3/default/strip/false/crop/5000x3600+0+0/resize/5000x3600!/?url=http%3A%2F%2Fnpr-brightspot.s3.amazonaws.com%2Fc7%2Ff7%2F54a9ca6f41edb98f831ccf9360b8%2Fgettyimages-2178028913.jpg" 
                        alt="Therapy Session" 
-                       className="rounded-3 shadow" 
-                       style={{ width: "100%", height: "140px", objectFit: "cover" }} />
-                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-3" style={{ background: "linear-gradient(45deg, rgba(243,166,161,0.2) 0%, rgba(232,161,176,0.2) 100%)" }}></div>
+                       className="rounded-circle shadow" 
+                       style={{ width: "140px", height: "140px", objectFit: "cover" }} />
+                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-circle" style={{ background: "linear-gradient(45deg, rgba(243,166,161,0.2) 0%, rgba(232,161,176,0.2) 100%)" }}></div>
                 </div>
               </div>
               <div className="d-flex align-items-center mb-3">
@@ -76,11 +70,11 @@ const DashboardHome = () => {
             <div className="card-body p-4">
               <div className="text-center mb-4">
                 <div className="position-relative d-inline-block">
-                  <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=280&h=160&fit=crop" 
+                  <img src="https://www.solhapp.com/blog/storage/the-science-behind-mood-tracking-how-monitoring-your-emotions-can-improve-mental-well-being.webp" 
                        alt="Mood Tracking" 
-                       className="rounded-3 shadow" 
-                       style={{ width: "100%", height: "140px", objectFit: "cover" }} />
-                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-3" style={{ background: "linear-gradient(45deg, rgba(246,196,83,0.2) 0%, rgba(242,156,80,0.2) 100%)" }}></div>
+          a             className="rounded-circle shadow" 
+                       style={{ width: "140px", height: "140px", objectFit: "cover" }} />
+                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-circle" style={{ background: "linear-gradient(45deg, rgba(246,196,83,0.2) 0%, rgba(242,156,80,0.2) 100%)" }}></div>
                 </div>
               </div>
               <div className="d-flex align-items-center mb-3">
@@ -117,11 +111,11 @@ const DashboardHome = () => {
             <div className="card-body p-4">
               <div className="text-center mb-4">
                 <div className="position-relative d-inline-block">
-                  <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=280&h=160&fit=crop" 
+                  <img src="https://www.shutterstock.com/image-vector/black-girl-woman-person-writes-600nw-2458543699.jpg" 
                        alt="Journal Writing" 
-                       className="rounded-3 shadow" 
-                       style={{ width: "100%", height: "140px", objectFit: "cover" }} />
-                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-3" style={{ background: "linear-gradient(45deg, rgba(232,161,176,0.2) 0%, rgba(217,137,154,0.2) 100%)" }}></div>
+                       className="rounded-circle shadow" 
+                       style={{ width: "140px", height: "140px", objectFit: "cover" }} />
+                  <div className="position-absolute top-0 start-0 w-100 h-100 rounded-circle" style={{ background: "linear-gradient(45deg, rgba(232,161,176,0.2) 0%, rgba(217,137,154,0.2) 100%)" }}></div>
                 </div>
               </div>
               <div className="d-flex align-items-center mb-3">
