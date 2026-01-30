@@ -51,23 +51,13 @@ const Sidebar = () => {
       <nav className="d-flex flex-column p-3">
         <NavLink 
           to="/" 
-          className="text-decoration-none text-white p-3 mb-2 rounded"
-          style={{ transition: "all 0.3s", backgroundColor: "transparent" }}
-          onMouseOver={(e) => e.target.style.backgroundColor = "#B39DDB"}
-          onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
-        >
-          <i className="fas fa-book me-3" style={{ color: "#8E6EC8" }}></i>
-          Home
-        </NavLink>
-        <NavLink 
-          to="/user" 
           className="text-decoration-none text-white p-3 mb-2 rounded" 
           style={{ transition: "all 0.3s", backgroundColor: "transparent" }}
           onMouseOver={(e) => e.target.style.backgroundColor = "#B39DDB"}
           onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
         >
           <i className="fas fa-home me-3" style={{ color: "#F3A6A1" }}></i>
-          Dashboard
+          Home
         </NavLink>
         
         <NavLink 
@@ -81,13 +71,31 @@ const Sidebar = () => {
           Profile
         </NavLink>
 
-        <NavLink to="/user/notifications" className="text-decoration-none text-white p-3 mb-2 rounded"
+        <NavLink 
+          to="/user/notifications" 
+          className="text-decoration-none text-white p-3 mb-2 rounded"
           style={{ transition: "all 0.3s", backgroundColor: "transparent" }}
           onMouseOver={(e) => e.target.style.backgroundColor = "#B39DDB"}
-          onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}> 
-            Notifications
-            {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
-          </NavLink>
+          onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
+        > 
+          <i className="fas fa-bell me-3" style={{ color: "#F6C453" }}></i>
+          Notifications
+          {unreadCount > 0 && (
+            <span 
+              style={{
+                backgroundColor: "#F3A6A1",
+                color: "white",
+                borderRadius: "50%",
+                padding: "2px 6px",
+                fontSize: "12px",
+                fontWeight: "bold",
+                marginLeft: "8px"
+              }}
+            >
+              {unreadCount}
+            </span>
+          )}
+        </NavLink>
         
         <NavLink 
           to="/user/appointments" 

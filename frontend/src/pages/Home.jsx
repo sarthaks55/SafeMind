@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBrain, FaCloudRain, FaRegComments, FaBed, FaUserInjured, FaBolt, FaHeartBroken, FaExclamationCircle, FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import { BsEmojiFrown, BsWind, BsEmojiDizzy } from 'react-icons/bs';
+import { useAuth } from '../context/AuthContext';
 import './Home.css';
 
 const Home = () => {
+    const { auth, logout } = useAuth();
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
     return (
         <>
             {/* Navbar */}
@@ -21,12 +25,39 @@ const Home = () => {
                             <Link to="/" className="nav-link safemind-nav-link">Home</Link>
                             <Link to="/about" className="nav-link safemind-nav-link">About Us</Link>
                             <Link to="/services" className="nav-link safemind-nav-link">Services</Link>
-                            <Link to="/login" className="btn btn-outline-custom ms-3">
-                                Login
-                            </Link>
-                            <Link to="/register-user" className="btn btn-primary-custom text-white">
-                                Get Started
-                            </Link>
+                            {auth ? (
+                                <div className="dropdown ms-3">
+                                    <button 
+                                        className="btn btn-outline-custom dropdown-toggle" 
+                                        type="button" 
+                                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                                        style={{ border: "none", background: "transparent", color: "#8E6EC8" }}
+                                    >
+                                        {auth.fullName}
+                                    </button>
+                                    {dropdownOpen && (
+                                        <div className="dropdown-menu show" style={{ position: "absolute", right: 0, top: "100%", zIndex: 1000 }}>
+                                            <Link 
+                                                to={auth.role === 'ROLE_ADMIN' ? '/admin' : auth.role === 'ROLE_PROFESSIONAL' ? '/professional' : '/user'} 
+                                                className="dropdown-item" 
+                                                onClick={() => setDropdownOpen(false)}
+                                            >
+                                                Dashboard
+                                            </Link>
+                                            <button className="dropdown-item" onClick={() => { logout(); setDropdownOpen(false); }}>Logout</button>
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <>
+                                    <Link to="/login" className="btn btn-outline-custom ms-3">
+                                        Login
+                                    </Link>
+                                    <Link to="/register-user" className="btn btn-primary-custom text-white">
+                                        Get Started
+                                    </Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -43,14 +74,6 @@ const Home = () => {
                             <p className="hero-subtitle">
                                 A safe harbor for your mind. SafeMind connects you with compassionate professionals and tools to navigate life's emotional tides.
                             </p>
-                            <div className="d-flex gap-3">
-                                <Link to="/register-user" className="btn btn-primary-custom text-white">
-                                    Start Healing
-                                </Link>
-                                <Link to="/register-professional" className="btn btn-outline-custom">
-                                    For Therapists
-                                </Link>
-                            </div>
                         </div>
                         <div className="col-lg-6">
                             <img
