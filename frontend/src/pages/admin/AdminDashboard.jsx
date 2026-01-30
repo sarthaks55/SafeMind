@@ -74,6 +74,20 @@ const AdminDashboard = () => {
 
         <nav style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
           <NavLink 
+            to="/" 
+            style={({ isActive }) => ({
+              color: "#FFFFFF",
+              textDecoration: "none",
+              padding: "12px 16px",
+              borderRadius: "8px",
+              backgroundColor: isActive ? "#7A5BC7" : "transparent",
+              transition: "all 0.3s ease"
+            })}
+          >
+            <i className="fas fa-home me-2"></i>
+            Home
+          </NavLink>
+          <NavLink 
             to="/admin" 
             end
             style={({ isActive }) => ({
@@ -85,7 +99,7 @@ const AdminDashboard = () => {
               transition: "all 0.3s ease"
             })}
           >
-            <i className="fas fa-home me-2"></i>
+            <i className="fas fa-tachometer-alt me-2"></i>
             Dashboard
           </NavLink>
           <NavLink 
