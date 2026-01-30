@@ -28,11 +28,26 @@ const Sidebar = () => {
 
    return (
     <aside style={{ width: "250px", background: "linear-gradient(180deg, #8E6EC8 0%, #7A5BC7 100%)", color: "#fff", minHeight: "100vh" }}>
-      <div style={{ padding: "25px 20px", borderBottom: "1px solid #B39DDB" }}>
-        <h4 className="mb-0" style={{ color: "#FFFFFF" }}>
-          <i className="fas fa-user-md me-2" style={{ color: "#C6B7E2" }}></i>
-          Therapist Panel
+      <div style={{ padding: "25px 20px", borderBottom: "1px solid #B39DDB", textAlign: "center" }}>
+        <div className="mb-3">
+          <div className="rounded-circle d-flex align-items-center justify-content-center mx-auto" 
+               style={{ 
+                 width: "60px", 
+                 height: "60px", 
+                 backgroundColor: "rgba(255, 255, 255, 0.2)",
+                 backdropFilter: "blur(10px)",
+                 border: "2px solid rgba(255, 255, 255, 0.3)",
+                 overflow: "hidden"
+               }}>
+            <img src="https://cdn-icons-png.flaticon.com/512/2784/2784403.png" 
+                 alt="SafeMind Logo" 
+                 style={{ width: "35px", height: "35px", objectFit: "contain" }} />
+          </div>
+        </div>
+        <h4 className="mb-0" style={{ color: "#FFFFFF", fontWeight: "bold" }}>
+          SafeMind
         </h4>
+        <p className="mb-0" style={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "12px" }}>Therapist Panel</p>
       </div>
 
       <nav className="d-flex flex-column p-3">
