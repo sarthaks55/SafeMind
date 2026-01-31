@@ -1,4 +1,4 @@
-import api from "./axiosConfig";
+import api from "./axios";
 
 // Admin profile
 export const updateAdminProfile = (data) =>

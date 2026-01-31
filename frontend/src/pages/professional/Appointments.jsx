@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getProfessionalAppointments,
   updateAppointmentStatus,
 } from "../../api/professionalService";
+import { isAppointmentActive } from "../../utils/appointmentUtils";
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAppointments();
@@ -30,6 +33,10 @@ const Appointments = () => {
     } catch (err) {
       alert(err.response?.data?.message || "Status update failed");
     }
+  };
+
+  const joinVideoSession = (appointmentId) => {
+    navigate(`/video-session/${appointmentId}`);
   };
 
   const getStatusBadge = (status) => {
@@ -119,7 +126,18 @@ const Appointments = () => {
                           </span>
                         </td>
                         <td className="py-3 px-4">
-                          <div className="d-flex gap-2">
+                          <div className="d-flex gap-2 flex-wrap">
+                            {a.status === "CONFIRMED" && isAppointmentActive(a.startTime, a.endTime) && (
+                              <button
+                                className="btn btn-sm px-2"
+                                style={{ backgroundColor: "#8E6EC8", color: "white", border: "none" }}
+                                onClick={() => joinVideoSession(a.appointmentId)}
+                              >
+                                <i className="fas fa-video me-1"></i>
+                                Join Video
+                              </button>
+                            )}
+                            
                             {a.status === "PENDING" && (
                               <button
                                 className="btn btn-sm px-3"

@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getUserAppointments,
   cancelAppointment
 } from "../../api/appointmentService";
+import { isAppointmentActive } from "../../utils/appointmentUtils";
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
+  const navigate = useNavigate();
 
   const load = async () => {
     const res = await getUserAppointments();
@@ -20,6 +23,10 @@ const Appointments = () => {
     if (status !== "PENDING") return;
     await cancelAppointment(id);
     load();
+  };
+
+  const joinVideoSession = (appointmentId) => {
+    navigate(`/video-session/${appointmentId}`);
   };
 
   const getStatusBadge = (status) => {
@@ -91,16 +98,28 @@ const Appointments = () => {
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        {a.status === "PENDING" && (
-                          <button
-                            className="btn btn-sm px-3"
-                            style={{ backgroundColor: "#D9899A", color: "white", border: "none" }}
-                            onClick={() => cancel(a.appointmentId, a.status)}
-                          >
-                            <i className="fas fa-times me-1"></i>
-                            Cancel
-                          </button>
-                        )}
+                        <div className="d-flex gap-2">
+                          {a.status === "CONFIRMED" && isAppointmentActive(a.startTime, a.endTime) && (
+                            <button
+                              className="btn btn-sm px-3"
+                              style={{ backgroundColor: "#8E6EC8", color: "white", border: "none" }}
+                              onClick={() => joinVideoSession(a.appointmentId)}
+                            >
+                              <i className="fas fa-video me-1"></i>
+                              Join Video
+                            </button>
+                          )}
+                          {a.status === "PENDING" && (
+                            <button
+                              className="btn btn-sm px-3"
+                              style={{ backgroundColor: "#D9899A", color: "white", border: "none" }}
+                              onClick={() => cancel(a.appointmentId, a.status)}
+                            >
+                              <i className="fas fa-times me-1"></i>
+                              Cancel
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );

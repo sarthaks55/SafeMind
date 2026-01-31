@@ -5,16 +5,16 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import com.project.enums.VideoSessionStatus;
+
+import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-@Table(name = "video_sessions")
+@Table(
+    name = "video_sessions"
+)
+@Data
 public class VideoSession {
 
     @Id
@@ -22,8 +22,11 @@ public class VideoSession {
     private Long videoSessionId;
 
     @OneToOne
-    @JoinColumn(name = "appointment_id", nullable = false, unique = true)
+    @JoinColumn(name = "appointment_id", nullable = false)
     private Appointment appointment;
+
+    @Column(nullable = false, unique = true)
+    private String roomToken;
 
     private LocalDateTime allowedFrom;
     private LocalDateTime allowedUntil;
@@ -33,4 +36,7 @@ public class VideoSession {
 
     @CreationTimestamp
     private Instant createdAt;
+
+    @Enumerated(EnumType.STRING)
+    private VideoSessionStatus status;
 }

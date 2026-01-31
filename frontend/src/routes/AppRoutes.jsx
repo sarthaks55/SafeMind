@@ -31,6 +31,7 @@ import AssessmentList from "../pages/assessments/AssessmentList";
 import AssessmentDetail from "../pages/assessments/AssessmentDetail";
 import AssessmentResult from "../pages/assessments/AssessmentResult";
 import Unauthorized from "../pages/Unauthorized";
+import VideoSession from "../pages/VideoSession";
 
 const AppRoutes = () => {
   return (
@@ -46,6 +47,7 @@ const AppRoutes = () => {
       <Route path="/assessments" element={<AssessmentList />} />
       <Route path="/assessments/:id" element={<AssessmentDetail />} />
       <Route path="/assessments/:id/result" element={<AssessmentResult />} />
+      <Route path="/video-session/:appointmentId" element={<VideoSession />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
       <Route path="/user" element={<UserDashboard />}>
         <Route index element={<DashboardHome />} />

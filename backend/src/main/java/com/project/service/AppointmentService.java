@@ -6,6 +6,7 @@ import java.util.List;
 import com.project.dto.AppointmentRequestDTO;
 import com.project.dto.AppointmentResponseDTO;
 import com.project.dto.AppointmentStatusUpdateDTO;
+import com.project.entities.Appointment;
 import com.project.enums.AppointmentStatus;
 
 public interface AppointmentService {
@@ -41,4 +42,5 @@ public interface AppointmentService {
     List<AppointmentResponseDTO> getAppointmentsBetweenDates(
             LocalDateTime start,
             LocalDateTime end);
+
 }
