@@ -56,27 +56,34 @@ public class UserServiceImpl implements UserService {
     private final NotificationService notificationService;
 	@Autowired
 	private final EmailService emailService;
+	@Autowired
+	private final OtpService otpService;
 
 	
 	@Override
 	public User registerUser(RegisterDTO dto) {
-		
-		if(userRepository.existsByEmail(dto.getEmail())){
-			throw new DuplicateEmailException("Email Already Exists");
-		}
-		
-		Role role = roleRepo.findByRoleName(dto.getRole());
 
-		if (role == null) {
-			throw new RoleNotFoundException("Invalid Role");
-		}
-		User user = modelMapper.map(dto, User.class);
-		String hashPassword = passwordEncoder.encode(dto.getPassword());
-		user.setPasswordHash(hashPassword);
-		user.setRole(role);
-		return userRepository.save(user);
+	    if (userRepository.existsByEmail(dto.getEmail())) {
+	        throw new DuplicateEmailException("Email Already Exists");
+	    }
 
+	    Role role = roleRepo.findByRoleName(dto.getRole());
+	    if (role == null) {
+	        throw new RoleNotFoundException("Invalid Role");
+	    }
+
+	    User user = modelMapper.map(dto, User.class);
+	    user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
+	    user.setRole(role);
+	    user.setActive(false); // 🔒 inactive until OTP
+
+	    User savedUser = userRepository.save(user);
+
+	    otpService.sendOtp(savedUser);
+
+	    return savedUser; // ✅ RETURN ONCE
 	}
+
 
 	@Override
 	public Professional registerProfessional(RegisterProfessionalDTO dto) {
@@ -100,6 +107,7 @@ public class UserServiceImpl implements UserService {
 	    User user = modelMapper.map(dto, User.class);
 	    user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
 	    user.setRole(role);
+	    user.setActive(false); // 🔒 inactive
 
 	    Professional professional = new Professional(
 	            user,
@@ -112,6 +120,10 @@ public class UserServiceImpl implements UserService {
 	    professional.setSpecialization(specialization);
 
 	    Professional savedProfessional = professionalRepo.save(professional);
+
+	    User savedUser = savedProfessional.getUser();
+	    otpService.sendOtp(savedUser);
+
 
 	    /* 🔔 NOTIFY ADMINS */
 	    List<User> admins = userRepository.findByRole_RoleName("ROLE_ADMIN");

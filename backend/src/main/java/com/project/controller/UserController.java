@@ -18,6 +18,7 @@ import com.project.entities.User;
 import com.project.security.CustomUserDetails;
 import com.project.service.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -46,16 +47,15 @@ public class UserController {
 
     @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(
-            @RequestBody PasswordUpdateDTO dto,
+            @RequestBody @Valid PasswordUpdateDTO dto,
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        userService.updatePassword(
-                user.getUserId(), dto);
+        userService.updatePassword(user.getUserId(), dto);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // 204 NO CONTENT
     }
 
     /* ================= APPOINTMENT ================= */
@@ -68,16 +68,18 @@ public class UserController {
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        userService.cancelConfirmedAppointment(
-                id, user.getUserId());
+        userService.cancelConfirmedAppointment(id, user.getUserId());
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // 204 NO CONTENT
     }
-    
-    
+
+    /* ================= PROFESSIONALS ================= */
+
     @GetMapping("/professionals")
-    public List<ProfessionalViewDTO> getProfessionals() {
-        return userService.getAllProfessionals();
+    public ResponseEntity<List<ProfessionalViewDTO>> getProfessionals() {
+        List<ProfessionalViewDTO> professionals =
+                userService.getAllProfessionals();
+
+        return ResponseEntity.ok(professionals); // 200 OK
     }
-    
 }

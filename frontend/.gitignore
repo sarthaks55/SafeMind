@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.pem
+*.p12
+/src/certs/*.pem

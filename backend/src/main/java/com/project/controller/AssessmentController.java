@@ -2,12 +2,8 @@ package com.project.controller;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.project.dto.AssessmentDetailDTO;
 import com.project.dto.AssessmentListDTO;
@@ -15,32 +11,46 @@ import com.project.dto.AssessmentResultDTO;
 import com.project.dto.AssessmentSubmitRequestDTO;
 import com.project.service.AssessmentService;
 
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/assessments")
+@RequiredArgsConstructor
 public class AssessmentController {
 
     private final AssessmentService service;
 
-    public AssessmentController(AssessmentService service) {
-        this.service = service;
-    }
+    /* ================= GET ALL ================= */
 
     @GetMapping
-    public List<AssessmentListDTO> getAll() {
-        return service.getAllAssessments();
+    public ResponseEntity<List<AssessmentListDTO>> getAll() {
+        List<AssessmentListDTO> assessments = service.getAllAssessments();
+        return ResponseEntity.ok(assessments); // 200
     }
+
+    /* ================= GET ONE ================= */
 
     @GetMapping("/{assessmentId}")
-    public AssessmentDetailDTO getAssessment(
+    public ResponseEntity<AssessmentDetailDTO> getAssessment(
             @PathVariable Long assessmentId) {
-        return service.getAssessment(assessmentId);
+
+        AssessmentDetailDTO assessment =
+                service.getAssessment(assessmentId);
+
+        return ResponseEntity.ok(assessment); // 200
     }
+
+    /* ================= SUBMIT ================= */
 
     @PostMapping("/{assessmentId}/submit")
-    public AssessmentResultDTO submit(
+    public ResponseEntity<AssessmentResultDTO> submit(
             @PathVariable Long assessmentId,
-            @RequestBody AssessmentSubmitRequestDTO request) {
-        return service.submitAssessment(assessmentId, request);
+            @RequestBody @Valid AssessmentSubmitRequestDTO request) {
+
+        AssessmentResultDTO result =
+                service.submitAssessment(assessmentId, request);
+
+        return ResponseEntity.ok(result); // 200
     }
 }
-

@@ -4,6 +4,7 @@ import com.project.dto.NotificationDTO;
 import com.project.security.CustomUserDetails;
 import com.project.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,25 +17,38 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
+    /* ================= GET ALL ================= */
+
     @GetMapping
-    public List<NotificationDTO> getMyNotifications(
+    public ResponseEntity<List<NotificationDTO>> getMyNotifications(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        return notificationService.getUserNotifications(userDetails.getUserId());
+        List<NotificationDTO> notifications =
+                notificationService.getUserNotifications(userDetails.getUserId());
+
+        return ResponseEntity.ok(notifications); // 200 OK
     }
 
+    /* ================= MARK READ ================= */
+
     @PutMapping("/{id}/read")
-    public void markRead(
+    public ResponseEntity<Void> markRead(
             @PathVariable Long id,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         notificationService.markAsRead(id, userDetails.getUserId());
+
+        return ResponseEntity.noContent().build(); // 204 NO CONTENT
     }
 
+    /* ================= UNREAD COUNT ================= */
+
     @GetMapping("/unread-count")
-    public long unreadCount(
+    public ResponseEntity<Long> unreadCount(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        return notificationService.getUnreadCount(userDetails.getUserId());
+        long count = notificationService.getUnreadCount(userDetails.getUserId());
+
+        return ResponseEntity.ok(count); // 200 OK
     }
 }

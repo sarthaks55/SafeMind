@@ -29,7 +29,7 @@ const Users = () => {
       await updateUserActivation(userId, !currentStatus);
       setUsers((prev) =>
         prev.map((u) =>
-          u.userId === userId ? { ...u, isActive: !currentStatus } : u,
+          u.userId === userId ? { ...u, active: !currentStatus } : u,
         ),
       );
     } catch {
@@ -86,7 +86,7 @@ const Users = () => {
 
               <tbody>
                 {users.map((u) => {
-                  const statusStyle = getStatusBadge(u.isActive);
+                  const statusStyle = getStatusBadge(u.active);
                   return (
                     <tr key={u.userId} className="border-bottom">
                       <td className="py-3 px-4">
@@ -114,17 +114,17 @@ const Users = () => {
                       <td className="py-3 px-4">
                         <div className="d-flex gap-2">
                           <button
-                            onClick={() => toggleActivation(u.userId, u.isActive)}
+                            onClick={() => toggleActivation(u.userId, u.active)}
                             className="btn btn-sm px-3"
                             style={{
-                              backgroundColor: u.isActive ? "#D9899A" : "#F3A6A1",
+                              backgroundColor: u.active ? "#D9899A" : "#F3A6A1",
                               color: "white",
                               border: "none",
                               borderRadius: "8px"
                             }}
                           >
-                            <i className={`fas ${u.isActive ? 'fa-ban' : 'fa-check'} me-1`}></i>
-                            {u.isActive ? "Deactivate" : "Activate"}
+                            <i className={`fas ${u.active ? 'fa-ban' : 'fa-check'} me-1`}></i>
+                            {u.active ? "Deactivate" : "Activate"}
                           </button>
                           <button
                             onClick={() => navigate(`/admin/appointments?userId=${u.userId}`)}

@@ -1,1 +1,3 @@
 /.metadata/
+/frontend/src/certs/*.pem
+/backend/src/main/resources/*.p12

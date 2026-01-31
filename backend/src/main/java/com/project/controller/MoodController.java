@@ -2,14 +2,9 @@ package com.project.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.project.dto.MoodAnalyticsResponseDTO;
 import com.project.dto.MoodRequestDTO;
@@ -17,6 +12,7 @@ import com.project.dto.MoodResponseDTO;
 import com.project.security.CustomUserDetails;
 import com.project.service.MoodService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -26,60 +22,72 @@ public class MoodController {
 
     private final MoodService moodService;
 
+    /* ================= ADD MOOD ================= */
+
     @PostMapping
-    public MoodResponseDTO addMood(
-            @RequestBody MoodRequestDTO dto,
+    public ResponseEntity<MoodResponseDTO> addMood(
+            @RequestBody @Valid MoodRequestDTO dto,
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return moodService.addTodayMood(
-                dto, user.getUserId());
+        MoodResponseDTO response =
+                moodService.addTodayMood(dto, user.getUserId());
+
+        return ResponseEntity.status(201).body(response); // 201 CREATED
     }
+
+    /* ================= UPDATE MOOD ================= */
 
     @PutMapping
-    public MoodResponseDTO updateMood(
-            @RequestBody MoodRequestDTO dto,
+    public ResponseEntity<MoodResponseDTO> updateMood(
+            @RequestBody @Valid MoodRequestDTO dto,
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return moodService.updateTodayMood(
-                dto, user.getUserId());
+        MoodResponseDTO response =
+                moodService.updateTodayMood(dto, user.getUserId());
+
+        return ResponseEntity.ok(response); // 200 OK
     }
+
+    /* ================= GET MY MOODS ================= */
 
     @GetMapping
-    public List<MoodResponseDTO> getMyMoods(
+    public ResponseEntity<List<MoodResponseDTO>> getMyMoods(
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return moodService.getUserMoods(user.getUserId());
+        List<MoodResponseDTO> moods =
+                moodService.getUserMoods(user.getUserId());
+
+        return ResponseEntity.ok(moods); // 200 OK
     }
-    
-    
-    
-    
-    /* ================= WEEKLY ================= */
+
+    /* ================= WEEKLY ANALYTICS ================= */
 
     @GetMapping("/weekly")
-    public MoodAnalyticsResponseDTO weekly(
+    public ResponseEntity<MoodAnalyticsResponseDTO> weekly(
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return moodService
-                .getWeeklyAnalytics(user.getUserId());
+        MoodAnalyticsResponseDTO response =
+                moodService.getWeeklyAnalytics(user.getUserId());
+
+        return ResponseEntity.ok(response); // 200 OK
     }
 
-    /* ================= MONTHLY ================= */
+    /* ================= MONTHLY ANALYTICS ================= */
 
     @GetMapping("/monthly")
-    public MoodAnalyticsResponseDTO monthly(
+    public ResponseEntity<MoodAnalyticsResponseDTO> monthly(
             @RequestParam int year,
             @RequestParam int month,
             Authentication auth) {
@@ -87,10 +95,9 @@ public class MoodController {
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return moodService
-                .getMonthlyAnalytics(
-                        user.getUserId(), year, month);
-    }
-    
+        MoodAnalyticsResponseDTO response =
+                moodService.getMonthlyAnalytics(user.getUserId(), year, month);
 
+        return ResponseEntity.ok(response); // 200 OK
+    }
 }

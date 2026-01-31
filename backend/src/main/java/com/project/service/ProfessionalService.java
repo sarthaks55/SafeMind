@@ -38,10 +38,10 @@ public interface ProfessionalService {
     List<ProfessionalAvailabilityResponseDTO> getMyAvailability(
             Long userId);
 
-    ProfessionalAvailability updateAvailability(
-            Long professionalId,
-            Long availabilityId,
-            ProfessionalAvailabilityDTO dto);
+//    ProfessionalAvailability updateAvailability(
+//            Long professionalId,
+//            Long availabilityId,
+//            ProfessionalAvailabilityDTO dto);
 
     void deleteAvailability(
             Long professionalId,

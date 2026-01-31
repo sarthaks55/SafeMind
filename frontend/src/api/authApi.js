@@ -12,3 +12,6 @@ export const registerUserApi = async (data) => {
 export const registerProfessionalApi = async (data) => {
   return api.post("/auth/registerProfessional", data);
 };
+
+export const verifyOtp = (data) =>
+  api.post("/auth/verify-otp", data);

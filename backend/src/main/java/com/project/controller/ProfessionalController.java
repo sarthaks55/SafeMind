@@ -4,14 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.project.dto.PasswordUpdateDTO;
 import com.project.dto.ProfessionalAppointmentStatusDTO;
@@ -22,6 +15,7 @@ import com.project.entities.Professional;
 import com.project.security.CustomUserDetails;
 import com.project.service.ProfessionalService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,24 +29,24 @@ public class ProfessionalController {
 
     @PutMapping("/profile")
     public ResponseEntity<Professional> updateProfile(
-            @RequestBody ProfessionalUpdateDTO dto,
+            @RequestBody @Valid ProfessionalUpdateDTO dto,
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return ResponseEntity.ok(
-                professionalService
-                        .updateProfessionalProfile(
-                                user.getUserId(), dto));
+        Professional updated =
+                professionalService.updateProfessionalProfile(
+                        user.getUserId(), dto);
+
+        return ResponseEntity.ok(updated); // 200 OK
     }
-    
-    
+
     /* ================= PASSWORD ================= */
 
     @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(
-            @RequestBody PasswordUpdateDTO dto,
+            @RequestBody @Valid PasswordUpdateDTO dto,
             Authentication auth) {
 
         CustomUserDetails user =
@@ -61,17 +55,15 @@ public class ProfessionalController {
         professionalService.updatePassword(
                 user.getUserId(), dto);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // 204 NO CONTENT
     }
-
-    
 
     /* ================= APPOINTMENTS ================= */
 
     @PutMapping("/appointments/{id}/status")
     public ResponseEntity<Void> updateAppointmentStatus(
             @PathVariable Long id,
-            @RequestBody ProfessionalAppointmentStatusDTO dto,
+            @RequestBody @Valid ProfessionalAppointmentStatusDTO dto,
             Authentication auth) {
 
         CustomUserDetails user =
@@ -80,55 +72,54 @@ public class ProfessionalController {
         professionalService.updateAppointmentStatus(
                 user.getUserId(), id, dto);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // 204 NO CONTENT
     }
-    
-    
-    
-    
+
     /* ================= AVAILABILITY ================= */
 
     @PostMapping("/availability")
-    public ResponseEntity<ProfessionalAvailabilityResponseDTO>
-    addAvailability(
-            @RequestBody ProfessionalAvailabilityDTO dto,
+    public ResponseEntity<ProfessionalAvailabilityResponseDTO> addAvailability(
+            @RequestBody @Valid ProfessionalAvailabilityDTO dto,
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return ResponseEntity.ok(
+        ProfessionalAvailabilityResponseDTO response =
                 professionalService.addAvailability(
-                        user.getUserId(), dto));
-    }
+                        user.getUserId(), dto);
 
+        return ResponseEntity.status(201).body(response); // 201 CREATED
+    }
 
     @GetMapping("/availability")
-    public ResponseEntity<List<ProfessionalAvailabilityResponseDTO>>
-    getAvailability(Authentication auth) {
-
-        CustomUserDetails user =
-                (CustomUserDetails) auth.getPrincipal();
-
-        return ResponseEntity.ok(
-                professionalService.getMyAvailability(
-                        user.getUserId()));
-    }
-
-
-    @PutMapping("/availability/{id}")
-    public ResponseEntity<?> updateAvailability(
-            @PathVariable Long id,
-            @RequestBody ProfessionalAvailabilityDTO dto,
+    public ResponseEntity<List<ProfessionalAvailabilityResponseDTO>> getAvailability(
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return ResponseEntity.ok(
-                professionalService.updateAvailability(
-                        user.getUserId(), id, dto));
+        List<ProfessionalAvailabilityResponseDTO> response =
+                professionalService.getMyAvailability(user.getUserId());
+
+        return ResponseEntity.ok(response); // 200 OK
     }
+
+//    @PutMapping("/availability/{id}")
+//    public ResponseEntity<ProfessionalAvailabilityResponseDTO> updateAvailability(
+//            @PathVariable Long id,
+//            @RequestBody @Valid ProfessionalAvailabilityDTO dto,
+//            Authentication auth) {
+//
+//        CustomUserDetails user =
+//                (CustomUserDetails) auth.getPrincipal();
+//
+//        ProfessionalAvailabilityResponseDTO response =
+//                professionalService.updateAvailability(
+//                        user.getUserId(), id, dto);
+//
+//        return ResponseEntity.ok(response); // 200 OK
+//    }
 
     @DeleteMapping("/availability/{id}")
     public ResponseEntity<Void> deleteAvailability(
@@ -141,9 +132,6 @@ public class ProfessionalController {
         professionalService.deleteAvailability(
                 user.getUserId(), id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build(); // 204 NO CONTENT
     }
-    
-    
-    
 }

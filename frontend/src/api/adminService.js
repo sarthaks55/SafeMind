@@ -12,9 +12,9 @@ export const updateAdminPassword = (data) =>
 export const getAllUsers = () =>
   api.get("/admin/users");
 
-export const updateUserActivation = (userId, isActive) =>
+export const updateUserActivation = (userId, active) =>
   api.put(`/admin/users/${userId}/activation`, {
-    isActive,
+    active,
   });
 
 

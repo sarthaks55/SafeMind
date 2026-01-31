@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { registerProfessionalApi } from "../api/authApi";
+import { useNavigate } from "react-router-dom";
 
 const RegisterProfessional = ({ onBack }) => {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -96,6 +98,11 @@ const RegisterProfessional = ({ onBack }) => {
     } catch (err) {
       setErrors({ general: "Registration failed. Please try again." });
     }
+
+    navigate("/verify-otp", {
+      state: { userId: response.data.userId }
+    });
+
   };
 
   return (

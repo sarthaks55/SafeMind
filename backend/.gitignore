@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+*.p12
+/src/main/resources/*.p12

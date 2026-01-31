@@ -282,49 +282,49 @@ public class ProfessionalServiceImpl implements ProfessionalService {
 
     /* ================= UPDATE ================= */
 
-    @Override
-    public ProfessionalAvailability updateAvailability(
-            Long userId,
-            Long availabilityId,
-            ProfessionalAvailabilityDTO dto) {
-
-        Professional professional =
-                professionalRepo.findByUser_UserId(userId)
-                        .orElseThrow(() ->
-                                new ProfessionalNotFoundException(
-                                        "Professional not found"));
-
-        ProfessionalAvailability availability =
-                availabilityRepo.findById(availabilityId)
-                        .orElseThrow(() ->
-                                new RuntimeException(
-                                        "Availability not found"));
-
-        if (!availability.getProfessional()
-                .getProfessionalId()
-                .equals(professional.getProfessionalId())) {
-
-            throw new UnauthorizedAppointmentAccessException(
-                    "Not your availability");
-        }
-
-        if (availabilityRepo
-                .existsByProfessional_ProfessionalIdAndDayOfWeekAndStartTimeLessThanAndEndTimeGreaterThan(
-                        professional.getProfessionalId(),
-                        dto.getDayOfWeek(),
-                        dto.getEndTime(),
-                        dto.getStartTime())) {
-
-            throw new IllegalArgumentException(
-                    "Overlapping availability exists");
-        }
-
-        availability.setDayOfWeek(dto.getDayOfWeek());
-        availability.setStartTime(dto.getStartTime());
-        availability.setEndTime(dto.getEndTime());
-
-        return availability;
-    }
+//    @Override
+//    public ProfessionalAvailabilityResponseDTO updateAvailability(
+//            Long userId,
+//            Long availabilityId,
+//            ProfessionalAvailabilityDTO dto) {
+//
+//        Professional professional =
+//                professionalRepo.findByUser_UserId(userId)
+//                        .orElseThrow(() ->
+//                                new ProfessionalNotFoundException(
+//                                        "Professional not found"));
+//
+//        ProfessionalAvailability availability =
+//                availabilityRepo.findById(availabilityId)
+//                        .orElseThrow(() ->
+//                                new RuntimeException(
+//                                        "Availability not found"));
+//
+//        if (!availability.getProfessional()
+//                .getProfessionalId()
+//                .equals(professional.getProfessionalId())) {
+//
+//            throw new UnauthorizedAppointmentAccessException(
+//                    "Not your availability");
+//        }
+//
+//        if (availabilityRepo
+//                .existsByProfessional_ProfessionalIdAndDayOfWeekAndStartTimeLessThanAndEndTimeGreaterThan(
+//                        professional.getProfessionalId(),
+//                        dto.getDayOfWeek(),
+//                        dto.getEndTime(),
+//                        dto.getStartTime())) {
+//
+//            throw new IllegalArgumentException(
+//                    "Overlapping availability exists");
+//        }
+//
+//        availability.setDayOfWeek(dto.getDayOfWeek());
+//        availability.setStartTime(dto.getStartTime());
+//        availability.setEndTime(dto.getEndTime());
+//
+//        return availability;
+//    }
 
 
     /* ================= DELETE ================= */

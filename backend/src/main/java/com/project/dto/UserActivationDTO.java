@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class UserActivationDTO {
-    private boolean isActive;
+    private boolean active;
 }

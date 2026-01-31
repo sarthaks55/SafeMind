@@ -41,7 +41,8 @@ const Login = () => {
     }
     
     try {
-      const token = await loginApi({ email, password });
+      const resToken = await loginApi({ email, password });
+      const token = resToken.token;
       login(token);
 
       const payload = JSON.parse(atob(token.split(".")[1]));
@@ -51,9 +52,16 @@ const Login = () => {
         navigate("/professional");
       else navigate("/user");
 
-    } catch {
-      setErrors({ general: "Invalid credentials" });
-    }
+    } catch (err) {
+      console.log(err);
+  const msg = err.response?.data?.message;
+
+  if (msg?.includes("not verified")) {
+    alert("Please verify OTP before login");
+  } else {
+    alert("Invalid credentials");
+  }
+}
   };
 
   return (

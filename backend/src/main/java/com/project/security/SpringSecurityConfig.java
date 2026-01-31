@@ -25,9 +25,10 @@ public class SpringSecurityConfig {
 		.cors(cors -> {})
 		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		.authorizeHttpRequests(auth ->auth.requestMatchers("/api/auth/**",
-				"/ws/**",
-                "/swagger-ui/**",
-                "/v3/api-docs/**").permitAll()
+			    "/ws/**",
+			    "/swagger-ui.html",
+			    "/swagger-ui/**",
+			    "/v3/api-docs/**").permitAll()
 				.requestMatchers("/admin/**").hasRole("ADMIN")
 				.requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
 				.requestMatchers("/api/moods/**").hasAuthority("ROLE_USER")

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { registerUserApi } from "../api/authApi";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+
 
 const RegisterUser = ({ onBack }) => {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -60,11 +63,18 @@ const RegisterUser = ({ onBack }) => {
     }
     
     try {
-      await registerUserApi(form);
+      const response = await  registerUserApi(form);
       alert("User registered successfully");
+      navigate("/verify-otp", {
+      state: {
+        userId: response.data.userId
+      }
+    });
     } catch (err) {
       setErrors({ general: "Registration failed. Please try again." });
     }
+
+
   };
 
   return (

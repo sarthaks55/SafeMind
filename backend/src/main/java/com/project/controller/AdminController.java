@@ -35,114 +35,113 @@ import lombok.RequiredArgsConstructor;
 public class AdminController {
 
     private final AppointmentService appointmentService;
-
-    
-    
     private final AdminService adminService;
 
-
     // -------- Admin Self --------
+
     @PutMapping("/profile")
-    public void updateProfile(@RequestBody @Valid AdminUpdateDTO dto,Authentication auth) {
-    	CustomUserDetails user =
-                (CustomUserDetails) auth.getPrincipal();
-        adminService.updateOwnProfile(user.getUserId(), dto);
-    }
-    
-    @PutMapping("/password")
-    public ResponseEntity<Void> updatePassword(
-            @RequestBody PasswordUpdateDTO dto,
+    public ResponseEntity<Void> updateProfile(
+            @RequestBody @Valid AdminUpdateDTO dto,
             Authentication auth) {
 
-        CustomUserDetails user =
-                (CustomUserDetails) auth.getPrincipal();
+        CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+        adminService.updateOwnProfile(user.getUserId(), dto);
 
-        adminService.updatePassword(
-                user.getUserId(), dto);
+        return ResponseEntity.noContent().build(); // 204
+    }
 
-        return ResponseEntity.noContent().build();
+    @PutMapping("/password")
+    public ResponseEntity<Void> updatePassword(
+            @RequestBody @Valid PasswordUpdateDTO dto,
+            Authentication auth) {
+
+        CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+        adminService.updatePassword(user.getUserId(), dto);
+
+        return ResponseEntity.noContent().build(); // 204
     }
 
     // -------- Users --------
+
     @GetMapping("/users")
-    public List<AdminUserViewDTO> getUsers() {
-        return adminService.getAllUsers();
+    public ResponseEntity<List<AdminUserViewDTO>> getUsers() {
+        List<AdminUserViewDTO> users = adminService.getAllUsers();
+        return ResponseEntity.ok(users); // 200
     }
 
     @PutMapping("/users/{id}/activation")
-    public void updateUserStatus(
+    public ResponseEntity<Void> updateUserStatus(
             @PathVariable Long id,
-            @RequestBody UserActivationDTO dto) {
+            @RequestBody @Valid UserActivationDTO dto) {
+
         adminService.updateUserActivation(id, dto.isActive());
+        return ResponseEntity.noContent().build(); // 204
     }
 
     // -------- Professionals --------
+
     @GetMapping("/professionals")
-    public List<AdminProfessionalViewDTO> getProfessionals() {
-        return adminService.getAllProfessionals();
+    public ResponseEntity<List<AdminProfessionalViewDTO>> getProfessionals() {
+        List<AdminProfessionalViewDTO> professionals = adminService.getAllProfessionals();
+        return ResponseEntity.ok(professionals); // 200
     }
 
     @PutMapping("/professionals/{userId}/verification")
-    public void updateVerification(
+    public ResponseEntity<Void> updateVerification(
             @PathVariable Long userId,
-            @RequestBody ProfessionalVerificationDTO dto) {
+            @RequestBody @Valid ProfessionalVerificationDTO dto) {
+
         adminService.updateProfessionalVerification(userId, dto.isVerified());
+        return ResponseEntity.noContent().build(); // 204
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     /* ================= ALL ================= */
 
     @GetMapping("/appointments")
-    public List<AppointmentResponseDTO> getAll() {
-        return appointmentService.getAllAppointments();
+    public ResponseEntity<List<AppointmentResponseDTO>> getAll() {
+        List<AppointmentResponseDTO> appointments = appointmentService.getAllAppointments();
+        return ResponseEntity.ok(appointments); // 200
     }
 
     /* ================= FILTERS ================= */
 
     @GetMapping("/appointments/status/{status}")
-    public List<AppointmentResponseDTO> byStatus(
+    public ResponseEntity<List<AppointmentResponseDTO>> byStatus(
             @PathVariable AppointmentStatus status) {
 
-        return appointmentService.getAppointmentsByStatus(status);
+        List<AppointmentResponseDTO> appointments = appointmentService.getAppointmentsByStatus(status);
+        return ResponseEntity.ok(appointments); // 200
     }
 
     @GetMapping("/appointments/user/{userId}")
-    public List<AppointmentResponseDTO> byUser(
+    public ResponseEntity<List<AppointmentResponseDTO>> byUser(
             @PathVariable Long userId) {
 
-        return appointmentService.getAppointmentsByUser(userId);
+        List<AppointmentResponseDTO> appointments = appointmentService.getAppointmentsByUser(userId);
+        return ResponseEntity.ok(appointments); // 200
     }
 
     @GetMapping("/appointments/professional/{professionalId}")
-    public List<AppointmentResponseDTO> byProfessional(
+    public ResponseEntity<List<AppointmentResponseDTO>> byProfessional(
             @PathVariable Long professionalId) {
 
-        return appointmentService
-                .getAppointmentsByProfessional(professionalId);
+        List<AppointmentResponseDTO> appointments =
+                appointmentService.getAppointmentsByProfessional(professionalId);
+
+        return ResponseEntity.ok(appointments); // 200
     }
 
     @GetMapping("/appointments/between")
-    public List<AppointmentResponseDTO> betweenDates(
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    public ResponseEntity<List<AppointmentResponseDTO>> betweenDates(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime start,
 
-            @RequestParam
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
             LocalDateTime end) {
 
-        return appointmentService
-                .getAppointmentsBetweenDates(start, end);
+        List<AppointmentResponseDTO> appointments =
+                appointmentService.getAppointmentsBetweenDates(start, end);
+
+        return ResponseEntity.ok(appointments); // 200
     }
 }

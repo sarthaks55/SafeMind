@@ -137,7 +137,7 @@ const Sidebar = () => {
           onMouseOver={(e) => e.target.style.backgroundColor = "#B39DDB"}
           onMouseOut={(e) => e.target.style.backgroundColor = "transparent"}
         >
-          <i className="fas fa-book me-3" style={{ color: "#8E6EC8" }}></i>
+          <i className="fas fa-book me-3" style={{ color: "#F6C453" }}></i>
           Diary
         </NavLink>
 

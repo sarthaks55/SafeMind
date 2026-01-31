@@ -6,10 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import com.project.dto.*;
+import com.project.dto.AppointmentRequestDTO;
+import com.project.dto.AppointmentResponseDTO;
+import com.project.dto.AppointmentStatusUpdateDTO;
 import com.project.security.CustomUserDetails;
 import com.project.service.AppointmentService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -23,15 +26,17 @@ public class AppointmentController {
 
     @PostMapping
     public ResponseEntity<AppointmentResponseDTO> book(
-            @RequestBody AppointmentRequestDTO dto,
+            @RequestBody @Valid AppointmentRequestDTO dto,
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return ResponseEntity.ok(
+        AppointmentResponseDTO response =
                 appointmentService.bookAppointment(
-                        dto, user.getUserId()));
+                        dto, user.getUserId());
+
+        return ResponseEntity.status(201).body(response); // 201 CREATED
     }
 
     @PutMapping("/{id}")
@@ -43,42 +48,53 @@ public class AppointmentController {
                 (CustomUserDetails) auth.getPrincipal();
 
         appointmentService.cancelAppointment(id, user.getUserId());
-        return ResponseEntity.noContent().build();
+
+        return ResponseEntity.noContent().build(); // 204
     }
 
     @GetMapping("/user")
-    public List<AppointmentResponseDTO> userAppointments(
+    public ResponseEntity<List<AppointmentResponseDTO>> userAppointments(
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return appointmentService.getUserAppointments(user.getUserId());
+        List<AppointmentResponseDTO> appointments =
+                appointmentService.getUserAppointments(user.getUserId());
+
+        return ResponseEntity.ok(appointments); // 200
     }
 
     /* ================= PROFESSIONAL ================= */
 
     @GetMapping("/professional")
-    public List<AppointmentResponseDTO> professionalAppointments(
+    public ResponseEntity<List<AppointmentResponseDTO>> professionalAppointments(
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return appointmentService
-                .getProfessionalAppointments(user.getUserId());
+        List<AppointmentResponseDTO> appointments =
+                appointmentService
+                        .getProfessionalAppointments(user.getUserId());
+
+        return ResponseEntity.ok(appointments); // 200
     }
 
     @PutMapping("/{id}/status")
-    public AppointmentResponseDTO updateStatus(
+    public ResponseEntity<AppointmentResponseDTO> updateStatus(
             @PathVariable Long id,
-            @RequestBody AppointmentStatusUpdateDTO dto,
+            @RequestBody @Valid AppointmentStatusUpdateDTO dto,
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        return appointmentService
-                .updateAppointmentStatus(id, dto, user.getUserId());
+        AppointmentResponseDTO updated =
+                appointmentService
+                        .updateAppointmentStatus(
+                                id, dto, user.getUserId());
+
+        return ResponseEntity.ok(updated); // 200
     }
 }

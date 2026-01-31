@@ -32,6 +32,9 @@ import AssessmentDetail from "../pages/assessments/AssessmentDetail";
 import AssessmentResult from "../pages/assessments/AssessmentResult";
 import Unauthorized from "../pages/Unauthorized";
 import VideoSession from "../pages/VideoSession";
+import VerifyOtp from "../auth/VerifyOtp";
+
+
 
 const AppRoutes = () => {
   return (
@@ -43,6 +46,7 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/register-user" element={<RegisterUser />} />
+      <Route path="/verify-otp" element={<VerifyOtp />} />
       <Route path="/register-professional" element={<RegisterProfessional />} />
       <Route path="/assessments" element={<AssessmentList />} />
       <Route path="/assessments/:id" element={<AssessmentDetail />} />
