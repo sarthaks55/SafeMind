@@ -33,3 +33,5 @@ build/
 .vscode/
 *.p12
 /src/main/resources/*.p12
+
+.env
