@@ -1,13 +1,21 @@
 import api from "./axios";
 
-export const createDiary = (data) =>
-  api.post("/diary", data);
+export const createDiary = async (data) => {
+  const res = await api.post("/diary", data);
+  return res.data;
+};
 
-export const updateDiary = (id, data) =>
-  api.put(`/diary/${id}`, data);
+export const updateDiary = async (id, data) => {
+  const res = await api.put(`/diary/${id}`, data);
+  return res.data;
+};
 
-export const deleteDiary = (id) =>
-  api.delete(`/diary/${id}`);
+export const deleteDiary = async (id) => {
+  const res = await api.delete(`/diary/${id}`);
+  return res.data;
+};
 
-export const getAllDiaries = () =>
-  api.get("/diary");
+export const getAllDiaries = async () => {
+  const res = await api.get("/diary");
+  return res.data;
+};

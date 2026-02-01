@@ -1,16 +1,17 @@
 package com.project.exception;
 
-import java.time.LocalDateTime;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 404 Not Found
+    /* ===================== 404 NOT FOUND ===================== */
+
     @ExceptionHandler({
             AdminNotFoundException.class,
             AppointmentNotFoundException.class,
@@ -23,11 +24,12 @@ public class GlobalExceptionHandler {
             SpecializationNotFoundException.class,
             UserNotFoundException.class
     })
-    public ResponseEntity<ApiError> handleNotFound(RuntimeException ex) {
-        return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    public ResponseEntity<ApiResponse<Object>> handleNotFound(RuntimeException ex) {
+        return buildError(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    // 400 Bad Request
+    /* ===================== 400 BAD REQUEST ===================== */
+
     @ExceptionHandler({
             DuplicateEmailException.class,
             EmailAlreadyExistsException.class,
@@ -38,44 +40,39 @@ public class GlobalExceptionHandler {
             MoodAlreadyExistsException.class,
             SlotAlreadyBookedException.class
     })
-    public ResponseEntity<ApiError> handleBadRequest(RuntimeException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    public ResponseEntity<ApiResponse<Object>> handleBadRequest(RuntimeException ex) {
+        return buildError(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    // 403 Forbidden
+    /* ===================== 403 FORBIDDEN ===================== */
+
     @ExceptionHandler({
             UnauthorizedAppointmentAccessException.class,
-            UnauthorizedDiaryAccessException.class
+            UnauthorizedDiaryAccessException.class,
+            DisabledException.class
     })
-    public ResponseEntity<ApiError> handleForbidden(RuntimeException ex) {
-        return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    public ResponseEntity<ApiResponse<Object>> handleForbidden(RuntimeException ex) {
+        return buildError(HttpStatus.FORBIDDEN, ex.getMessage());
     }
 
-    // 500 Internal Server Error
+    /* ===================== 500 INTERNAL SERVER ERROR ===================== */
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleAllUnhandled(Exception ex) {
-        return buildResponse(
+    public ResponseEntity<ApiResponse<Object>> handleUnhandled(Exception ex) {
+        return buildError(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "An unexpected error occurred"
         );
     }
-    
-    @ExceptionHandler(DisabledException.class)
-    public ResponseEntity<String> handleDisabledUser() {
-        return ResponseEntity
-                .status(HttpStatus.FORBIDDEN)
-                .body("Account not verified. Please verify OTP.");
-    }
 
-    private ResponseEntity<ApiError> buildResponse(
+    /* ===================== COMMON BUILDER ===================== */
+
+    private ResponseEntity<ApiResponse<Object>> buildError(
             HttpStatus status, String message) {
 
-        ApiError error = new ApiError(
-                status.value(),
-                message,
-                LocalDateTime.now()
-        );
+        ApiResponse<Object> response =
+                new ApiResponse<>(false, message, null);
 
-        return ResponseEntity.status(status).body(error);
+        return ResponseEntity.status(status).body(response);
     }
 }

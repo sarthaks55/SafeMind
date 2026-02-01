@@ -14,10 +14,14 @@ const Professionals = () => {
 
   const fetchProfessionals = async () => {
     try {
-      const res = await getAllProfessionals();
-      setProfessionals(res.data);
-    } catch {
-      alert("Failed to load professionals");
+      const response = await getAllProfessionals();
+      if (response.success) {
+        setProfessionals(response.data);
+      } else {
+        alert(response.message || "Failed to load professionals");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to load professionals");
     } finally {
       setLoading(false);
     }
@@ -29,14 +33,18 @@ const Professionals = () => {
 
   const toggleVerification = async (userId, currentStatus) => {
     try {
-      await updateProfessionalVerification(userId, !currentStatus);
-      setProfessionals((prev) =>
-        prev.map((p) =>
-          p.userId === userId ? { ...p, verified: !currentStatus } : p,
-        ),
-      );
-    } catch {
-      alert("Failed to update verification");
+      const response = await updateProfessionalVerification(userId, !currentStatus);
+      if (response.success) {
+        setProfessionals((prev) =>
+          prev.map((p) =>
+            p.userId === userId ? { ...p, verified: !currentStatus } : p,
+          ),
+        );
+      } else {
+        alert(response.message || "Failed to update verification");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to update verification");
     }
   };
 

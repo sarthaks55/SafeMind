@@ -1,16 +1,26 @@
 import api from "./axios";
 
-export const addMood = (data) =>
-  api.post("/moods", data);
+export const addMood = async (data) => {
+  const res = await api.post("/moods", data);
+  return res.data;
+};
 
-export const updateMood = (data) =>
-  api.put("/moods", data);
+export const updateMood = async (data) => {
+  const res = await api.put("/moods", data);
+  return res.data;
+};
 
-export const getMyMoods = () =>
-  api.get("/moods");
+export const getMyMoods = async () => {
+  const res = await api.get("/moods");
+  return res.data;
+};
 
-export const getWeeklyAnalytics = () =>
-  api.get("/moods/weekly");
+export const getWeeklyAnalytics = async () => {
+  const res = await api.get("/moods/weekly");
+  return res.data;
+};
 
-export const getMonthlyAnalytics = (year, month) =>
-  api.get(`/moods/monthly?year=${year}&month=${month}`);
+export const getMonthlyAnalytics = async (year, month) => {
+  const res = await api.get(`/moods/monthly?year=${year}&month=${month}`);
+  return res.data;
+};

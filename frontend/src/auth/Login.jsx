@@ -2,11 +2,15 @@ import { useState } from "react";
 import { loginApi } from "../api/authApi";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import ErrorMessage from "../components/ErrorMessage";
+import SuccessMessage from "../components/SuccessMessage";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -41,27 +45,32 @@ const Login = () => {
     }
     
     try {
-      const resToken = await loginApi({ email, password });
-      const token = resToken.token;
-      login(token);
+      setErrorMessage("");
+      const response = await loginApi({ email, password });
+      if (response.success) {
+        setSuccessMessage(response.message || "Login successful");
+        const token = response.data.token;
+        login(token);
 
-      const payload = JSON.parse(atob(token.split(".")[1]));
+        const payload = JSON.parse(atob(token.split(".")[1]));
 
-      if (payload.role === "ROLE_ADMIN") navigate("/admin");
-      else if (payload.role === "ROLE_PROFESSIONAL")
-        navigate("/professional");
-      else navigate("/user");
-
+        if (payload.role === "ROLE_ADMIN") navigate("/admin");
+        else if (payload.role === "ROLE_PROFESSIONAL")
+          navigate("/professional");
+        else navigate("/user");
+      } else {
+        setErrorMessage(response.message || "Login failed");
+      }
     } catch (err) {
       console.log(err);
-  const msg = err.response?.data?.message;
+      const msg = err.response?.data?.message;
 
-  if (msg?.includes("not verified")) {
-    alert("Please verify OTP before login");
-  } else {
-    alert("Invalid credentials");
-  }
-}
+      if (msg?.includes("not verified")) {
+        setErrorMessage("Please verify OTP before login");
+      } else {
+        setErrorMessage(msg || "Invalid credentials");
+      }
+    }
   };
 
   return (
@@ -88,6 +97,9 @@ const Login = () => {
                 </div>
                 
                 <div className="p-4" style={{ backgroundColor: "#FFFFFF" }}>
+                  <ErrorMessage error={errorMessage} onClose={() => setErrorMessage("")} />
+                  <SuccessMessage message={successMessage} onClose={() => setSuccessMessage("")} />
+                  
                   <form onSubmit={submit}>
                     {errors.general && (
                       <div className="alert alert-danger" style={{ backgroundColor: "#D9899A", color: "white", border: "none" }}>

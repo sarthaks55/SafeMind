@@ -2,9 +2,9 @@ package com.project.service;
 
 import java.util.List;
 
-import com.project.dto.MoodAnalyticsResponseDTO;
-import com.project.dto.MoodRequestDTO;
-import com.project.dto.MoodResponseDTO;
+import com.project.dto.mood.request.MoodRequestDTO;
+import com.project.dto.mood.response.MoodAnalyticsResponseDTO;
+import com.project.dto.mood.response.MoodResponseDTO;
 
 public interface MoodService {
 

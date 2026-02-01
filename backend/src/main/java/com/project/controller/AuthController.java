@@ -1,6 +1,6 @@
 package com.project.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,14 +10,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.dto.LoginDTO;
-import com.project.dto.OtpVerifyDTO;
-import com.project.dto.RegisterDTO;
-import com.project.dto.RegisterProfessionalDTO;
-import com.project.dto.RegisterResponseDTO;
-import com.project.dto.LoginResponseDTO;
+import com.project.dto.auth.request.LoginDTO;
+import com.project.dto.auth.request.OtpVerifyDTO;
+import com.project.dto.auth.request.RegisterDTO;
+import com.project.dto.auth.request.RegisterProfessionalDTO;
+import com.project.dto.auth.response.LoginResponseDTO;
+import com.project.dto.auth.response.RegisterResponseDTO;
 import com.project.entities.Professional;
 import com.project.entities.User;
+import com.project.exception.ApiResponse;
+import com.project.exception.ResponseBuilder;
 import com.project.security.CustomUserDetails;
 import com.project.security.JWTService;
 import com.project.service.OtpService;
@@ -31,51 +33,57 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController {
 
-	@Autowired
     private final UserService userService;
-	@Autowired
-	private final AuthenticationManager authenticationManager;
-	@Autowired
-	private final OtpService otpService;
-	@Autowired
-	private final JWTService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final OtpService otpService;
+    private final JWTService jwtService;
 
     /* ================= REGISTER USER ================= */
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponseDTO> register(
+    public ResponseEntity<ApiResponse<RegisterResponseDTO>> register(
             @RequestBody @Valid RegisterDTO registerDTO) {
 
         User user = userService.registerUser(registerDTO);
 
-        return ResponseEntity.status(201).body(
+        RegisterResponseDTO response =
                 new RegisterResponseDTO(
                         user.getUserId(),
                         "User registered successfully. Please verify OTP."
-                )
+                );
+
+        return ResponseBuilder.success(
+                "User registered successfully",
+                response,
+                HttpStatus.CREATED
         );
     }
 
     /* ================= REGISTER PROFESSIONAL ================= */
 
     @PostMapping("/register-professional")
-    public ResponseEntity<RegisterResponseDTO> registerProfessional(
+    public ResponseEntity<ApiResponse<RegisterResponseDTO>> registerProfessional(
             @RequestBody @Valid RegisterProfessionalDTO dto) {
 
         Professional professional = userService.registerProfessional(dto);
 
-        return ResponseEntity.status(201).body(
+        RegisterResponseDTO response =
                 new RegisterResponseDTO(
                         professional.getUser().getUserId(),
                         "Professional registered successfully. Please verify OTP."
-                )
+                );
+
+        return ResponseBuilder.success(
+                "Professional registered successfully",
+                response,
+                HttpStatus.CREATED
         );
     }
 
     /* ================= LOGIN ================= */
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(
+    public ResponseEntity<ApiResponse<LoginResponseDTO>> login(
             @RequestBody @Valid LoginDTO dto) {
 
         Authentication authentication =
@@ -91,21 +99,25 @@ public class AuthController {
 
         String token = jwtService.generateToken(userDetails);
 
-        return ResponseEntity.ok(
-                new LoginResponseDTO(
-                        token
-                )
+        return ResponseBuilder.success(
+                "Login successful",
+                new LoginResponseDTO(token),
+                HttpStatus.OK
         );
     }
 
     /* ================= VERIFY OTP ================= */
 
     @PostMapping("/verify-otp")
-    public ResponseEntity<Void> verifyOtp(
+    public ResponseEntity<ApiResponse<Object>> verifyOtp(
             @RequestBody @Valid OtpVerifyDTO dto) {
 
         otpService.verifyOtp(dto.getUserId(), dto.getOtp());
 
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseBuilder.success(
+                "OTP verified successfully",
+                null,
+                HttpStatus.NO_CONTENT
+        );
     }
 }

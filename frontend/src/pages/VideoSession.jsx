@@ -65,7 +65,12 @@ const VideoSession = () => {
       // Join video session
       console.log('Joining video session for appointment:', appointmentId);
       const response = await joinVideoSession(appointmentId);
-      console.log('Video session API response:', response.data);
+      
+      if (!response.success) {
+        setError(response.message || 'Failed to join video session');
+        setIsLoading(false);
+        return;
+      }
       
       let { roomToken, wsUrl, allowedFrom, allowedUntil } = response.data;
       

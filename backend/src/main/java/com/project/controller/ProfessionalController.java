@@ -2,18 +2,30 @@ package com.project.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.project.dto.PasswordUpdateDTO;
-import com.project.dto.ProfessionalAppointmentStatusDTO;
-import com.project.dto.ProfessionalAvailabilityDTO;
-import com.project.dto.ProfessionalAvailabilityResponseDTO;
-import com.project.dto.ProfessionalUpdateDTO;
+import com.project.dto.appointment.request.ProfessionalAppointmentStatusDTO;
+import com.project.dto.professional.request.ProfessionalAvailabilityDTO;
+import com.project.dto.professional.request.ProfessionalUpdateDTO;
+import com.project.dto.professional.response.ProfessionalAvailabilityResponseDTO;
+import com.project.dto.user.request.PasswordUpdateDTO;
 import com.project.entities.Professional;
+import com.project.exception.ApiResponse;
+import com.project.exception.ResponseBuilder;
 import com.project.security.CustomUserDetails;
 import com.project.service.ProfessionalService;
+import com.project.service.UserService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +36,12 @@ import lombok.RequiredArgsConstructor;
 public class ProfessionalController {
 
     private final ProfessionalService professionalService;
+    private final UserService userService;
 
     /* ================= PROFILE ================= */
 
     @PutMapping("/profile")
-    public ResponseEntity<Professional> updateProfile(
+    public ResponseEntity<ApiResponse<Professional>> updateProfile(
             @RequestBody @Valid ProfessionalUpdateDTO dto,
             Authentication auth) {
 
@@ -39,13 +52,40 @@ public class ProfessionalController {
                 professionalService.updateProfessionalProfile(
                         user.getUserId(), dto);
 
-        return ResponseEntity.ok(updated); // 200 OK
+        return ResponseBuilder.success(
+                "Profile updated successfully",
+                updated,
+                HttpStatus.OK
+        );
     }
+    
+    /* ================= PROFILE (GET) ================= */
+
+    @GetMapping("/profile")
+    public ResponseEntity<ApiResponse<ProfessionalUpdateDTO>> getProfile(@RequestAttribute Long professionalId,
+            Authentication auth) {
+
+        CustomUserDetails user =
+                (CustomUserDetails) auth.getPrincipal();
+        
+        
+
+        ProfessionalUpdateDTO profile =
+                professionalService.getProfessionalProfile(
+                        user.getUserId(),professionalId);
+
+        return ResponseBuilder.success(
+                "Profile fetched successfully",
+                profile,
+                HttpStatus.OK
+        );
+    }
+
 
     /* ================= PASSWORD ================= */
 
     @PutMapping("/password")
-    public ResponseEntity<Void> updatePassword(
+    public ResponseEntity<ApiResponse<Object>> updatePassword(
             @RequestBody @Valid PasswordUpdateDTO dto,
             Authentication auth) {
 
@@ -55,13 +95,17 @@ public class ProfessionalController {
         professionalService.updatePassword(
                 user.getUserId(), dto);
 
-        return ResponseEntity.noContent().build(); // 204 NO CONTENT
+        return ResponseBuilder.success(
+                "Password updated successfully",
+                null,
+                HttpStatus.NO_CONTENT
+        );
     }
 
     /* ================= APPOINTMENTS ================= */
 
     @PutMapping("/appointments/{id}/status")
-    public ResponseEntity<Void> updateAppointmentStatus(
+    public ResponseEntity<ApiResponse<Object>> updateAppointmentStatus(
             @PathVariable Long id,
             @RequestBody @Valid ProfessionalAppointmentStatusDTO dto,
             Authentication auth) {
@@ -72,13 +116,17 @@ public class ProfessionalController {
         professionalService.updateAppointmentStatus(
                 user.getUserId(), id, dto);
 
-        return ResponseEntity.noContent().build(); // 204 NO CONTENT
+        return ResponseBuilder.success(
+                "Appointment status updated successfully",
+                null,
+                HttpStatus.NO_CONTENT
+        );
     }
 
     /* ================= AVAILABILITY ================= */
 
     @PostMapping("/availability")
-    public ResponseEntity<ProfessionalAvailabilityResponseDTO> addAvailability(
+    public ResponseEntity<ApiResponse<ProfessionalAvailabilityResponseDTO>> addAvailability(
             @RequestBody @Valid ProfessionalAvailabilityDTO dto,
             Authentication auth) {
 
@@ -89,40 +137,33 @@ public class ProfessionalController {
                 professionalService.addAvailability(
                         user.getUserId(), dto);
 
-        return ResponseEntity.status(201).body(response); // 201 CREATED
+        return ResponseBuilder.success(
+                "Availability added successfully",
+                response,
+                HttpStatus.CREATED
+        );
     }
 
     @GetMapping("/availability")
-    public ResponseEntity<List<ProfessionalAvailabilityResponseDTO>> getAvailability(
+    public ResponseEntity<ApiResponse<List<ProfessionalAvailabilityResponseDTO>>> getAvailability(
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
         List<ProfessionalAvailabilityResponseDTO> response =
-                professionalService.getMyAvailability(user.getUserId());
+                professionalService.getMyAvailability(
+                        user.getUserId());
 
-        return ResponseEntity.ok(response); // 200 OK
+        return ResponseBuilder.success(
+                "Availability fetched successfully",
+                response,
+                HttpStatus.OK
+        );
     }
 
-//    @PutMapping("/availability/{id}")
-//    public ResponseEntity<ProfessionalAvailabilityResponseDTO> updateAvailability(
-//            @PathVariable Long id,
-//            @RequestBody @Valid ProfessionalAvailabilityDTO dto,
-//            Authentication auth) {
-//
-//        CustomUserDetails user =
-//                (CustomUserDetails) auth.getPrincipal();
-//
-//        ProfessionalAvailabilityResponseDTO response =
-//                professionalService.updateAvailability(
-//                        user.getUserId(), id, dto);
-//
-//        return ResponseEntity.ok(response); // 200 OK
-//    }
-
     @DeleteMapping("/availability/{id}")
-    public ResponseEntity<Void> deleteAvailability(
+    public ResponseEntity<ApiResponse<Object>> deleteAvailability(
             @PathVariable Long id,
             Authentication auth) {
 
@@ -132,6 +173,10 @@ public class ProfessionalController {
         professionalService.deleteAvailability(
                 user.getUserId(), id);
 
-        return ResponseEntity.noContent().build(); // 204 NO CONTENT
+        return ResponseBuilder.success(
+                "Availability deleted successfully",
+                null,
+                HttpStatus.NO_CONTENT
+        );
     }
 }

@@ -6,12 +6,16 @@ export const loginApi = async (data) => {
 };
 
 export const registerUserApi = async (data) => {
-  return api.post("/auth/register", data);
+  const res = await api.post("/auth/register", data);
+  return res.data;
 };
 
 export const registerProfessionalApi = async (data) => {
-  return api.post("/auth/registerProfessional", data);
+  const res = await api.post("/auth/registerProfessional", data);
+  return res.data;
 };
 
-export const verifyOtp = (data) =>
-  api.post("/auth/verify-otp", data);
+export const verifyOtp = async (data) => {
+  const res = await api.post("/auth/verify-otp", data);
+  return res.data;
+};

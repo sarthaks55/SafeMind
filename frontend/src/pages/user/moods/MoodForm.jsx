@@ -8,11 +8,23 @@ const MoodForm = () => {
   const submit = async (e) => {
     e.preventDefault();
     try {
-      await addMood({ mood, notes });
-      alert("Mood added");
-    } catch {
-      await updateMood({ mood, notes });
-      alert("Mood updated");
+      const response = await addMood({ mood, notes });
+      if (response.success) {
+        alert(response.message || "Mood added");
+      } else {
+        alert(response.message || "Failed to add mood");
+      }
+    } catch (err) {
+      try {
+        const response = await updateMood({ mood, notes });
+        if (response.success) {
+          alert(response.message || "Mood updated");
+        } else {
+          alert(response.message || "Failed to update mood");
+        }
+      } catch (updateErr) {
+        alert(updateErr.response?.data?.message || "Failed to save mood");
+      }
     }
   };
 

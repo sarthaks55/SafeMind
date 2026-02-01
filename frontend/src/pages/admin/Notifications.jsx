@@ -8,18 +8,33 @@ const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
 
   const loadNotifications = async () => {
-    const res = await getNotifications();
-    setNotifications(res.data);
+    try {
+      const response = await getNotifications();
+      if (response.success) {
+        setNotifications(response.data);
+      } else {
+        console.error(response.message);
+      }
+    } catch (err) {
+      console.error("Failed to load notifications:", err);
+    }
   };
 
   const handleRead = async (id) => {
-  await markAsRead(id);
-
-  // Remove notification from UI instantly
-  setNotifications((prev) =>
-    prev.filter((n) => n.notificationId !== id)
-  );
-};
+    try {
+      const response = await markAsRead(id);
+      if (response.success) {
+        // Remove notification from UI instantly
+        setNotifications((prev) =>
+          prev.filter((n) => n.notificationId !== id)
+        );
+      } else {
+        alert(response.message || "Failed to mark as read");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to mark as read");
+    }
+  };
 
   useEffect(() => {
     loadNotifications();

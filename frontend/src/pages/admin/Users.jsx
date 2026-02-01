@@ -11,10 +11,14 @@ const Users = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await getAllUsers();
-      setUsers(res.data);
+      const response = await getAllUsers();
+      if (response.success) {
+        setUsers(response.data);
+      } else {
+        alert(response.message || "Failed to load users");
+      }
     } catch (err) {
-      alert("Failed to load users");
+      alert(err.response?.data?.message || "Failed to load users");
     } finally {
       setLoading(false);
     }
@@ -26,14 +30,18 @@ const Users = () => {
 
   const toggleActivation = async (userId, currentStatus) => {
     try {
-      await updateUserActivation(userId, !currentStatus);
-      setUsers((prev) =>
-        prev.map((u) =>
-          u.userId === userId ? { ...u, active: !currentStatus } : u,
-        ),
-      );
-    } catch {
-      alert("Failed to update user status");
+      const response = await updateUserActivation(userId, !currentStatus);
+      if (response.success) {
+        setUsers((prev) =>
+          prev.map((u) =>
+            u.userId === userId ? { ...u, active: !currentStatus } : u,
+          ),
+        );
+      } else {
+        alert(response.message || "Failed to update user status");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to update user status");
     }
   };
 

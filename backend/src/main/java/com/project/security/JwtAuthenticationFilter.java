@@ -1,7 +1,9 @@
 package com.project.security;
 
+
 import java.io.IOException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +11,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,23 +21,24 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JWTService JWTService;
+    private final JWTService jwtService;
     private final CustomUserDetailsService userDetailsService;
 
     public JwtAuthenticationFilter(
-            JWTService JWTService,
+            JWTService jwtService,
             CustomUserDetailsService userDetailsService) {
-        this.JWTService = JWTService;
+
+        this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
-    
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
         return path.startsWith("/v3/api-docs")
             || path.startsWith("/swagger-ui")
             || path.startsWith("/swagger-ui.html")
-            || path.startsWith("/api/auth"); // optional, but recommended
+            || path.startsWith("/api/auth");
     }
 
     @Override
@@ -41,11 +46,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain)
-            throws ServletException, IOException {
+            throws ServletException, IOException, IOException {
 
         String authHeader = request.getHeader("Authorization");
 
-        // No JWT present
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -54,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         try {
-            String email = JWTService.extractEmail(token);
+            String email = jwtService.extractEmail(token);
 
             if (email != null &&
                 SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -62,30 +66,40 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UserDetails userDetails =
                         userDetailsService.loadUserByUsername(email);
 
-                if (JWTService.isTokenValid(token, userDetails.getUsername())) {
+                if (jwtService.isTokenValid(token, userDetails.getUsername())) {
 
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(
                                     userDetails,
                                     null,
-                                    userDetails.getAuthorities()
-                            );
+                                    userDetails.getAuthorities());
 
                     authentication.setDetails(
                             new WebAuthenticationDetailsSource()
-                                    .buildDetails(request)
-                    );
+                                    .buildDetails(request));
 
                     SecurityContextHolder.getContext()
                             .setAuthentication(authentication);
                 }
             }
-        } catch (Exception ex) {
-            // If token is invalid or malformed, ignore and continue.
-            // Do NOT throw exception, otherwise every request fails.
-        	ex.printStackTrace();
-        }
 
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+
+        } catch (ExpiredJwtException ex) {
+            sendJwtError(response, "JWT expired. Please login again.");
+        } catch (JwtException | IllegalArgumentException ex) {
+            sendJwtError(response, "Invalid JWT token.");
+        }
+    }
+
+    private void sendJwtError(HttpServletResponse response, String message)
+            throws IOException {
+
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType("application/json");
+
+        response.getWriter().write(
+            "{\"success\":false,\"message\":\"" + message + "\",\"data\":null}"
+        );
     }
 }

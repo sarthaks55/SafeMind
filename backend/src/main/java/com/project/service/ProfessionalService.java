@@ -2,13 +2,12 @@ package com.project.service;
 
 import java.util.List;
 
-import com.project.dto.PasswordUpdateDTO;
-import com.project.dto.ProfessionalAppointmentStatusDTO;
-import com.project.dto.ProfessionalAvailabilityDTO;
-import com.project.dto.ProfessionalAvailabilityResponseDTO;
-import com.project.dto.ProfessionalUpdateDTO;
+import com.project.dto.appointment.request.ProfessionalAppointmentStatusDTO;
+import com.project.dto.professional.request.ProfessionalAvailabilityDTO;
+import com.project.dto.professional.request.ProfessionalUpdateDTO;
+import com.project.dto.professional.response.ProfessionalAvailabilityResponseDTO;
+import com.project.dto.user.request.PasswordUpdateDTO;
 import com.project.entities.Professional;
-import com.project.entities.ProfessionalAvailability;
 
 public interface ProfessionalService {
 
@@ -46,5 +45,8 @@ public interface ProfessionalService {
     void deleteAvailability(
             Long professionalId,
             Long availabilityId);
+
+
+	ProfessionalUpdateDTO getProfessionalProfile(Long userId, Long professionalId);
 
 }

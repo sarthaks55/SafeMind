@@ -1,7 +1,16 @@
 import api from "./axios";
 
-export const updateProfile = (data) =>
-  api.put("/user/profile", data);
+export const getProfile = async () => {
+  const res = await api.get("/user/profile");
+  return res.data;
+};
 
-export const changePassword = (data) =>
-  api.put("/user/password", data);
+export const updateProfile = async (data) => {
+  const res = await api.put("/user/profile", data);
+  return res.data;
+};
+
+export const changePassword = async (data) => {
+  const res = await api.put("/user/password", data);
+  return res.data;
+};

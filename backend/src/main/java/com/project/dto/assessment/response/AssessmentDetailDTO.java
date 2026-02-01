@@ -1,0 +1,14 @@
+package com.project.dto.assessment.response;
+
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class AssessmentDetailDTO {
+    private Long assessmentId;
+    private String title;
+    private String description;
+    private List<AssessmentQuestionDTO> questions;
+}
+

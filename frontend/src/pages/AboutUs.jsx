@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaHeart, FaBalanceScale, FaHandHoldingHeart, FaUsers } from 'react-icons/fa';
+import PublicNavbar from '../components/PublicNavbar';
 import './Home.css';
 
 const AboutUs = () => {
@@ -8,33 +9,10 @@ const AboutUs = () => {
 
     return (
         <>
-            {/* Navbar */}
-            <nav className="navbar navbar-expand-lg safemind-navbar fixed-top">
-                <div className="container">
-                    <Link to="/" className="navbar-brand safemind-brand">
-                        SafeMind
-                    </Link>
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="navbarNav">
-                        <div className="navbar-nav ms-auto align-items-center">
-                            <Link to="/" className="nav-link safemind-nav-link">Home</Link>
-                            <Link to="/about" className="nav-link safemind-nav-link active">About Us</Link>
-                            <Link to="/services" className="nav-link safemind-nav-link">Services</Link>
-                            <Link to="/login" className="btn btn-outline-custom ms-3">
-                                Login
-                            </Link>
-                            <Link to="/register-user" className="btn btn-primary-custom text-white">
-                                Get Started
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            <PublicNavbar />
 
             {/* Hero Section */}
-            <section className="hero-section" style={{ minHeight: '60vh', paddingBottom: '4rem' }}>
+            <section className="hero-section" style={{ minHeight: '60vh', paddingBottom: '4rem', paddingTop: '100px' }}>
                 <div className="container text-center">
                     <div className="row justify-content-center">
                         <div className="col-lg-8">

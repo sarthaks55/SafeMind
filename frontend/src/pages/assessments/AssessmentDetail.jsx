@@ -3,22 +3,64 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getAssessmentById, submitAssessment } from "../../api/assessmentService";
 import ProgressBar from "../../components/assessments/ProgressBar";
 import QuestionCard from "../../components/assessments/QuestionCard";
+import PublicNavbar from "../../components/PublicNavbar";
 
 const AssessmentDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [assessment, setAssessment] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
   useEffect(() => {
-    getAssessmentById(id).then(res => setAssessment(res.data));
+    const loadAssessment = async () => {
+      try {
+        const response = await getAssessmentById(id);
+        if (response.success) {
+          setAssessment(response.data);
+        } else {
+          console.error(response.message);
+        }
+      } catch (err) {
+        console.error("Failed to load assessment:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAssessment();
     return () => setAnswers({}); // 🔥 CLEAR MEMORY ON LEAVE
   }, [id]);
 
-  if (!assessment) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <>
+        <PublicNavbar />
+        <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px", paddingTop: "100px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ textAlign: "center", color: "#8E6EC8" }}>
+            <i className="fas fa-spinner fa-spin fa-3x mb-3"></i>
+            <div>Loading assessment...</div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (!assessment) {
+    return (
+      <>
+        <PublicNavbar />
+        <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px", paddingTop: "100px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ textAlign: "center", color: "#D9899A" }}>
+            <i className="fas fa-exclamation-triangle fa-3x mb-3"></i>
+            <div>Assessment not found</div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   const total = assessment.questions.length;
   const answered = Object.keys(answers).length;
@@ -44,15 +86,26 @@ const AssessmentDetail = () => {
       }))
     };
 
-    const res = await submitAssessment(id, payload);
-
-    navigate(`/assessments/${id}/result`, {
-      state: res.data
-    });
+    try {
+      const response = await submitAssessment(id, payload);
+      if (response.success) {
+        navigate(`/assessments/${id}/result`, {
+          state: response.data
+        });
+      } else {
+        alert(response.message || "Failed to submit assessment");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to submit assessment");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px" }}>
+    <>
+      <PublicNavbar />
+      <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px", paddingTop: "100px" }}>
       <div style={{ maxWidth: "800px", margin: "0 auto" }}>
         <h2 style={{ color: "#8E6EC8", marginBottom: "20px", fontWeight: "bold" }}>{assessment.title}</h2>
 
@@ -85,6 +138,7 @@ const AssessmentDetail = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

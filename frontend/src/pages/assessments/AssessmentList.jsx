@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAssessments } from "../../api/assessmentService";
 import { useNavigate } from "react-router-dom";
+import PublicNavbar from "../../components/PublicNavbar";
 
 const AssessmentList = () => {
   const [assessments, setAssessments] = useState([]);
@@ -8,15 +9,41 @@ const AssessmentList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAssessments()
-      .then(res => setAssessments(res.data))
-      .finally(() => setLoading(false));
+    const loadAssessments = async () => {
+      try {
+        const response = await getAssessments();
+        if (response.success) {
+          setAssessments(response.data);
+        } else {
+          console.error(response.message);
+        }
+      } catch (err) {
+        console.error("Failed to load assessments:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadAssessments();
   }, []);
 
-  if (loading) return <p>Loading assessments...</p>;
+  if (loading) {
+    return (
+      <>
+        <PublicNavbar />
+        <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px", paddingTop: "100px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ textAlign: "center", color: "#8E6EC8" }}>
+            <i className="fas fa-spinner fa-spin fa-3x mb-3"></i>
+            <div>Loading assessments...</div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px" }}>
+    <>
+      <PublicNavbar />
+      <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px", paddingTop: "100px" }}>
       <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
         <h2 style={{ color: "#8E6EC8", marginBottom: "30px", fontWeight: "bold", textAlign: "center" }}>Quick Mental Health Assessments</h2>
 
@@ -56,7 +83,8 @@ const AssessmentList = () => {
           ))}
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

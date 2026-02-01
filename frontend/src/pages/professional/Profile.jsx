@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
+  getProfessionalProfile,
   updateProfessionalProfile,
   changeProfessionalPassword,
 } from "../../api/professionalService";
@@ -16,6 +17,20 @@ const Profile = () => {
   });
 
   const [profileErrors, setProfileErrors] = useState({});
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const response = await getProfessionalProfile();
+        if (response.success) {
+          setProfile(response.data);
+        }
+      } catch (err) {
+        console.error("Failed to load profile:", err.message);
+      }
+    };
+    loadProfile();
+  }, []);
 
   const validateProfile = () => {
     const errors = {};
@@ -55,8 +70,12 @@ const Profile = () => {
     if (!validateProfile()) return;
     
     try {
-      await updateProfessionalProfile(profile);
-      alert("Profile updated successfully");
+      const response = await updateProfessionalProfile(profile);
+      if (response.success) {
+        alert(response.message || "Profile updated successfully");
+      } else {
+        alert(response.message || "Profile update failed");
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Profile update failed");
     }
@@ -97,9 +116,13 @@ const Profile = () => {
     if (!validatePassword()) return;
     
     try {
-      await changeProfessionalPassword(password);
-      alert("Password updated successfully");
-      setPassword({ oldPassword: "", newPassword: "" });
+      const response = await changeProfessionalPassword(password);
+      if (response.success) {
+        alert(response.message || "Password updated successfully");
+        setPassword({ oldPassword: "", newPassword: "" });
+      } else {
+        alert(response.message || "Password update failed");
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Password update failed");
     }

@@ -1,25 +1,17 @@
 package com.project.service;
 
-import com.project.entities.Appointment;
+import org.springframework.stereotype.Service;
+
 import com.project.entities.VideoSession;
 
+@Service
 public interface VideoSessionService {
-	
-	VideoSession createOrGetVideoSession(Appointment appointment);
 
+    VideoSession createOrGetVideoSession(Long appointmentId);
 
-	/**
-	* Mark participant join (patient / professional).
-	*/
-	void markParticipantJoined(VideoSession session, boolean isProfessional);
+    void markParticipantJoined(Long videoSessionId, boolean isProfessional);
 
+    void endSession(Long videoSessionId);
 
-	/**
-	* End the video session.
-	*/
-	void endSession(VideoSession session);
-
-
-	VideoSession getById(Long videoSessionId);
-
+    VideoSession getById(Long videoSessionId);
 }

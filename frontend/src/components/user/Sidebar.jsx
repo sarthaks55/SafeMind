@@ -19,8 +19,15 @@ const Sidebar = () => {
 
   useEffect(() => {
     const loadCount = async () => {
-      const res = await getUnreadCount();
-      setUnreadCount(res.data);
+      try {
+        const res = await getUnreadCount();
+        if (res.success) {
+          setUnreadCount(res.data);
+        }
+      } catch (err) {
+        // Silently handle network errors
+        console.error("Failed to load notification count:", err.message);
+      }
     };
     loadCount();
   }, []);

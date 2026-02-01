@@ -29,13 +29,17 @@ const VerifyOtp = () => {
     try {
       setLoading(true);
 
-      await verifyOtp({
+      const response = await verifyOtp({
         userId,
         otp,
       });
 
-      alert("Verification successful. You can now login.");
-      navigate("/login");
+      if (response.success) {
+        alert(response.message || "Verification successful. You can now login.");
+        navigate("/login");
+      } else {
+        setError(response.message || "Invalid or expired OTP");
+      }
     } catch (err) {
       setError(
         err.response?.data?.message || "Invalid or expired OTP"

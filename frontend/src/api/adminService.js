@@ -1,58 +1,87 @@
 import api from "./axios";
 
 // Admin profile
-export const updateAdminProfile = (data) =>
-  api.put("/admin/profile", data);
+export const getAdminProfile = async () => {
+  const res = await api.get("/admin/profile");
+  return res.data;
+};
+
+export const updateAdminProfile = async (data) => {
+  const res = await api.put("/admin/profile", data);
+  return res.data;
+};
 
 // Admin password
-export const updateAdminPassword = (data) =>
-  api.put("/admin/password", data);
+export const updateAdminPassword = async (data) => {
+  const res = await api.put("/admin/password", data);
+  return res.data;
+};
 
 // USERS
-export const getAllUsers = () =>
-  api.get("/admin/users");
+export const getAllUsers = async () => {
+  const res = await api.get("/admin/users");
+  return res.data;
+};
 
-export const updateUserActivation = (userId, active) =>
-  api.put(`/admin/users/${userId}/activation`, {
+export const updateUserActivation = async (userId, active) => {
+  const res = await api.put(`/admin/users/${userId}/activation`, {
     active,
   });
+  return res.data;
+};
 
+// PROFESSIONALS
+export const getAllProfessionals = async () => {
+  const res = await api.get("/admin/professionals");
+  return res.data;
+};
 
-  // PROFESSIONALS
-export const getAllProfessionals = () =>
-  api.get("/admin/professionals");
-
-export const updateProfessionalVerification = (userId, verified) =>
-  api.put(`/admin/professionals/${userId}/verification`, {
+export const updateProfessionalVerification = async (userId, verified) => {
+  const res = await api.put(`/admin/professionals/${userId}/verification`, {
     verified,
   });
+  return res.data;
+};
 
-
-export const getAppointmentsByProfessional = (professionalId) =>
-  api.get(`/admin/appointments/professional/${professionalId}`);
-
+export const getAppointmentsByProfessional = async (professionalId) => {
+  const res = await api.get(`/admin/appointments/professional/${professionalId}`);
+  return res.data;
+};
 
 // APPOINTMENTS
-export const getAllAppointments = () =>
-  api.get("/admin/appointments");
+export const getAllAppointments = async () => {
+  const res = await api.get("/admin/appointments");
+  return res.data;
+};
 
-export const getAppointmentsByStatus = (status) =>
-  api.get(`/admin/appointments/status/${status}`);
+export const getAppointmentsByStatus = async (status) => {
+  const res = await api.get(`/admin/appointments/status/${status}`);
+  return res.data;
+};
 
-export const getAppointmentsBetweenDates = (start, end) =>
-  api.get("/admin/appointments/between", {
+export const getAppointmentsBetweenDates = async (start, end) => {
+  const res = await api.get("/admin/appointments/between", {
     params: { start, end },
   });
+  return res.data;
+};
 
-export const getAppointmentsByUser = (userId) =>
-  api.get(`/admin/appointments/user/${userId}`);
+export const getAppointmentsByUser = async (userId) => {
+  const res = await api.get(`/admin/appointments/user/${userId}`);
+  return res.data;
+};
 
+export const getNotifications = async () => {
+  const res = await api.get("/notifications");
+  return res.data;
+};
 
-export const getNotifications = () =>
-  api.get("/notifications");
+export const getUnreadCount = async () => {
+  const res = await api.get("/notifications/unread-count");
+  return res.data;
+};
 
-export const getUnreadCount = () =>
-  api.get("/notifications/unread-count");
-
-export const markAsRead = (id) =>
-  api.put(`/notifications/${id}/read`);
+export const markAsRead = async (id) => {
+  const res = await api.put(`/notifications/${id}/read`);
+  return res.data;
+};

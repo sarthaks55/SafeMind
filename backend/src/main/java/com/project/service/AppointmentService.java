@@ -3,10 +3,9 @@ package com.project.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.project.dto.AppointmentRequestDTO;
-import com.project.dto.AppointmentResponseDTO;
-import com.project.dto.AppointmentStatusUpdateDTO;
-import com.project.entities.Appointment;
+import com.project.dto.appointment.request.AppointmentRequestDTO;
+import com.project.dto.appointment.request.AppointmentStatusUpdateDTO;
+import com.project.dto.appointment.response.AppointmentResponseDTO;
 import com.project.enums.AppointmentStatus;
 
 public interface AppointmentService {

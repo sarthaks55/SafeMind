@@ -31,8 +31,12 @@ const AdminAppointments = () => {
   const fetchAll = async () => {
     setLoading(true);
     try {
-      const res = await getAllAppointments();
-      setAppointments(res.data);
+      const response = await getAllAppointments();
+      if (response.success) {
+        setAppointments(response.data);
+      } else {
+        console.error(response.message);
+      }
     } catch (error) {
       console.error("Failed to fetch appointments", error);
     } finally {
@@ -44,15 +48,19 @@ const AdminAppointments = () => {
     const load = async () => {
       setLoading(true);
       try {
+        let response;
         if (userId) {
-          const res = await getAppointmentsByUser(userId);
-          setAppointments(res.data);
+          response = await getAppointmentsByUser(userId);
         } else if (professionalId) {
-          const res = await getAppointmentsByProfessional(professionalId);
-          setAppointments(res.data);
+          response = await getAppointmentsByProfessional(professionalId);
         } else {
-          const res = await getAllAppointments();
-          setAppointments(res.data);
+          response = await getAllAppointments();
+        }
+        
+        if (response.success) {
+          setAppointments(response.data);
+        } else {
+          console.error(response.message);
         }
       } catch (error) {
         console.error("Failed to load appointments", error);
@@ -67,8 +75,12 @@ const AdminAppointments = () => {
     if (!status) return;
     setLoading(true);
     try {
-      const res = await getAppointmentsByStatus(status);
-      setAppointments(res.data);
+      const response = await getAppointmentsByStatus(status);
+      if (response.success) {
+        setAppointments(response.data);
+      } else {
+        console.error(response.message);
+      }
     } catch (error) {
       console.error("Failed to filter by status", error);
     } finally {
@@ -80,8 +92,12 @@ const AdminAppointments = () => {
     if (!start || !end) return;
     setLoading(true);
     try {
-      const res = await getAppointmentsBetweenDates(start, end);
-      setAppointments(res.data);
+      const response = await getAppointmentsBetweenDates(start, end);
+      if (response.success) {
+        setAppointments(response.data);
+      } else {
+        console.error(response.message);
+      }
     } catch (error) {
       console.error("Failed to filter by dates", error);
     } finally {

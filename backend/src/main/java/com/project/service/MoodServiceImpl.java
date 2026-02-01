@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.dto.MoodAnalyticsResponseDTO;
-import com.project.dto.MoodDailyStatsDTO;
-import com.project.dto.MoodRequestDTO;
-import com.project.dto.MoodResponseDTO;
+import com.project.dto.mood.request.MoodRequestDTO;
+import com.project.dto.mood.response.MoodAnalyticsResponseDTO;
+import com.project.dto.mood.response.MoodDailyStatsDTO;
+import com.project.dto.mood.response.MoodResponseDTO;
 import com.project.entities.MoodEntry;
 import com.project.entities.User;
 import com.project.exception.MoodAlreadyExistsException;
