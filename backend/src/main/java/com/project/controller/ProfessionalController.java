@@ -62,7 +62,7 @@ public class ProfessionalController {
     /* ================= PROFILE (GET) ================= */
 
     @GetMapping("/profile")
-    public ResponseEntity<ApiResponse<ProfessionalUpdateDTO>> getProfile(@RequestAttribute Long professionalId,
+    public ResponseEntity<ApiResponse<ProfessionalUpdateDTO>> getProfile(
             Authentication auth) {
 
         CustomUserDetails user =
@@ -72,7 +72,7 @@ public class ProfessionalController {
 
         ProfessionalUpdateDTO profile =
                 professionalService.getProfessionalProfile(
-                        user.getUserId(),professionalId);
+                        user.getUserId());
 
         return ResponseBuilder.success(
                 "Profile fetched successfully",

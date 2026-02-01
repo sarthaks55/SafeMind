@@ -23,60 +23,68 @@ const RegisterProfessional = ({ onBack }) => {
   const validateForm = () => {
     const newErrors = {};
     
-    // Full name validation with regex (only letters and spaces)
-    const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+    const nameRegex = /^[A-Za-z ]+$/;
     if (!form.fullName.trim()) {
       newErrors.fullName = "Full name is required";
+    } else if (form.fullName.trim().length < 3 || form.fullName.trim().length > 50) {
+      newErrors.fullName = "Full name must be between 3 and 50 characters";
     } else if (!nameRegex.test(form.fullName.trim())) {
-      newErrors.fullName = "Name must contain only letters and spaces (2-50 characters)";
+      newErrors.fullName = "Full name can contain only letters and spaces";
     }
     
-    // Email validation with comprehensive regex
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!form.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(form.email)) {
-      newErrors.email = "Please enter a valid email address";
+      newErrors.email = "Invalid email format";
     }
     
-    // Password validation with regex for strength
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{6,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
     if (!form.password.trim()) {
       newErrors.password = "Password is required";
+    } else if (form.password.length < 6 || form.password.length > 64) {
+      newErrors.password = "Password must be between 6 and 64 characters";
     } else if (!passwordRegex.test(form.password)) {
-      newErrors.password = "Password must contain at least 6 characters, 1 uppercase, 1 lowercase, and 1 number";
+      newErrors.password = "Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character";
     }
     
-    // Phone validation with regex (Indian format)
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!form.phone.trim()) {
-      newErrors.phone = "Phone is required";
+      newErrors.phone = "Phone number is required";
     } else if (!phoneRegex.test(form.phone.replace(/\D/g, ''))) {
-      newErrors.phone = "Please enter a valid 10-digit phone number";
+      newErrors.phone = "Phone number must be a valid 10-digit Indian mobile number";
     }
     
-    // Qualification validation with regex (letters, numbers, spaces, common punctuation)
-    const qualificationRegex = /^[a-zA-Z0-9\s.,()-]{2,100}$/;
-    if (!form.qualification.trim()) {
-      newErrors.qualification = "Qualification is required";
-    } else if (!qualificationRegex.test(form.qualification.trim())) {
-      newErrors.qualification = "Please enter a valid qualification (2-100 characters)";
+    if (!form.gender) {
+      newErrors.gender = "Gender is required";
     }
     
-    // Experience validation with regex (positive numbers only)
-    const experienceRegex = /^[0-9]{1,2}$/;
+    if (!form.specialization) {
+      newErrors.specialization = "Specialization is required";
+    }
+    
     if (form.experienceYears < 0) {
       newErrors.experienceYears = "Experience cannot be negative";
-    } else if (!experienceRegex.test(form.experienceYears.toString()) || form.experienceYears > 50) {
-      newErrors.experienceYears = "Please enter valid experience (0-50 years)";
+    } else if (form.experienceYears > 60) {
+      newErrors.experienceYears = "Experience seems invalid";
     }
     
-    // Consultation fee validation with regex (positive numbers)
-    const feeRegex = /^[0-9]{1,6}$/;
-    if (form.consultationFee < 0) {
-      newErrors.consultationFee = "Fee cannot be negative";
-    } else if (!feeRegex.test(form.consultationFee.toString()) || form.consultationFee > 999999) {
-      newErrors.consultationFee = "Please enter a valid fee (up to 999999)";
+    if (!form.qualification.trim()) {
+      newErrors.qualification = "Qualification is required";
+    } else if (form.qualification.trim().length < 2 || form.qualification.trim().length > 100) {
+      newErrors.qualification = "Qualification must be between 2 and 100 characters";
+    }
+    
+    if (form.bio && form.bio.length > 500) {
+      newErrors.bio = "Bio must not exceed 500 characters";
+    }
+    
+    if (!form.consultationFee || form.consultationFee <= 0) {
+      newErrors.consultationFee = "Consultation fee must be greater than 0";
+    }
+    
+    if (!form.spokenLanguage) {
+      newErrors.spokenLanguage = "Spoken language is required";
     }
     
     setErrors(newErrors);
@@ -167,20 +175,25 @@ const RegisterProfessional = ({ onBack }) => {
               <div className="col-md-6 mb-3">
                 <select className="form-control shadow-sm py-3"
                   style={{ backgroundColor: "#FFFFFF", color: "#8E6EC8", borderRadius: "10px", border: "2px solid #F3A6A1" }}
+                  value={form.gender}
                   onChange={e => setForm({ ...form, gender: e.target.value })}>
-                  <option>MALE</option>
-                  <option>FEMALE</option>
+                  <option value="MALE">MALE</option>
+                  <option value="FEMALE">FEMALE</option>
+                  <option value="OTHER">OTHER</option>
                 </select>
+                {errors.gender && <small className="text-danger">{errors.gender}</small>}
               </div>
               <div className="col-md-6 mb-3">
                 <select className="form-control shadow-sm py-3"
                   style={{ backgroundColor: "#FFFFFF", color: "#8E6EC8", borderRadius: "10px", border: "2px solid #F3A6A1" }}
+                  value={form.specialization}
                   onChange={e => setForm({ ...form, specialization: e.target.value })}>
-                  <option>THERAPIST</option>
-                  <option>PSYCHIATRIST</option>
-                  <option>CHILD_SPECIALIST</option>
-                  <option>COUPLES_THERAPIST</option>
+                  <option value="THERAPIST">THERAPIST</option>
+                  <option value="PSYCHIATRIST">PSYCHIATRIST</option>
+                  <option value="CHILD_SPECIALIST">CHILD_SPECIALIST</option>
+                  <option value="COUPLES_THERAPIST">COUPLES_THERAPIST</option>
                 </select>
+                {errors.specialization && <small className="text-danger">{errors.specialization}</small>}
               </div>
             </div>
 
@@ -188,11 +201,13 @@ const RegisterProfessional = ({ onBack }) => {
               <div className="col-md-6 mb-3">
                 <select className="form-control shadow-sm py-3"
                   style={{ backgroundColor: "#FFFFFF", color: "#8E6EC8", borderRadius: "10px", border: "2px solid #F3A6A1" }}
+                  value={form.spokenLanguage}
                   onChange={e => setForm({ ...form, spokenLanguage: e.target.value })}>
-                  <option>ENGLISH</option>
-                  <option>HINDI</option>
-                  <option>MARATHI</option>
+                  <option value="ENGLISH">ENGLISH</option>
+                  <option value="HINDI">HINDI</option>
+                  <option value="MARATHI">MARATHI</option>
                 </select>
+                {errors.spokenLanguage && <small className="text-danger">{errors.spokenLanguage}</small>}
               </div>
               <div className="col-md-6 mb-3">
                 <input type="number" className="form-control shadow-sm py-3"
@@ -220,8 +235,10 @@ const RegisterProfessional = ({ onBack }) => {
                 placeholder="Short Bio"
                 rows="3"
                 style={{ backgroundColor: "#FFFFFF", color: "#8E6EC8", borderRadius: "10px", border: "2px solid #F3A6A1" }}
+                value={form.bio}
                 onChange={e => setForm({ ...form, bio: e.target.value })}
               />
+              {errors.bio && <small className="text-danger">{errors.bio}</small>}
             </div>
 
             <div className="mb-4">

@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
 
 	    Specialization specialization;
 	    try {
-	        specialization = Specialization.valueOf(dto.getSpecialization());
+	        specialization = dto.getSpecialization();
 	    } catch (IllegalArgumentException ex) {
 	        throw new SpecializationNotFoundException("Invalid Specialization");
 	    }

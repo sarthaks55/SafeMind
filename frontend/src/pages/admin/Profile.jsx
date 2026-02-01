@@ -34,18 +34,26 @@ const AdminProfile = () => {
 
   const validateProfile = () => {
     const errors = {};
-    const nameRegex = /^[a-zA-Z\s]{2,50}$/;
-    const phoneRegex = /^[0-9]{10}$/;
+    const nameRegex = /^[A-Za-z ]+$/;
+    const phoneRegex = /^[6-9]\d{9}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
-    if (!nameRegex.test(profile.fullName)) {
-      errors.fullName = "Name should contain only letters and be 2-50 characters";
+    if (!profile.fullName || profile.fullName.trim().length < 3 || profile.fullName.trim().length > 50) {
+      errors.fullName = "Full name must be between 3 and 50 characters";
+    } else if (!nameRegex.test(profile.fullName)) {
+      errors.fullName = "Full name can contain only letters and spaces";
     }
-    if (!emailRegex.test(profile.email)) {
-      errors.email = "Please enter a valid email address";
+    
+    if (!profile.email) {
+      errors.email = "Email is required";
+    } else if (!emailRegex.test(profile.email)) {
+      errors.email = "Invalid email format";
     }
-    if (!phoneRegex.test(profile.phone)) {
-      errors.phone = "Phone should be exactly 10 digits";
+    
+    if (!profile.phone) {
+      errors.phone = "Phone number is required";
+    } else if (!phoneRegex.test(profile.phone)) {
+      errors.phone = "Phone number must be a valid 10-digit Indian mobile number";
     }
     
     setProfileErrors(errors);
@@ -68,17 +76,79 @@ const AdminProfile = () => {
   };
 
   const handleProfileChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-    if (profileErrors[e.target.name]) {
-      setProfileErrors({ ...profileErrors, [e.target.name]: "" });
+    const { name, value } = e.target;
+    setProfile({ ...profile, [name]: value });
+    
+    // Real-time validation
+    const errors = { ...profileErrors };
+    const nameRegex = /^[A-Za-z ]+$/;
+    const phoneRegex = /^[6-9]\d{9}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (name === 'fullName') {
+      if (!value.trim()) {
+        errors.fullName = "Full name is required";
+      } else if (value.trim().length < 3 || value.trim().length > 50) {
+        errors.fullName = "Full name must be between 3 and 50 characters";
+      } else if (!nameRegex.test(value)) {
+        errors.fullName = "Full name can contain only letters and spaces";
+      } else {
+        delete errors.fullName;
+      }
     }
+    
+    if (name === 'email') {
+      if (!value.trim()) {
+        errors.email = "Email is required";
+      } else if (!emailRegex.test(value)) {
+        errors.email = "Invalid email format";
+      } else {
+        delete errors.email;
+      }
+    }
+    
+    if (name === 'phone') {
+      if (!value.trim()) {
+        errors.phone = "Phone number is required";
+      } else if (!phoneRegex.test(value)) {
+        errors.phone = "Phone number must be a valid 10-digit Indian mobile number";
+      } else {
+        delete errors.phone;
+      }
+    }
+    
+    setProfileErrors(errors);
   };
 
   const handlePasswordChange = (e) => {
-    setPassword({ ...password, [e.target.name]: e.target.value });
-    if (passwordErrors[e.target.name]) {
-      setPasswordErrors({ ...passwordErrors, [e.target.name]: "" });
+    const { name, value } = e.target;
+    setPassword({ ...password, [name]: value });
+    
+    // Real-time validation
+    const errors = { ...passwordErrors };
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+    
+    if (name === 'oldPassword') {
+      if (!value.trim()) {
+        errors.oldPassword = "Old password is required";
+      } else {
+        delete errors.oldPassword;
+      }
     }
+    
+    if (name === 'newPassword') {
+      if (!value.trim()) {
+        errors.newPassword = "New password is required";
+      } else if (value.length < 6 || value.length > 64) {
+        errors.newPassword = "New password must be between 6 and 64 characters";
+      } else if (!passwordRegex.test(value)) {
+        errors.newPassword = "New password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character";
+      } else {
+        delete errors.newPassword;
+      }
+    }
+    
+    setPasswordErrors(errors);
   };
 
   const submitProfile = async (e) => {

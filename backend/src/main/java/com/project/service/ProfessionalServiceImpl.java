@@ -362,10 +362,10 @@ public class ProfessionalServiceImpl implements ProfessionalService {
 
 
 	@Override
-	public ProfessionalUpdateDTO getProfessionalProfile(Long userId, Long professionalId) {
+	public ProfessionalUpdateDTO getProfessionalProfile(Long userId) {
 		User user = userRepo.findById(userId).orElseThrow();
 		
-		Professional professional = professionalRepo.findById(professionalId).orElseThrow();
+		Professional professional = professionalRepo.findByUser_UserId(userId).orElseThrow();
 		
 		ProfessionalUpdateDTO profile = modelMapper.map(professional, ProfessionalUpdateDTO.class);
 		profile.setFullName(user.getFullName());

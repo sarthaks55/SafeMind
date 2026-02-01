@@ -23,36 +23,36 @@ const RegisterUser = ({ onBack }) => {
   const validateForm = () => {
     const newErrors = {};
     
-    // Full name validation with regex (only letters and spaces)
-    const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+    const nameRegex = /^[A-Za-z ]+$/;
     if (!form.fullName.trim()) {
       newErrors.fullName = "Full name is required";
+    } else if (form.fullName.trim().length < 3 || form.fullName.trim().length > 50) {
+      newErrors.fullName = "Full name must be between 3 and 50 characters";
     } else if (!nameRegex.test(form.fullName.trim())) {
-      newErrors.fullName = "Name must contain only letters and spaces (2-50 characters)";
+      newErrors.fullName = "Full name can contain only letters and spaces";
     }
     
-    // Email validation with comprehensive regex
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!form.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(form.email)) {
-      newErrors.email = "Please enter a valid email address";
+      newErrors.email = "Invalid email format";
     }
     
-    // Password validation with regex for strength
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{6,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
     if (!form.password.trim()) {
       newErrors.password = "Password is required";
+    } else if (form.password.length < 6 || form.password.length > 64) {
+      newErrors.password = "Password must be between 6 and 64 characters";
     } else if (!passwordRegex.test(form.password)) {
-      newErrors.password = "Password must contain at least 6 characters, 1 uppercase, 1 lowercase, and 1 number";
+      newErrors.password = "Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character";
     }
     
-    // Phone validation with regex (Indian format)
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!form.phone.trim()) {
-      newErrors.phone = "Phone is required";
+      newErrors.phone = "Phone number is required";
     } else if (!phoneRegex.test(form.phone.replace(/\D/g, ''))) {
-      newErrors.phone = "Please enter a valid 10-digit phone number";
+      newErrors.phone = "Phone number must be a valid 10-digit Indian mobile number";
     }
     
     setErrors(newErrors);

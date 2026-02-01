@@ -17,20 +17,20 @@ const Login = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    // Email validation with comprehensive regex
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim()) {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(email)) {
-      newErrors.email = "Please enter a valid email address";
+      newErrors.email = "Invalid email format";
     }
     
-    // Password validation with regex for strength
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{6,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
     if (!password.trim()) {
       newErrors.password = "Password is required";
+    } else if (password.length < 6 || password.length > 64) {
+      newErrors.password = "Password must be between 6 and 64 characters";
     } else if (!passwordRegex.test(password)) {
-      newErrors.password = "Password must contain at least 6 characters, 1 uppercase, 1 lowercase, and 1 number";
+      newErrors.password = "Password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character";
     }
     
     setErrors(newErrors);

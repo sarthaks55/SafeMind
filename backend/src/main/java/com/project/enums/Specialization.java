@@ -1,5 +1,6 @@
 package com.project.enums;
 
+
 public enum Specialization {
 	THERAPIST,
 	PSYCHIATRIST,
