@@ -17,6 +17,7 @@ public class AppointmentResponseDTO {
 	}
 	private Long appointmentId;
     private Long userId;
+    private String fullName;
     private String professionalName;
     private LocalDateTime startTime;
     private LocalDateTime endTime;

@@ -11,6 +11,8 @@ const Notifications = () => {
     try {
       const response = await getNotifications();
       if (response.success) {
+                console.log(response);
+
         setNotifications(response.data);
       } else {
         console.error(response.message);
@@ -69,26 +71,28 @@ const Notifications = () => {
       {new Date(n.created).toLocaleString()}
     </small>
 
-    <div style={{ marginTop: "15px" }}>
-      <button
-        onClick={() => handleRead(n.notificationId)}
-        style={{
-          backgroundColor: "#7A5BC7",
-          color: "white",
-          border: "none",
-          padding: "8px 16px",
-          borderRadius: "6px",
-          cursor: "pointer",
-          fontSize: "14px",
-          fontWeight: "500",
-          transition: "background-color 0.3s ease"
-        }}
-        onMouseOver={(e) => e.target.style.backgroundColor = "#6B46C1"}
-        onMouseOut={(e) => e.target.style.backgroundColor = "#7A5BC7"}
-      >
-        Mark as read
-      </button>
-    </div>
+    {!n.read && (
+  <div style={{ marginTop: "15px" }}>
+    <button
+      onClick={() => handleRead(n.notificationId)}
+      style={{
+        backgroundColor: "#7A5BC7",
+        color: "white",
+        border: "none",
+        padding: "8px 16px",
+        borderRadius: "6px",
+        cursor: "pointer",
+        fontSize: "14px",
+        fontWeight: "500",
+        transition: "background-color 0.3s ease"
+      }}
+      onMouseOver={(e) => e.target.style.backgroundColor = "#6B46C1"}
+      onMouseOut={(e) => e.target.style.backgroundColor = "#7A5BC7"}
+    >
+      Mark as read
+    </button>
+  </div>
+)}
   </div>
 ))}
 

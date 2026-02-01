@@ -117,7 +117,7 @@ public class AuthController {
         return ResponseBuilder.success(
                 "OTP verified successfully",
                 null,
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 }

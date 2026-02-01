@@ -157,7 +157,7 @@ const RegisterUser = ({ onBack }) => {
               >
                 <option>MALE</option>
                 <option>FEMALE</option>
-                <option>OTHERS</option>
+                <option>OTHER</option>
               </select>
             </div>
 

@@ -98,7 +98,7 @@ public class ProfessionalController {
         return ResponseBuilder.success(
                 "Password updated successfully",
                 null,
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 
@@ -119,7 +119,7 @@ public class ProfessionalController {
         return ResponseBuilder.success(
                 "Appointment status updated successfully",
                 null,
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 
@@ -176,7 +176,7 @@ public class ProfessionalController {
         return ResponseBuilder.success(
                 "Availability deleted successfully",
                 null,
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 }

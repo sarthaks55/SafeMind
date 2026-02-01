@@ -145,7 +145,7 @@ const Users = () => {
                             }}
                           >
                             <i className="fas fa-calendar-check me-1"></i>
-                            View
+                            View Appointments
                           </button>
                         </div>
                       </td>
