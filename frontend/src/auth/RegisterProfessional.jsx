@@ -91,17 +91,18 @@ const RegisterProfessional = ({ onBack }) => {
     }
     
     try {
-      await registerProfessionalApi(form);
-      alert(
-        "Professional registered successfully.\nWaiting for admin verification."
-      );
+      const response = await registerProfessionalApi(form);
+      if (response.success) {
+        alert(response.message || "Professional registered successfully.\nWaiting for admin verification.");
+        navigate("/verify-otp", {
+          state: { userId: response.data.userId }
+        });
+      } else {
+        setErrors({ general: response.message || "Registration failed. Please try again." });
+      }
     } catch (err) {
-      setErrors({ general: "Registration failed. Please try again." });
+      setErrors({ general: err.response?.data?.message || "Registration failed. Please try again." });
     }
-
-    navigate("/verify-otp", {
-      state: { userId: response.data.userId }
-    });
 
   };
 

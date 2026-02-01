@@ -1,6 +1,6 @@
 // src/pages/admin/Profile.jsx
-import { useState } from "react";
-import { updateAdminPassword, updateAdminProfile } from "../../api/adminService";
+import { useState, useEffect } from "react";
+import { getAdminProfile, updateAdminPassword, updateAdminProfile } from "../../api/adminService";
 
 const AdminProfile = () => {
   const [profile, setProfile] = useState({
@@ -17,6 +17,20 @@ const AdminProfile = () => {
 
   const [profileErrors, setProfileErrors] = useState({});
   const [passwordErrors, setPasswordErrors] = useState({});
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const response = await getAdminProfile();
+        if (response.success) {
+          setProfile(response.data);
+        }
+      } catch (err) {
+        console.error("Failed to load profile:", err.message);
+      }
+    };
+    loadProfile();
+  }, []);
 
   const validateProfile = () => {
     const errors = {};

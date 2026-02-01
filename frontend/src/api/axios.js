@@ -19,4 +19,23 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Log all responses
+api.interceptors.response.use(
+  (response) => {
+    console.log('API Response:', response.data);
+    return response;
+  },
+  (error) => {
+    console.log('API Error Response:', error.response?.data);
+    
+    // Handle token expiration
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 export default api;

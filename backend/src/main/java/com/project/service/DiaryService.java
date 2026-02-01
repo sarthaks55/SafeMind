@@ -1,9 +1,9 @@
 package com.project.service;
 
-import com.project.dto.DiaryRequestDTO;
-import com.project.dto.DiaryResponseDTO;
-
 import java.util.List;
+
+import com.project.dto.diary.request.DiaryRequestDTO;
+import com.project.dto.diary.response.DiaryResponseDTO;
 
 public interface DiaryService {
 

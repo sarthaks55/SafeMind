@@ -1,8 +1,8 @@
 package com.project.service;
 
-import com.project.dto.NotificationDTO;
-
 import java.util.List;
+
+import com.project.dto.notification.response.NotificationDTO;
 
 public interface NotificationService {
 

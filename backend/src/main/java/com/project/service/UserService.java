@@ -2,11 +2,11 @@ package com.project.service;
 
 import java.util.List;
 
-import com.project.dto.PasswordUpdateDTO;
-import com.project.dto.ProfessionalViewDTO;
-import com.project.dto.RegisterDTO;
-import com.project.dto.RegisterProfessionalDTO;
-import com.project.dto.UserUpdateDTO;
+import com.project.dto.auth.request.RegisterDTO;
+import com.project.dto.auth.request.RegisterProfessionalDTO;
+import com.project.dto.user.request.PasswordUpdateDTO;
+import com.project.dto.user.request.UserUpdateDTO;
+import com.project.dto.user.response.ProfessionalViewDTO;
 import com.project.entities.Professional;
 import com.project.entities.User;
 
@@ -33,6 +33,8 @@ public interface UserService {
 	Professional registerProfessional(RegisterProfessionalDTO registerProfessionalDTO);
 	
     List<ProfessionalViewDTO> getAllProfessionals();
+
+	UserUpdateDTO getProfile(Long userId);
 
 	
 }

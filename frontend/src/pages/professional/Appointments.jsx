@@ -17,10 +17,14 @@ const Appointments = () => {
 
   const fetchAppointments = async () => {
     try {
-      const res = await getProfessionalAppointments();
-      setAppointments(res.data);
+      const response = await getProfessionalAppointments();
+      if (response.success) {
+        setAppointments(response.data);
+      } else {
+        alert(response.message || "Failed to load appointments");
+      }
     } catch (err) {
-      alert("Failed to load appointments");
+      alert(err.response?.data?.message || "Failed to load appointments");
     } finally {
       setLoading(false);
     }
@@ -28,8 +32,12 @@ const Appointments = () => {
 
   const handleStatusChange = async (id, status) => {
     try {
-      await updateAppointmentStatus(id, { status });
-      fetchAppointments();
+      const response = await updateAppointmentStatus(id, { status });
+      if (response.success) {
+        fetchAppointments();
+      } else {
+        alert(response.message || "Status update failed");
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Status update failed");
     }

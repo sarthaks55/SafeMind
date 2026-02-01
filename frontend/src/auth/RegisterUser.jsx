@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { registerUserApi } from "../api/authApi";
 import { Link,useNavigate } from "react-router-dom";
+import ErrorMessage from "../components/ErrorMessage";
+import SuccessMessage from "../components/SuccessMessage";
 
 
 const RegisterUser = ({ onBack }) => {
@@ -15,6 +17,8 @@ const RegisterUser = ({ onBack }) => {
     role: "ROLE_USER"
   });
   const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const validateForm = () => {
     const newErrors = {};
@@ -63,15 +67,22 @@ const RegisterUser = ({ onBack }) => {
     }
     
     try {
-      const response = await  registerUserApi(form);
-      alert("User registered successfully");
-      navigate("/verify-otp", {
-      state: {
-        userId: response.data.userId
+      setErrorMessage("");
+      const response = await registerUserApi(form);
+      if (response.success) {
+        setSuccessMessage(response.message || "User registered successfully");
+        setTimeout(() => {
+          navigate("/verify-otp", {
+            state: {
+              userId: response.data.userId
+            }
+          });
+        }, 1500);
+      } else {
+        setErrorMessage(response.message || "Registration failed. Please try again.");
       }
-    });
     } catch (err) {
-      setErrors({ general: "Registration failed. Please try again." });
+      setErrorMessage(err.response?.data?.message || "Registration failed. Please try again.");
     }
 
 
@@ -85,6 +96,9 @@ const RegisterUser = ({ onBack }) => {
           <p className="mb-0">Join SafeMind as a user</p>
         </div>
         <div className="card-body p-4">
+          <ErrorMessage error={errorMessage} onClose={() => setErrorMessage("")} />
+          <SuccessMessage message={successMessage} onClose={() => setSuccessMessage("")} />
+          
           <form onSubmit={submit}>
             {errors.general && (
               <div className="alert alert-danger mb-3" style={{ backgroundColor: "#D9899A", color: "white", border: "none" }}>

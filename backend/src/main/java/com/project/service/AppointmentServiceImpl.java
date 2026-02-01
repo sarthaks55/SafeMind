@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.dto.AppointmentRequestDTO;
-import com.project.dto.AppointmentResponseDTO;
-import com.project.dto.AppointmentStatusUpdateDTO;
+import com.project.dto.appointment.request.AppointmentRequestDTO;
+import com.project.dto.appointment.request.AppointmentStatusUpdateDTO;
+import com.project.dto.appointment.response.AppointmentResponseDTO;
 import com.project.entities.Appointment;
 import com.project.entities.Professional;
 import com.project.entities.ProfessionalAvailability;
@@ -110,7 +110,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     /* ================= USER VIEW ================= */
-
+    @Transactional(readOnly = true)
     @Override
     public List<AppointmentResponseDTO> getUserAppointments(Long userId) {
 
@@ -120,6 +120,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentRepo.findByUser(user)
                 .stream()
                 .map(this::mapToDTO)
+              
                 .collect(Collectors.toList());
     }
 
@@ -209,14 +210,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
     private AppointmentResponseDTO mapToDTO(Appointment a) {
-        return AppointmentResponseDTO.builder()
-                .appointmentId(a.getAppointmentId())
-                .userId(a.getUser().getUserId())
-                .professionalId(a.getProfessional().getProfessionalId())
-                .startTime(a.getStartTime())
-                .endTime(a.getEndTime())
-                .status(a.getStatus())
-                .build();
+    	AppointmentResponseDTO resp = new AppointmentResponseDTO();
+    			resp.setUserId(a.getAppointmentId());
+                resp.setUserId(a.getUser().getUserId());
+                resp.setProfessionalName(a.getProfessional().getUser().getFullName());
+                resp.setStartTime(a.getStartTime());
+                resp.setEndTime(a.getEndTime());
+                resp.setStatus(a.getStatus());
+              
+         
+         return resp;
     }
     
     

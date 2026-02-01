@@ -2,15 +2,16 @@ package com.project.service;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.dto.PasswordUpdateDTO;
-import com.project.dto.ProfessionalAppointmentStatusDTO;
-import com.project.dto.ProfessionalAvailabilityDTO;
-import com.project.dto.ProfessionalAvailabilityResponseDTO;
-import com.project.dto.ProfessionalUpdateDTO;
+import com.project.dto.appointment.request.ProfessionalAppointmentStatusDTO;
+import com.project.dto.professional.request.ProfessionalAvailabilityDTO;
+import com.project.dto.professional.request.ProfessionalUpdateDTO;
+import com.project.dto.professional.response.ProfessionalAvailabilityResponseDTO;
+import com.project.dto.user.request.PasswordUpdateDTO;
 import com.project.entities.Appointment;
 import com.project.entities.Professional;
 import com.project.entities.ProfessionalAvailability;
@@ -39,6 +40,7 @@ public class ProfessionalServiceImpl implements ProfessionalService {
     private final PasswordEncoder passwordEncoder;
     private final ProfessionalAvailabilityRepository availabilityRepo;
     private final NotificationService notificationService;
+    private final ModelMapper modelMapper;
 
 
     /* ================= PROFILE UPDATE ================= */
@@ -356,6 +358,25 @@ public class ProfessionalServiceImpl implements ProfessionalService {
 
         availabilityRepo.delete(availability);
     }
+
+
+
+	@Override
+	public ProfessionalUpdateDTO getProfessionalProfile(Long userId, Long professionalId) {
+		User user = userRepo.findById(userId).orElseThrow();
+		
+		Professional professional = professionalRepo.findById(professionalId).orElseThrow();
+		
+		ProfessionalUpdateDTO profile = modelMapper.map(professional, ProfessionalUpdateDTO.class);
+		profile.setFullName(user.getFullName());
+		profile.setEmail(user.getEmail());
+		profile.setPhone(user.getPhone());
+		profile.setGender(user.getGender());
+		return profile;
+	}
+
+
+
 
     
 }

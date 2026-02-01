@@ -4,18 +4,24 @@ import api from "../../api/axios"; // your axios instance
 
 const BookAppointment = () => {
   const [professionals, setProfessionals] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedProfessional, setSelectedProfessional] = useState(null);
   const [startTime, setStartTime] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [bookingLoading, setBookingLoading] = useState(false);
 
-  // fetch verified professionals
   useEffect(() => {
     const fetchProfessionals = async () => {
       try {
-        const res = await getProfessionals();
-        setProfessionals(res.data);
+        const response = await getProfessionals();
+        if (response.success) {
+          setProfessionals(response.data);
+        } else {
+          alert(response.message || "Failed to load professionals");
+        }
       } catch (err) {
-        alert("Failed to load professionals");
+        alert(err.response?.data?.message || "Failed to load professionals");
+      } finally {
+        setLoading(false);
       }
     };
     fetchProfessionals();
@@ -27,24 +33,39 @@ const BookAppointment = () => {
       return;
     }
 
-    setLoading(true);
+    setBookingLoading(true);
     try {
-      await bookAppointment({
+      const response = await bookAppointment({
         professionalId: selectedProfessional.professionalId,
         startTime,
       });
-      alert("Appointment booked successfully!");
-      setSelectedProfessional(null);
-      setStartTime("");
+      if (response.success) {
+        alert(response.message || "Appointment booked successfully!");
+        setSelectedProfessional(null);
+        setStartTime("");
+      } else {
+        alert(response.message || "Failed to book appointment");
+      }
     } catch (error) {
       alert(
         error.response?.data?.message ||
           "Failed to book appointment. Please try again."
       );
     } finally {
-      setLoading(false);
+      setBookingLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="container-fluid" style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div className="text-center" style={{ color: "#8E6EC8" }}>
+          <i className="fas fa-spinner fa-spin fa-3x mb-3"></i>
+          <div>Loading professionals...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -166,7 +187,7 @@ const BookAppointment = () => {
                 </button>
                 <button
                   className="btn"
-                  disabled={loading}
+                  disabled={bookingLoading}
                   onClick={submitBooking}
                   style={{
                     background:
@@ -174,7 +195,7 @@ const BookAppointment = () => {
                     color: "white",
                   }}
                 >
-                  {loading ? "Booking..." : "Confirm Booking"}
+                  {bookingLoading ? "Booking..." : "Confirm Booking"}
                 </button>
               </div>
             </div>

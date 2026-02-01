@@ -25,6 +25,8 @@ const Home = () => {
                             <Link to="/" className="nav-link safemind-nav-link">Home</Link>
                             <Link to="/about" className="nav-link safemind-nav-link">About Us</Link>
                             <Link to="/services" className="nav-link safemind-nav-link">Services</Link>
+                            <Link to="/assessments" className="nav-link safemind-nav-link">Assessments</Link>
+                            <Link to="/book-appointment" className="nav-link safemind-nav-link">Book Appointment</Link>
                             {auth ? (
                                 <div className="dropdown ms-3">
                                     <button 

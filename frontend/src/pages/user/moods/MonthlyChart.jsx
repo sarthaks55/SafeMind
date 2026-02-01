@@ -6,11 +6,23 @@ const MonthlyChart = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    const now = new Date();
-    getMonthlyAnalytics(
-      now.getFullYear(),
-      now.getMonth() + 1
-    ).then(res => setData(res.data));
+    const loadData = async () => {
+      try {
+        const now = new Date();
+        const response = await getMonthlyAnalytics(
+          now.getFullYear(),
+          now.getMonth() + 1
+        );
+        if (response.success) {
+          setData(response.data);
+        } else {
+          console.error(response.message);
+        }
+      } catch (err) {
+        console.error("Failed to load monthly analytics:", err);
+      }
+    };
+    loadData();
   }, []);
 
   if (!data) return null;

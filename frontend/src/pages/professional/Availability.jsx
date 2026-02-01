@@ -31,10 +31,14 @@ const Availability = () => {
 
   const loadAvailability = async () => {
     try {
-      const res = await getAvailability();
-      setList(res.data);
-    } catch {
-      alert("Failed to load availability");
+      const response = await getAvailability();
+      if (response.success) {
+        setList(response.data);
+      } else {
+        alert(response.message || "Failed to load availability");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to load availability");
     }
   };
 
@@ -47,15 +51,20 @@ const Availability = () => {
     }
 
     try {
+      let response;
       if (editingId) {
-        await updateAvailability(editingId, form);
+        response = await updateAvailability(editingId, form);
       } else {
-        await addAvailability(form);
+        response = await addAvailability(form);
       }
 
-      setForm({ dayOfWeek: "MONDAY", startTime: "", endTime: "" });
-      setEditingId(null);
-      loadAvailability();
+      if (response.success) {
+        setForm({ dayOfWeek: "MONDAY", startTime: "", endTime: "" });
+        setEditingId(null);
+        loadAvailability();
+      } else {
+        alert(response.message || "Operation failed");
+      }
     } catch (err) {
       alert(err.response?.data?.message || "Operation failed");
     }
@@ -72,8 +81,16 @@ const Availability = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this availability?")) return;
-    await deleteAvailability(id);
-    loadAvailability();
+    try {
+      const response = await deleteAvailability(id);
+      if (response.success) {
+        loadAvailability();
+      } else {
+        alert(response.message || "Failed to delete availability");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to delete availability");
+    }
   };
 
   return (

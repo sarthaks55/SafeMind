@@ -6,10 +6,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.dto.AdminProfessionalViewDTO;
-import com.project.dto.AdminUpdateDTO;
-import com.project.dto.AdminUserViewDTO;
-import com.project.dto.PasswordUpdateDTO;
+import com.project.dto.admin.request.AdminUpdateDTO;
+import com.project.dto.admin.response.AdminProfessionalViewDTO;
+import com.project.dto.admin.response.AdminUserViewDTO;
+import com.project.dto.user.request.PasswordUpdateDTO;
 import com.project.entities.Professional;
 import com.project.entities.User;
 import com.project.exception.AdminNotFoundException;

@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.project.dto.AssessmentDetailDTO;
-import com.project.dto.AssessmentListDTO;
-import com.project.dto.AssessmentOptionDTO;
-import com.project.dto.AssessmentQuestionDTO;
-import com.project.dto.AssessmentResultDTO;
-import com.project.dto.AssessmentSubmitRequestDTO;
+import com.project.dto.assessment.request.AssessmentSubmitRequestDTO;
+import com.project.dto.assessment.response.AssessmentDetailDTO;
+import com.project.dto.assessment.response.AssessmentListDTO;
+import com.project.dto.assessment.response.AssessmentOptionDTO;
+import com.project.dto.assessment.response.AssessmentQuestionDTO;
+import com.project.dto.assessment.response.AssessmentResultDTO;
 import com.project.entities.Assessment;
 import com.project.entities.AssessmentQuestion;
 import com.project.entities.AssessmentResultRange;

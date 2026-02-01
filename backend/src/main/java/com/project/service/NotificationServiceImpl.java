@@ -1,17 +1,17 @@
 package com.project.service;
 
-import com.project.dto.NotificationDTO;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.project.dto.notification.response.NotificationDTO;
 import com.project.entities.Notification;
 import com.project.entities.User;
 import com.project.exception.NotificationNotFoundException;
 import com.project.repo.NotificationRepo;
 import com.project.repo.UserRepository;
-import com.project.service.EmailService;
-import com.project.service.NotificationService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

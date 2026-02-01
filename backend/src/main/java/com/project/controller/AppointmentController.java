@@ -2,13 +2,22 @@ package com.project.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.project.dto.AppointmentRequestDTO;
-import com.project.dto.AppointmentResponseDTO;
-import com.project.dto.AppointmentStatusUpdateDTO;
+import com.project.dto.appointment.request.AppointmentRequestDTO;
+import com.project.dto.appointment.request.AppointmentStatusUpdateDTO;
+import com.project.dto.appointment.response.AppointmentResponseDTO;
+import com.project.exception.ApiResponse;
+import com.project.exception.ResponseBuilder;
 import com.project.security.CustomUserDetails;
 import com.project.service.AppointmentService;
 
@@ -25,7 +34,7 @@ public class AppointmentController {
     /* ================= USER ================= */
 
     @PostMapping
-    public ResponseEntity<AppointmentResponseDTO> book(
+    public ResponseEntity<ApiResponse<AppointmentResponseDTO>> book(
             @RequestBody @Valid AppointmentRequestDTO dto,
             Authentication auth) {
 
@@ -36,53 +45,71 @@ public class AppointmentController {
                 appointmentService.bookAppointment(
                         dto, user.getUserId());
 
-        return ResponseEntity.status(201).body(response); // 201 CREATED
+        return ResponseBuilder.success(
+                "Appointment booked successfully",
+                response,
+                HttpStatus.CREATED
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> cancel(
+    public ResponseEntity<ApiResponse<Object>> cancel(
             @PathVariable Long id,
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
-        appointmentService.cancelAppointment(id, user.getUserId());
+        appointmentService.cancelAppointment(
+                id, user.getUserId());
 
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseBuilder.success(
+                "Appointment cancelled successfully",
+                null,
+                HttpStatus.NO_CONTENT
+        );
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<AppointmentResponseDTO>> userAppointments(
+    public ResponseEntity<ApiResponse<List<AppointmentResponseDTO>>> userAppointments(
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
         List<AppointmentResponseDTO> appointments =
-                appointmentService.getUserAppointments(user.getUserId());
+                appointmentService.getUserAppointments(
+                        user.getUserId());
 
-        return ResponseEntity.ok(appointments); // 200
+        return ResponseBuilder.success(
+                "User appointments fetched successfully",
+                appointments,
+                HttpStatus.OK
+        );
     }
 
     /* ================= PROFESSIONAL ================= */
 
     @GetMapping("/professional")
-    public ResponseEntity<List<AppointmentResponseDTO>> professionalAppointments(
+    public ResponseEntity<ApiResponse<List<AppointmentResponseDTO>>> professionalAppointments(
             Authentication auth) {
 
         CustomUserDetails user =
                 (CustomUserDetails) auth.getPrincipal();
 
         List<AppointmentResponseDTO> appointments =
-                appointmentService
-                        .getProfessionalAppointments(user.getUserId());
+                appointmentService.getProfessionalAppointments(
+                        user.getUserId());
 
-        return ResponseEntity.ok(appointments); // 200
+        return ResponseBuilder.success(
+                "Professional appointments fetched successfully",
+                appointments,
+                HttpStatus.OK
+        );
     }
 
     @PutMapping("/{id}/status")
-    public ResponseEntity<AppointmentResponseDTO> updateStatus(
+    public ResponseEntity<ApiResponse<AppointmentResponseDTO>> updateStatus(
             @PathVariable Long id,
             @RequestBody @Valid AppointmentStatusUpdateDTO dto,
             Authentication auth) {
@@ -91,10 +118,13 @@ public class AppointmentController {
                 (CustomUserDetails) auth.getPrincipal();
 
         AppointmentResponseDTO updated =
-                appointmentService
-                        .updateAppointmentStatus(
-                                id, dto, user.getUserId());
+                appointmentService.updateAppointmentStatus(
+                        id, dto, user.getUserId());
 
-        return ResponseEntity.ok(updated); // 200
+        return ResponseBuilder.success(
+                "Appointment status updated successfully",
+                updated,
+                HttpStatus.OK
+        );
     }
 }

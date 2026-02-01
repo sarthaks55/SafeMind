@@ -2,10 +2,10 @@ package com.project.service;
 
 import java.util.List;
 
-import com.project.dto.AdminProfessionalViewDTO;
-import com.project.dto.AdminUpdateDTO;
-import com.project.dto.AdminUserViewDTO;
-import com.project.dto.PasswordUpdateDTO;
+import com.project.dto.admin.request.AdminUpdateDTO;
+import com.project.dto.admin.response.AdminProfessionalViewDTO;
+import com.project.dto.admin.response.AdminUserViewDTO;
+import com.project.dto.user.request.PasswordUpdateDTO;
 
 public interface AdminService {
 

@@ -5,16 +5,35 @@ import { deleteDiary, getAllDiaries } from "../../../api/diaryService";
 const DiaryList = ({ onEdit }) => {
   const [entries, setEntries] = useState([]);
 
-  const load = () => {
-    getAllDiaries().then(res => setEntries(res.data));
+  const load = async () => {
+    try {
+      const response = await getAllDiaries();
+      if (response.success) {
+        setEntries(response.data);
+      } else {
+        console.error(response.message);
+      }
+    } catch (err) {
+      console.error("Failed to load diaries:", err);
+    }
   };
 
-  useEffect(load, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   const remove = async (id) => {
     if (!window.confirm("Delete this entry?")) return;
-    await deleteDiary(id);
-    load();
+    try {
+      const response = await deleteDiary(id);
+      if (response.success) {
+        load();
+      } else {
+        alert(response.message || "Failed to delete diary");
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to delete diary");
+    }
   };
 
   return (

@@ -5,14 +5,30 @@ import {
   cancelAppointment
 } from "../../api/appointmentService";
 import { isAppointmentActive } from "../../utils/appointmentUtils";
+import ErrorMessage from "../../components/ErrorMessage";
+import SuccessMessage from "../../components/SuccessMessage";
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const load = async () => {
-    const res = await getUserAppointments();
-    setAppointments(res.data);
+    try {
+      setErrorMessage("");
+      const response = await getUserAppointments();
+      if (response.success) {
+        setAppointments(response.data);
+      } else {
+        setErrorMessage(response.message || "Failed to load appointments");
+      }
+    } catch (err) {
+      setErrorMessage(err.response?.data?.message || "Failed to load appointments");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -21,8 +37,18 @@ const Appointments = () => {
 
   const cancel = async (id, status) => {
     if (status !== "PENDING") return;
-    await cancelAppointment(id);
-    load();
+    try {
+      setErrorMessage("");
+      const response = await cancelAppointment(id);
+      if (response.success) {
+        setSuccessMessage(response.message || "Appointment cancelled successfully");
+        setAppointments(prev => prev.map(a => a.appointmentId === id ? {...a, status: "CANCELLED"} : a));
+      } else {
+        setErrorMessage(response.message || "Failed to cancel appointment");
+      }
+    } catch (err) {
+      setErrorMessage(err.response?.data?.message || "Failed to cancel appointment");
+    }
   };
 
   const joinVideoSession = (appointmentId) => {
@@ -55,6 +81,9 @@ const Appointments = () => {
         </div>
       </div>
 
+      <ErrorMessage error={errorMessage} onClose={() => setErrorMessage("")} />
+      <SuccessMessage message={successMessage} onClose={() => setSuccessMessage("")} />
+
       <div className="card border-0 shadow-sm" style={{ backgroundColor: "#FFFFFF", borderRadius: "15px" }}>
         <div className="card-body p-0">
           <div className="table-responsive">
@@ -70,7 +99,22 @@ const Appointments = () => {
               </thead>
 
               <tbody>
-                {appointments.map(a => {
+                {loading ? (
+                  <tr>
+                    <td colSpan="5" className="text-center py-5" style={{ color: "#CFCFD4" }}>
+                      <i className="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                      <div>Loading appointments...</div>
+                    </td>
+                  </tr>
+                ) : appointments.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="text-center py-5" style={{ color: "#CFCFD4" }}>
+                      <i className="fas fa-calendar-times fa-3x mb-3 opacity-50"></i>
+                      <div>No appointments found</div>
+                    </td>
+                  </tr>
+                ) : (
+                  appointments.map(a => {
                   const statusStyle = getStatusBadge(a.status);
                   return (
                     <tr key={a.appointmentId} className="border-bottom">
@@ -83,7 +127,7 @@ const Appointments = () => {
                                style={{ width: "32px", height: "32px", fontSize: "12px", backgroundColor: "#8E6EC8", color: "white" }}>
                             Dr
                           </div>
-                          <span className="fw-medium" style={{ color: "#8E6EC8" }}>Professional #{a.professionalId}</span>
+                          <span className="fw-medium" style={{ color: "#8E6EC8" }}>{a.professionalName}</span>
                         </div>
                       </td>
                       <td className="py-3 px-4">
@@ -123,15 +167,8 @@ const Appointments = () => {
                       </td>
                     </tr>
                   );
-                })}
-                {appointments.length === 0 && (
-                  <tr>
-                    <td colSpan="5" className="text-center py-5" style={{ color: "#CFCFD4" }}>
-                      <i className="fas fa-calendar-times fa-3x mb-3 opacity-50"></i>
-                      <div>No appointments found</div>
-                    </td>
-                  </tr>
-                )}
+                }))
+                }
               </tbody>
             </table>
           </div>

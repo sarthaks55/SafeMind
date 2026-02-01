@@ -6,7 +6,19 @@ const WeeklyChart = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    getWeeklyAnalytics().then(res => setData(res.data));
+    const loadData = async () => {
+      try {
+        const response = await getWeeklyAnalytics();
+        if (response.success) {
+          setData(response.data);
+        } else {
+          console.error(response.message);
+        }
+      } catch (err) {
+        console.error("Failed to load weekly analytics:", err);
+      }
+    };
+    loadData();
   }, []);
 
   if (!data) return null;

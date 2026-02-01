@@ -2,6 +2,7 @@ package com.project.service;
 
 
 
+import java.awt.Dialog.ModalExclusionType;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -9,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.project.dto.PasswordUpdateDTO;
-import com.project.dto.ProfessionalViewDTO;
-import com.project.dto.RegisterDTO;
-import com.project.dto.RegisterProfessionalDTO;
-import com.project.dto.UserUpdateDTO;
+import com.project.dto.auth.request.RegisterDTO;
+import com.project.dto.auth.request.RegisterProfessionalDTO;
+import com.project.dto.user.request.PasswordUpdateDTO;
+import com.project.dto.user.request.UserUpdateDTO;
+import com.project.dto.user.response.ProfessionalViewDTO;
 import com.project.entities.Appointment;
 import com.project.entities.Professional;
 import com.project.entities.Role;
@@ -297,6 +298,15 @@ public class UserServiceImpl implements UserService {
         dto.setVerified(p.isVerified());
         return dto;
     }
+
+
+	@Override
+	public UserUpdateDTO getProfile(Long userId) {
+		User user = userRepository.findById(userId).orElseThrow();
+		UserUpdateDTO profile = modelMapper.map(user, UserUpdateDTO.class);
+		
+		return profile;
+	}
     
 }
 	

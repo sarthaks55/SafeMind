@@ -1,10 +1,16 @@
 import api from "./axios";
 
-export const getNotifications = () =>
-  api.get("/notifications");
+export const getNotifications = async () => {
+  const res = await api.get("/notifications");
+  return res.data;
+};
 
-export const getUnreadCount = () =>
-  api.get("/notifications/unread-count");
+export const getUnreadCount = async () => {
+  const res = await api.get("/notifications/unread-count");
+  return res.data;
+};
 
-export const markAsRead = (id) =>
-  api.put(`/notifications/${id}/read`);
+export const markAsRead = async (id) => {
+  const res = await api.put(`/notifications/${id}/read`);
+  return res.data;
+};

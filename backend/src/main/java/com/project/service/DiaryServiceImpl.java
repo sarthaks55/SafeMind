@@ -1,18 +1,19 @@
 package com.project.service;
 
-import com.project.dto.DiaryRequestDTO;
-import com.project.dto.DiaryResponseDTO;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.project.dto.diary.request.DiaryRequestDTO;
+import com.project.dto.diary.response.DiaryResponseDTO;
 import com.project.entities.DiaryEntry;
 import com.project.entities.User;
 import com.project.exception.DiaryNotFoundException;
 import com.project.repo.DiaryRepository;
 import com.project.repo.UserRepository;
 import com.project.security.AESUtil;
-import com.project.service.DiaryService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

@@ -1,13 +1,28 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import PublicNavbar from "../../components/PublicNavbar";
 
 const AssessmentResult = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  if (!state) return <p>No result found.</p>;
+  if (!state) {
+    return (
+      <>
+        <PublicNavbar />
+        <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px", paddingTop: "100px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ textAlign: "center", color: "#D9899A" }}>
+            <i className="fas fa-exclamation-triangle fa-3x mb-3"></i>
+            <div>No result found</div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
-    <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px" }}>
+    <>
+      <PublicNavbar />
+      <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px", paddingTop: "100px" }}>
       <div style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center" }}>
         <div style={{
           backgroundColor: "#FFFFFF",
@@ -74,7 +89,8 @@ const AssessmentResult = () => {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

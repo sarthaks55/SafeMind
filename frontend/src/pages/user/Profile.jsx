@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { updateProfile, changePassword } from "../../api/userService";
+import { useState, useEffect } from "react";
+import { getProfile, updateProfile, changePassword } from "../../api/userService";
 import { useAuth } from "../../context/AuthContext";
+import ErrorMessage from "../../components/ErrorMessage";
+import SuccessMessage from "../../components/SuccessMessage";
 
 const Profile = () => {
   const { auth, setAuth } = useAuth();
@@ -15,6 +17,24 @@ const Profile = () => {
     newPassword: "",
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const response = await getProfile();
+        if (response.success) {
+          setProfile(response.data);
+        }
+      } catch (err) {
+        // Silently handle network errors when backend is down
+        console.error("Failed to load profile:", err.message);
+      }
+    };
+    loadProfile();
+  }, []);
+
   const handleProfileChange = (e) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
@@ -26,22 +46,33 @@ const Profile = () => {
   const submitProfile = async (e) => {
     e.preventDefault();
     try {
-      const res = await updateProfile(profile);
-      alert("Profile updated successfully");
-      setAuth((prev) => ({ ...prev, ...res.data }));
+      setErrorMessage("");
+      setSuccessMessage("");
+      const response = await updateProfile(profile);
+      if (response.success) {
+        setSuccessMessage(response.message || "Profile updated successfully");
+      } else {
+        setErrorMessage(response.message || "Profile update failed");
+      }
     } catch (err) {
-      alert(err.response?.data?.message || "Profile update failed");
+      setErrorMessage(err.response?.data?.message || "Profile update failed");
     }
   };
 
   const submitPassword = async (e) => {
     e.preventDefault();
     try {
-      await changePassword(passwords);
-      alert("Password changed successfully");
-      setPasswords({ oldPassword: "", newPassword: "" });
+      setErrorMessage("");
+      setSuccessMessage("");
+      const response = await changePassword(passwords);
+      if (response.success) {
+        setSuccessMessage(response.message || "Password changed successfully");
+        setPasswords({ oldPassword: "", newPassword: "" });
+      } else {
+        setErrorMessage(response.message || "Password change failed");
+      }
     } catch (err) {
-      alert(err.response?.data?.message || "Password change failed");
+      setErrorMessage(err.response?.data?.message || "Password change failed");
     }
   };
 
@@ -59,6 +90,11 @@ const Profile = () => {
       </div>
 
       <div className="row g-4">
+        <div className="col-12">
+          <ErrorMessage error={errorMessage} onClose={() => setErrorMessage("")} />
+          <SuccessMessage message={successMessage} onClose={() => setSuccessMessage("")} />
+        </div>
+        
         <div className="col-md-6">
           <div className="card border-0 shadow-sm" style={{ backgroundColor: "#FFFFFF", borderRadius: "15px", borderTop: "4px solid #F3A6A1" }}>
             <div className="card-header bg-transparent border-0 pt-4">

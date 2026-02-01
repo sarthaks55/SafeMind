@@ -25,6 +25,8 @@ public class SpringSecurityConfig {
 		.cors(cors -> {})
 		.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 		.authorizeHttpRequests(auth ->auth.requestMatchers("/api/auth/**",
+				"/api/professionals",
+				"/api/assessments",
 			    "/ws/**",
 			    "/swagger-ui.html",
 			    "/swagger-ui/**",

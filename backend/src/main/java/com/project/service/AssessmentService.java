@@ -2,10 +2,10 @@ package com.project.service;
 
 import java.util.List;
 
-import com.project.dto.AssessmentDetailDTO;
-import com.project.dto.AssessmentListDTO;
-import com.project.dto.AssessmentResultDTO;
-import com.project.dto.AssessmentSubmitRequestDTO;
+import com.project.dto.assessment.request.AssessmentSubmitRequestDTO;
+import com.project.dto.assessment.response.AssessmentDetailDTO;
+import com.project.dto.assessment.response.AssessmentListDTO;
+import com.project.dto.assessment.response.AssessmentResultDTO;
 
 public interface AssessmentService {
 

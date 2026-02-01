@@ -1,49 +1,38 @@
 package com.project.controller;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.dto.JoinSessionResponse;
-import com.project.entities.Appointment;
+import com.project.dto.video.response.JoinSessionResponse;
 import com.project.entities.VideoSession;
-import com.project.repo.AppointmentRepository;
-import com.project.service.AppointmentService;
+import com.project.exception.ApiResponse;
+import com.project.exception.ResponseBuilder;
 import com.project.service.VideoSessionService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/video-sessions")
+@RequiredArgsConstructor
 public class VideoSessionController {
 
-	@Autowired
-    private VideoSessionService videoSessionService;
-	@Autowired
-	private AppointmentRepository appointmentRepo;
+    private final VideoSessionService videoSessionService;
 
-    
+    /* ================= JOIN SESSION ================= */
 
-    /**
-     * Join video session for an appointment.
-     */
     @PostMapping("/appointments/{appointmentId}/join")
-    public ResponseEntity<JoinSessionResponse> joinSession(
+    public ResponseEntity<ApiResponse<JoinSessionResponse>> joinSession(
             @PathVariable Long appointmentId,
-            HttpServletRequest request
-    ) {
+            HttpServletRequest request) {
 
-        // 1️⃣ Fetch appointment
-        Appointment appointment =
-                appointmentRepo.findById(appointmentId).orElseThrow();
-
-        // 2️⃣ Create or get video session
+        // service will throw AppointmentNotFoundException if invalid
         VideoSession session =
-                videoSessionService.createOrGetVideoSession(appointment);
+                videoSessionService.createOrGetVideoSession(appointmentId);
 
         String scheme = request.isSecure() ? "wss" : "ws";
         String host = request.getServerName();
@@ -53,8 +42,6 @@ public class VideoSessionController {
                 (port == 80 || port == 443 ? "" : ":" + port) +
                 "/ws/signaling";
 
-        
-        // 3️⃣ Build response
         JoinSessionResponse response = new JoinSessionResponse(
                 session.getRoomToken(),
                 wsUrl,
@@ -62,21 +49,25 @@ public class VideoSessionController {
                 session.getAllowedUntil()
         );
 
-        return ResponseEntity.ok(response);
+        return ResponseBuilder.success(
+                "Joined video session successfully",
+                response,
+                HttpStatus.OK
+        );
     }
 
-    /**
-     * End video session explicitly.
-     */
+    /* ================= END SESSION ================= */
+
     @PostMapping("/{videoSessionId}/end")
-    public ResponseEntity<Void> endSession(
-            @PathVariable Long videoSessionId
-    ) {
+    public ResponseEntity<ApiResponse<Object>> endSession(
+            @PathVariable Long videoSessionId) {
 
-        VideoSession session =
-                videoSessionService.getById(videoSessionId);
+        videoSessionService.endSession(videoSessionId);
 
-        videoSessionService.endSession(session);
-        return ResponseEntity.noContent().build();
+        return ResponseBuilder.success(
+                "Video session ended successfully",
+                null,
+                HttpStatus.NO_CONTENT
+        );
     }
 }
