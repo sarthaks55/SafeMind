@@ -211,8 +211,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     private AppointmentResponseDTO mapToDTO(Appointment a) {
     	AppointmentResponseDTO resp = new AppointmentResponseDTO();
-    			resp.setUserId(a.getAppointmentId());
+    			resp.setAppointmentId(a.getAppointmentId());
                 resp.setUserId(a.getUser().getUserId());
+                resp.setFullName(a.getUser().getFullName());
                 resp.setProfessionalName(a.getProfessional().getUser().getFullName());
                 resp.setStartTime(a.getStartTime());
                 resp.setEndTime(a.getEndTime());

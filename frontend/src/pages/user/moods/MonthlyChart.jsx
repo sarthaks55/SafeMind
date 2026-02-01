@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Bar, Pie } from "react-chartjs-2";
-import { getMonthlyAnalytics } from "../../../api/moodService";
+import { getMonthlyAnalytics,getWeeklyAnalytics } from "../../../api/moodService";
 
 const MonthlyChart = () => {
   const [data, setData] = useState(null);
@@ -9,11 +9,12 @@ const MonthlyChart = () => {
     const loadData = async () => {
       try {
         const now = new Date();
-        const response = await getMonthlyAnalytics(
-          now.getFullYear(),
-          now.getMonth() + 1
+        const response = await getWeeklyAnalytics(
+          // now.getFullYear(),
+          // now.getMonth() + 1
         );
         if (response.success) {
+          console.log(response.data);
           setData(response.data);
         } else {
           console.error(response.message);

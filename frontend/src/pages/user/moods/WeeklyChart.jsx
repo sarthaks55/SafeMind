@@ -10,6 +10,7 @@ const WeeklyChart = () => {
       try {
         const response = await getWeeklyAnalytics();
         if (response.success) {
+          console.log(response.data);
           setData(response.data);
         } else {
           console.error(response.message);

@@ -116,7 +116,7 @@ public class AdminController {
         return ResponseBuilder.success(
                 "User activation status updated",
                 null,
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 
@@ -148,7 +148,7 @@ public class AdminController {
         return ResponseBuilder.success(
                 "Professional verification updated",
                 null,
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 

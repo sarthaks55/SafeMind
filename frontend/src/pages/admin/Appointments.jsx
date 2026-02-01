@@ -224,8 +224,8 @@ const AdminAppointments = () => {
               <thead style={{ backgroundColor: "#C6B7E2" }}>
                 <tr>
                   <th className="border-0 py-3 px-4 fw-bold" style={{ color: "#8E6EC8" }}>ID</th>
-                  <th className="border-0 py-3 px-4 fw-bold" style={{ color: "#8E6EC8" }}>User ID</th>
-                  <th className="border-0 py-3 px-4 fw-bold" style={{ color: "#8E6EC8" }}>Professional ID</th>
+                  <th className="border-0 py-3 px-4 fw-bold" style={{ color: "#8E6EC8" }}>User Name</th>
+                  <th className="border-0 py-3 px-4 fw-bold" style={{ color: "#8E6EC8" }}>Professional Name</th>
                   <th className="border-0 py-3 px-4 fw-bold" style={{ color: "#8E6EC8" }}>Start Time</th>
                   <th className="border-0 py-3 px-4 fw-bold" style={{ color: "#8E6EC8" }}>End Time</th>
                   <th className="border-0 py-3 px-4 fw-bold" style={{ color: "#8E6EC8" }}>Status</th>
@@ -241,10 +241,10 @@ const AdminAppointments = () => {
                         <span className="badge" style={{ backgroundColor: "#C6B7E2", color: "#8E6EC8" }}>#{a.appointmentId}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="badge" style={{ backgroundColor: "#F3A6A1", color: "white" }}>#{a.userId}</span>
+                        <span className="badge" style={{ backgroundColor: "#F3A6A1", color: "white" }}>#{a.fullName}</span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="badge" style={{ backgroundColor: "#E8A1B0", color: "white" }}>#{a.professionalId}</span>
+                        <span className="badge" style={{ backgroundColor: "#E8A1B0", color: "white" }}>#{a.professionalName}</span>
                       </td>
                       <td className="py-3 px-4">
                         <div>

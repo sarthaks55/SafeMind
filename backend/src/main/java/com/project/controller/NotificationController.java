@@ -57,7 +57,7 @@ public class NotificationController {
         return ResponseBuilder.success(
                 "Notification marked as read",
                 null,
-                HttpStatus.NO_CONTENT
+                HttpStatus.OK
         );
     }
 
