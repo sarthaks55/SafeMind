@@ -47,6 +47,8 @@ public interface ProfessionalService {
             Long availabilityId);
 
 
-	ProfessionalUpdateDTO getProfessionalProfile(Long userId, Long professionalId);
+
+
+	ProfessionalUpdateDTO getProfessionalProfile(Long userId);
 
 }

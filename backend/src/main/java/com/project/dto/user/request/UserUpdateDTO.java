@@ -1,12 +1,31 @@
 package com.project.dto.user.request;
 
 import com.project.enums.Gender;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 import lombok.Data;
 
 @Data
 public class UserUpdateDTO {
+
+    @Size(min = 3, max = 50, message = "Full name must be between 3 and 50 characters")
+    @Pattern(
+        regexp = "^[A-Za-z ]+$",
+        message = "Full name can contain only letters and spaces"
+    )
     private String fullName;
+
+    @Email(message = "Invalid email format")
     private String email;
+
+    @Pattern(
+        regexp = "^[6-9]\\d{9}$",
+        message = "Phone number must be a valid 10-digit Indian mobile number"
+    )
     private String phone;
+
     private Gender gender;
 }

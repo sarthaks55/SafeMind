@@ -12,13 +12,61 @@ const Profile = () => {
     phone: auth?.phone || "",
   });
 
+  const [profileErrors, setProfileErrors] = useState({});
+
+  const validateProfile = () => {
+    const errors = {};
+    const nameRegex = /^[A-Za-z ]+$/;
+    const phoneRegex = /^[6-9]\d{9}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (profile.fullName && (profile.fullName.trim().length < 3 || profile.fullName.trim().length > 50)) {
+      errors.fullName = "Full name must be between 3 and 50 characters";
+    } else if (profile.fullName && !nameRegex.test(profile.fullName)) {
+      errors.fullName = "Full name can contain only letters and spaces";
+    }
+    
+    if (profile.email && !emailRegex.test(profile.email)) {
+      errors.email = "Invalid email format";
+    }
+    
+    if (profile.phone && !phoneRegex.test(profile.phone)) {
+      errors.phone = "Phone number must be a valid 10-digit Indian mobile number";
+    }
+    
+    setProfileErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const [passwords, setPasswords] = useState({
     oldPassword: "",
     newPassword: "",
   });
 
+  const [passwordErrors, setPasswordErrors] = useState({});
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const validatePassword = () => {
+    const errors = {};
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+    
+    if (!passwords.oldPassword.trim()) {
+      errors.oldPassword = "Old password is required";
+    }
+    
+    if (!passwords.newPassword.trim()) {
+      errors.newPassword = "New password is required";
+    } else if (passwords.newPassword.length < 6 || passwords.newPassword.length > 64) {
+      errors.newPassword = "New password must be between 6 and 64 characters";
+    } else if (!passwordRegex.test(passwords.newPassword)) {
+      errors.newPassword = "New password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character";
+    }
+    
+    setPasswordErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -36,21 +84,86 @@ const Profile = () => {
   }, []);
 
   const handleProfileChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setProfile({ ...profile, [name]: value });
+    
+    // Real-time validation
+    const errors = { ...profileErrors };
+    const nameRegex = /^[A-Za-z ]+$/;
+    const phoneRegex = /^[6-9]\d{9}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (name === 'fullName') {
+      if (value && (value.trim().length < 3 || value.trim().length > 50)) {
+        errors.fullName = "Full name must be between 3 and 50 characters";
+      } else if (value && !nameRegex.test(value)) {
+        errors.fullName = "Full name can contain only letters and spaces";
+      } else {
+        delete errors.fullName;
+      }
+    }
+    
+    if (name === 'email') {
+      if (value && !emailRegex.test(value)) {
+        errors.email = "Invalid email format";
+      } else {
+        delete errors.email;
+      }
+    }
+    
+    if (name === 'phone') {
+      if (value && !phoneRegex.test(value)) {
+        errors.phone = "Phone number must be a valid 10-digit Indian mobile number";
+      } else {
+        delete errors.phone;
+      }
+    }
+    
+    setProfileErrors(errors);
   };
 
   const handlePasswordChange = (e) => {
-    setPasswords({ ...passwords, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setPasswords({ ...passwords, [name]: value });
+    
+    // Real-time validation
+    const errors = { ...passwordErrors };
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+    
+    if (name === 'oldPassword') {
+      if (!value.trim()) {
+        errors.oldPassword = "Old password is required";
+      } else {
+        delete errors.oldPassword;
+      }
+    }
+    
+    if (name === 'newPassword') {
+      if (!value.trim()) {
+        errors.newPassword = "New password is required";
+      } else if (value.length < 6 || value.length > 64) {
+        errors.newPassword = "New password must be between 6 and 64 characters";
+      } else if (!passwordRegex.test(value)) {
+        errors.newPassword = "New password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character";
+      } else {
+        delete errors.newPassword;
+      }
+    }
+    
+    setPasswordErrors(errors);
   };
 
   const submitProfile = async (e) => {
     e.preventDefault();
+    if (!validateProfile()) return;
+    
     try {
       setErrorMessage("");
       setSuccessMessage("");
       const response = await updateProfile(profile);
       if (response.success) {
         setSuccessMessage(response.message || "Profile updated successfully");
+        setProfileErrors({});
       } else {
         setErrorMessage(response.message || "Profile update failed");
       }
@@ -61,6 +174,8 @@ const Profile = () => {
 
   const submitPassword = async (e) => {
     e.preventDefault();
+    if (!validatePassword()) return;
+    
     try {
       setErrorMessage("");
       setSuccessMessage("");
@@ -68,6 +183,7 @@ const Profile = () => {
       if (response.success) {
         setSuccessMessage(response.message || "Password changed successfully");
         setPasswords({ oldPassword: "", newPassword: "" });
+        setPasswordErrors({});
       } else {
         setErrorMessage(response.message || "Password change failed");
       }
@@ -116,6 +232,7 @@ const Profile = () => {
                     onChange={handleProfileChange}
                     required
                   />
+                  {profileErrors.fullName && <small className="text-danger">{profileErrors.fullName}</small>}
                 </div>
 
                 <div className="mb-4">
@@ -128,6 +245,7 @@ const Profile = () => {
                     value={profile.phone}
                     onChange={handleProfileChange}
                   />
+                  {profileErrors.phone && <small className="text-danger">{profileErrors.phone}</small>}
                 </div>
 
                 <button className="btn px-4 py-2" style={{ backgroundColor: "#8E6EC8", color: "white", border: "none", borderRadius: "8px" }}>
@@ -160,6 +278,7 @@ const Profile = () => {
                     onChange={handlePasswordChange}
                     required
                   />
+                  {passwordErrors.oldPassword && <small className="text-danger">{passwordErrors.oldPassword}</small>}
                 </div>
 
                 <div className="mb-4">
@@ -173,6 +292,11 @@ const Profile = () => {
                     onChange={handlePasswordChange}
                     required
                   />
+                  {passwordErrors.newPassword && <small className="text-danger">{passwordErrors.newPassword}</small>}
+                  <small className="text-muted mt-2 d-block">
+                    <i className="fas fa-info-circle me-1"></i>
+                    Use 6-64 characters with uppercase, lowercase, number, and special character
+                  </small>
                 </div>
 
                 <button className="btn px-4 py-2" style={{ backgroundColor: "#7A5BC7", color: "white", border: "none", borderRadius: "8px" }}>

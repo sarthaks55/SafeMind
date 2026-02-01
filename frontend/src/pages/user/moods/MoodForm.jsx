@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { addMood, updateMood } from "../../../api/moodService";
 
-const MoodForm = () => {
+const MoodForm = ({ onMoodAdded }) => {
   const [mood, setMood] = useState("HAPPY");
   const [notes, setNotes] = useState("");
 
@@ -11,6 +11,7 @@ const MoodForm = () => {
       const response = await addMood({ mood, notes });
       if (response.success) {
         alert(response.message || "Mood added");
+        onMoodAdded?.();
       } else {
         alert(response.message || "Failed to add mood");
       }
@@ -19,6 +20,7 @@ const MoodForm = () => {
         const response = await updateMood({ mood, notes });
         if (response.success) {
           alert(response.message || "Mood updated");
+          onMoodAdded?.();
         } else {
           alert(response.message || "Failed to update mood");
         }

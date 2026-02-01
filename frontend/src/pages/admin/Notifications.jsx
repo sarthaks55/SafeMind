@@ -26,10 +26,7 @@ const Notifications = () => {
     try {
       const response = await markAsRead(id);
       if (response.success) {
-        // Remove notification from UI instantly
-        setNotifications((prev) =>
-          prev.filter((n) => n.notificationId !== id)
-        );
+        loadNotifications();
       } else {
         alert(response.message || "Failed to mark as read");
       }

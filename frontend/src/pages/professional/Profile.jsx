@@ -34,24 +34,40 @@ const Profile = () => {
 
   const validateProfile = () => {
     const errors = {};
-    const nameRegex = /^[a-zA-Z\s]{2,50}$/;
-    const phoneRegex = /^[0-9]{10}$/;
-    const qualificationRegex = /^[a-zA-Z\s.,]{2,100}$/;
+    const nameRegex = /^[A-Za-z ]+$/;
+    const phoneRegex = /^[6-9]\d{9}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
-    if (!nameRegex.test(profile.fullName)) {
-      errors.fullName = "Name should contain only letters and be 2-50 characters";
+    if (profile.fullName && (profile.fullName.trim().length < 3 || profile.fullName.trim().length > 50)) {
+      errors.fullName = "Full name must be between 3 and 50 characters";
+    } else if (profile.fullName && !nameRegex.test(profile.fullName)) {
+      errors.fullName = "Full name can contain only letters and spaces";
     }
-    if (!phoneRegex.test(profile.phone)) {
-      errors.phone = "Phone should be exactly 10 digits";
+    
+    if (profile.email && !emailRegex.test(profile.email)) {
+      errors.email = "Invalid email format";
     }
-    if (!qualificationRegex.test(profile.qualification)) {
-      errors.qualification = "Qualification should be 2-100 characters";
+    
+    if (profile.phone && !phoneRegex.test(profile.phone)) {
+      errors.phone = "Phone number must be a valid 10-digit Indian mobile number";
     }
-    if (profile.experienceYears < 0 || profile.experienceYears > 50) {
-      errors.experienceYears = "Experience should be between 0-50 years";
+    
+    if (profile.experienceYears < 0) {
+      errors.experienceYears = "Experience cannot be negative";
+    } else if (profile.experienceYears > 60) {
+      errors.experienceYears = "Experience seems invalid";
     }
-    if (profile.consultationFee < 0) {
-      errors.consultationFee = "Fee should be a positive number";
+    
+    if (profile.qualification && (profile.qualification.trim().length < 2 || profile.qualification.trim().length > 100)) {
+      errors.qualification = "Qualification must be between 2 and 100 characters";
+    }
+    
+    if (profile.bio && profile.bio.length > 500) {
+      errors.bio = "Bio must not exceed 500 characters";
+    }
+    
+    if (profile.consultationFee <= 0) {
+      errors.consultationFee = "Consultation fee must be greater than 0";
     }
     
     setProfileErrors(errors);
@@ -59,10 +75,68 @@ const Profile = () => {
   };
 
   const handleProfileChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-    if (profileErrors[e.target.name]) {
-      setProfileErrors({ ...profileErrors, [e.target.name]: "" });
+    const { name, value } = e.target;
+    setProfile({ ...profile, [name]: value });
+    
+    // Real-time validation
+    const errors = { ...profileErrors };
+    const nameRegex = /^[A-Za-z ]+$/;
+    const phoneRegex = /^[6-9]\d{9}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (name === 'fullName') {
+      if (value && (value.trim().length < 3 || value.trim().length > 50)) {
+        errors.fullName = "Full name must be between 3 and 50 characters";
+      } else if (value && !nameRegex.test(value)) {
+        errors.fullName = "Full name can contain only letters and spaces";
+      } else {
+        delete errors.fullName;
+      }
     }
+    
+    if (name === 'phone') {
+      if (value && !phoneRegex.test(value)) {
+        errors.phone = "Phone number must be a valid 10-digit Indian mobile number";
+      } else {
+        delete errors.phone;
+      }
+    }
+    
+    if (name === 'qualification') {
+      if (value && (value.trim().length < 2 || value.trim().length > 100)) {
+        errors.qualification = "Qualification must be between 2 and 100 characters";
+      } else {
+        delete errors.qualification;
+      }
+    }
+    
+    if (name === 'experienceYears') {
+      if (value < 0) {
+        errors.experienceYears = "Experience cannot be negative";
+      } else if (value > 60) {
+        errors.experienceYears = "Experience seems invalid";
+      } else {
+        delete errors.experienceYears;
+      }
+    }
+    
+    if (name === 'consultationFee') {
+      if (value <= 0) {
+        errors.consultationFee = "Consultation fee must be greater than 0";
+      } else {
+        delete errors.consultationFee;
+      }
+    }
+    
+    if (name === 'bio') {
+      if (value && value.length > 500) {
+        errors.bio = "Bio must not exceed 500 characters";
+      } else {
+        delete errors.bio;
+      }
+    }
+    
+    setProfileErrors(errors);
   };
 
   const handleProfileSubmit = async (e) => {
@@ -91,13 +165,18 @@ const Profile = () => {
 
   const validatePassword = () => {
     const errors = {};
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
     
-    if (password.oldPassword.length < 6) {
-      errors.oldPassword = "Password should be at least 6 characters";
+    if (!password.oldPassword.trim()) {
+      errors.oldPassword = "Old password is required";
     }
-    if (!passwordRegex.test(password.newPassword)) {
-      errors.newPassword = "Password should have 8+ chars, uppercase, lowercase, and number";
+    
+    if (!password.newPassword.trim()) {
+      errors.newPassword = "New password is required";
+    } else if (password.newPassword.length < 6 || password.newPassword.length > 64) {
+      errors.newPassword = "New password must be between 6 and 64 characters";
+    } else if (!passwordRegex.test(password.newPassword)) {
+      errors.newPassword = "New password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character";
     }
     
     setPasswordErrors(errors);
@@ -105,10 +184,34 @@ const Profile = () => {
   };
 
   const handlePasswordChange = (e) => {
-    setPassword({ ...password, [e.target.name]: e.target.value });
-    if (passwordErrors[e.target.name]) {
-      setPasswordErrors({ ...passwordErrors, [e.target.name]: "" });
+    const { name, value } = e.target;
+    setPassword({ ...password, [name]: value });
+    
+    // Real-time validation
+    const errors = { ...passwordErrors };
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/;
+    
+    if (name === 'oldPassword') {
+      if (!value.trim()) {
+        errors.oldPassword = "Old password is required";
+      } else {
+        delete errors.oldPassword;
+      }
     }
+    
+    if (name === 'newPassword') {
+      if (!value.trim()) {
+        errors.newPassword = "New password is required";
+      } else if (value.length < 6 || value.length > 64) {
+        errors.newPassword = "New password must be between 6 and 64 characters";
+      } else if (!passwordRegex.test(value)) {
+        errors.newPassword = "New password must contain at least 1 uppercase, 1 lowercase, 1 number, and 1 special character";
+      } else {
+        delete errors.newPassword;
+      }
+    }
+    
+    setPasswordErrors(errors);
   };
 
   const handlePasswordSubmit = async (e) => {
@@ -254,6 +357,7 @@ const Profile = () => {
                     value={profile.bio}
                     onChange={handleProfileChange}
                   />
+                  {profileErrors.bio && <small className="text-danger">{profileErrors.bio}</small>}
                 </div>
 
                 <button className="btn px-5 py-3 fw-bold shadow-sm" 
@@ -315,7 +419,7 @@ const Profile = () => {
                   {passwordErrors.newPassword && <small className="text-danger">{passwordErrors.newPassword}</small>}
                   <small className="text-muted mt-2 d-block">
                     <i className="fas fa-info-circle me-1"></i>
-                    Use 8+ characters with uppercase, lowercase, and numbers
+                    Use 6-64 characters with uppercase, lowercase, number, and special character
                   </small>
                 </div>
 

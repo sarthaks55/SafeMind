@@ -1,8 +1,15 @@
+import { useState } from "react";
 import MoodForm from "./MoodForm";
 import WeeklyChart from "./WeeklyChart";
 import MonthlyChart from "./MonthlyChart";
 
 const MoodDashboard = () => {
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleMoodAdded = () => {
+    setRefreshKey(prev => prev + 1);
+  };
+
   return (
     <div className="container-fluid" style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px" }}>
       <div className="row mb-4">
@@ -23,7 +30,7 @@ const MoodDashboard = () => {
         <div className="col-12">
           <div className="card border-0 shadow-sm" style={{ backgroundColor: "#FFFFFF", borderRadius: "15px", borderTop: "4px solid #9C7FD1" }}>
             <div className="card-body p-4">
-              <MoodForm />
+              <MoodForm onMoodAdded={handleMoodAdded} />
             </div>
           </div>
         </div>
@@ -37,7 +44,7 @@ const MoodDashboard = () => {
               </h5>
             </div>
             <div className="card-body">
-              <WeeklyChart />
+              <WeeklyChart key={`weekly-${refreshKey}`} />
             </div>
           </div>
         </div>
@@ -51,7 +58,7 @@ const MoodDashboard = () => {
               </h5>
             </div>
             <div className="card-body">
-              <MonthlyChart />
+              <MonthlyChart key={`monthly-${refreshKey}`} />
             </div>
           </div>
         </div>
