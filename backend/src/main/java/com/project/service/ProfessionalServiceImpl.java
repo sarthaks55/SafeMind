@@ -279,6 +279,32 @@ public class ProfessionalServiceImpl implements ProfessionalService {
                         a.getEndTime()))
                 .toList();
     }
+    
+    
+    
+    /* ================= GET ================= */
+
+    @Override
+    public List<ProfessionalAvailabilityResponseDTO> getMyAvailabilityUser(
+            Long professionalId) {
+
+        Professional professional =
+                professionalRepo.findById(professionalId)
+                        .orElseThrow(() ->
+                                new ProfessionalNotFoundException(
+                                        "Professional not found"));
+
+        return availabilityRepo
+                .findByProfessional_ProfessionalId(
+                		professionalId)
+                .stream()
+                .map(a -> new ProfessionalAvailabilityResponseDTO(
+                        a.getAvailabilityId(),
+                        a.getDayOfWeek(),
+                        a.getStartTime(),
+                        a.getEndTime()))
+                .toList();
+    }
 
 
 

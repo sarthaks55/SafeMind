@@ -14,3 +14,9 @@ export const changePassword = async (data) => {
   const res = await api.put("/user/password", data);
   return res.data;
 };
+
+export const getAvailability = async (professionalId) => {
+  const res = await api.get(`/availability/${professionalId}`);
+  return res.data;
+};
+

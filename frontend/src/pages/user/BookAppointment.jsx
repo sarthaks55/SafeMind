@@ -1,22 +1,28 @@
 import { useEffect, useState } from "react";
-import { bookAppointment, getProfessionals } from "../../api/appointmentService";
-import api from "../../api/axios"; // your axios instance
+import { bookAppointment,getProfessionals } from "../../api/appointmentService";
+import {  getAvailability } from "../../api/userService";
 
 const BookAppointment = () => {
   const [professionals, setProfessionals] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [selectedProfessional, setSelectedProfessional] = useState(null);
+  const [availability, setAvailability] = useState([]);
+  const [availabilityLoading, setAvailabilityLoading] = useState(false);
+
   const [startTime, setStartTime] = useState("");
   const [bookingLoading, setBookingLoading] = useState(false);
+
+  /* ================= LOAD PROFESSIONALS ================= */
 
   useEffect(() => {
     const fetchProfessionals = async () => {
       try {
-        const response = await getProfessionals();
-        if (response.success) {
-          setProfessionals(response.data);
+        const res = await getProfessionals();
+        if (res.success) {
+          setProfessionals(res.data);
         } else {
-          alert(response.message || "Failed to load professionals");
+          alert(res.message || "Failed to load professionals");
         }
       } catch (err) {
         alert(err.response?.data?.message || "Failed to load professionals");
@@ -24,8 +30,39 @@ const BookAppointment = () => {
         setLoading(false);
       }
     };
+
     fetchProfessionals();
   }, []);
+
+  /* ================= LOAD AVAILABILITY ================= */
+
+  useEffect(() => {
+    if (!selectedProfessional) return;
+
+    const fetchAvailability = async () => {
+      setAvailabilityLoading(true);
+      try {
+        const res = await getAvailability(
+  selectedProfessional.professionalId
+);
+
+        if (res.success) {
+          setAvailability(res.data);
+          setStartTime("");
+        } else {
+          alert(res.message || "Failed to load availability");
+        }
+      } catch (err) {
+        alert(err.response?.data?.message || "Failed to load availability");
+      } finally {
+        setAvailabilityLoading(false);
+      }
+    };
+
+    fetchAvailability();
+  }, [selectedProfessional]);
+
+  /* ================= BOOK APPOINTMENT ================= */
 
   const submitBooking = async () => {
     if (!startTime) {
@@ -35,20 +72,20 @@ const BookAppointment = () => {
 
     setBookingLoading(true);
     try {
-      const response = await bookAppointment({
+      const res = await bookAppointment({
         professionalId: selectedProfessional.professionalId,
         startTime,
       });
-      if (response.success) {
-        alert(response.message || "Appointment booked successfully!");
-        setSelectedProfessional(null);
-        setStartTime("");
+
+      if (res.success) {
+        alert(res.message || "Appointment booked successfully");
+        closeModal();
       } else {
-        alert(response.message || "Failed to book appointment");
+        alert(res.message || "Failed to book appointment");
       }
-    } catch (error) {
+    } catch (err) {
       alert(
-        error.response?.data?.message ||
+        err.response?.data?.message ||
           "Failed to book appointment. Please try again."
       );
     } finally {
@@ -56,9 +93,22 @@ const BookAppointment = () => {
     }
   };
 
+  /* ================= HELPERS ================= */
+
+  const closeModal = () => {
+    setSelectedProfessional(null);
+    setAvailability([]);
+    setStartTime("");
+  };
+
+  /* ================= LOADING ================= */
+
   if (loading) {
     return (
-      <div className="container-fluid" style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div
+        className="container-fluid d-flex align-items-center justify-content-center"
+        style={{ minHeight: "100vh", backgroundColor: "#FAF9F7" }}
+      >
         <div className="text-center" style={{ color: "#8E6EC8" }}>
           <i className="fas fa-spinner fa-spin fa-3x mb-3"></i>
           <div>Loading professionals...</div>
@@ -67,18 +117,21 @@ const BookAppointment = () => {
     );
   }
 
+  /* ================= UI ================= */
+
   return (
     <div
       className="container-fluid"
       style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px" }}
     >
-      {/* Header */}
+      {/* HEADER */}
       <div className="row mb-4">
         <div className="col-12">
           <div
             className="card border-0 shadow-sm text-center"
             style={{
-              background: "linear-gradient(135deg, #8E6EC8 0%, #7A5BC7 100%)",
+              background:
+                "linear-gradient(135deg, #8E6EC8 0%, #7A5BC7 100%)",
               color: "white",
               borderRadius: "15px",
             }}
@@ -93,30 +146,19 @@ const BookAppointment = () => {
         </div>
       </div>
 
-      {/* Professionals Cards */}
+      {/* PROFESSIONALS */}
       <div className="row">
         {professionals.map((p) => (
           <div className="col-md-4 mb-4" key={p.professionalId}>
             <div
               className="card border-0 shadow-sm h-100"
-              style={{
-                borderRadius: "15px",
-                cursor: "pointer",
-                backgroundColor: "#FFFFFF",
-              }}
+              style={{ borderRadius: "15px", cursor: "pointer" }}
               onClick={() => setSelectedProfessional(p)}
             >
               <div className="card-body">
                 <h5 style={{ color: "#8E6EC8" }}>{p.fullName}</h5>
-                <p className="mb-1">
-                  <strong>Gender:</strong> {p.gender || "Not specified"}
-                </p>
-                <p className="mb-1">
-                  <strong>Specialization:</strong> {p.specialization}
-                </p>
-                <p className="mb-2">
-                  <strong>Fee:</strong> ₹{p.consultationFee}
-                </p>
+                <p><strong>Specialization:</strong> {p.specialization}</p>
+                <p><strong>Fee:</strong> ₹{p.consultationFee}</p>
 
                 <button
                   className="btn w-100"
@@ -135,54 +177,83 @@ const BookAppointment = () => {
         ))}
       </div>
 
-      {/* Modal */}
+      {/* MODAL */}
       {selectedProfessional && (
         <div
           className="modal fade show"
           style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
         >
           <div className="modal-dialog modal-lg modal-dialog-centered">
-            <div
-              className="modal-content border-0"
-              style={{ borderRadius: "15px" }}
-            >
+            <div className="modal-content border-0" style={{ borderRadius: "15px" }}>
               <div className="modal-header">
                 <h5 className="modal-title" style={{ color: "#8E6EC8" }}>
                   {selectedProfessional.fullName}
                 </h5>
-                <button
-                  className="btn-close"
-                  onClick={() => setSelectedProfessional(null)}
-                ></button>
+                <button className="btn-close" onClick={closeModal}></button>
               </div>
 
               <div className="modal-body">
-                <p><strong>Specialization:</strong> {selectedProfessional.specialization}</p>
-                <p><strong>Qualification:</strong> {selectedProfessional.qualification}</p>
-                <p><strong>Experience:</strong> {selectedProfessional.experienceYears} years</p>
-                <p><strong>Languages:</strong> {selectedProfessional.spokenLanguage}</p>
-                <p><strong>Consultation Fee:</strong> ₹{selectedProfessional.consultationFee}</p>
+                <p><strong>Specialization:</strong> {selectedProfessional.specialization}</p> 
+                <p><strong>Qualification:</strong> {selectedProfessional.qualification}</p> 
+                <p><strong>Experience:</strong> {selectedProfessional.experienceYears} years</p> 
+                <p><strong>Languages:</strong> {selectedProfessional.spokenLanguage}</p> 
+                <p><strong>Consultation Fee:</strong> ₹{selectedProfessional.consultationFee}</p> 
                 <p><strong>Bio:</strong> {selectedProfessional.bio}</p>
 
                 <hr />
+
+                
+                <label className="fw-bold mb-2" style={{ color: "#8E6EC8" }}>
+                  Professional Availability
+                </label>
+                <div className="table-responsive">
+                  <table className="table table-hover">
+                    <thead style={{ backgroundColor: "#C6B7E2" }}>
+                      <tr>
+                        <th>Day</th>
+                        <th>Start</th>
+                        <th>End</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {availabilityLoading ? (
+                        <tr>
+                          <td colSpan="3" className="text-center py-4">
+                            Loading availability...
+                          </td>
+                        </tr>
+                      ) : availability.length === 0 ? (
+                        <tr>
+                          <td colSpan="3" className="text-center py-4 text-muted">
+                            No availability available
+                          </td>
+                        </tr>
+                      ) : (
+                        availability.map((a) => (
+                          <tr key={a.availabilityId}>
+                            <td>{a.dayOfWeek}</td>
+                            <td>{a.startTime}</td>
+                            <td>{a.endTime}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
 
                 <label className="fw-bold mb-2" style={{ color: "#8E6EC8" }}>
                   Select Date & Time
                 </label>
                 <input
                   type="datetime-local"
-                  className="form-control"
-                  style={{ backgroundColor: "#C6B7E2" }}
+                  className="form-control mb-3"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
                 />
               </div>
 
               <div className="modal-footer">
-                <button
-                  className="btn"
-                  onClick={() => setSelectedProfessional(null)}
-                >
+                <button className="btn" onClick={closeModal}>
                   Cancel
                 </button>
                 <button

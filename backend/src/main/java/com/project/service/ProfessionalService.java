@@ -36,6 +36,10 @@ public interface ProfessionalService {
 
     List<ProfessionalAvailabilityResponseDTO> getMyAvailability(
             Long userId);
+    
+    List<ProfessionalAvailabilityResponseDTO> getMyAvailabilityUser(
+            Long professionalId);
+
 
 //    ProfessionalAvailability updateAvailability(
 //            Long professionalId,

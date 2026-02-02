@@ -2,6 +2,7 @@ package com.project.service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,17 +78,21 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setStatus(AppointmentStatus.PENDING);
 
         appointmentRepo.save(appointment);
+        
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("dd MMM yyyy, hh:mm a");
+
 
         notificationService.sendInAppNotification(
         	    professional.getUser().getUserId(),
         	    "New Appointment Booked",
-        	    "A patient has booked an appointment on " + startTime
+        	    "A patient has booked an appointment on " + startTime.format(formatter)
         	);
 
         	notificationService.sendEmailNotification(
         	    professional.getUser().getEmail(),
         	    "New Appointment Booking",
-        	    "You have received a new appointment request scheduled at " + startTime
+        	    "You have received a new appointment request scheduled at " + startTime.format(formatter)
         	);
 
         	return mapToDTO(appointment);

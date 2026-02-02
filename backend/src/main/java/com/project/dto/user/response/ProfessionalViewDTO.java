@@ -3,7 +3,9 @@ package com.project.dto.user.response;
 
 
 import java.math.BigDecimal;
+import java.time.LocalTime;
 
+import com.project.enums.DayOfWeekEnum;
 import com.project.enums.Gender;
 import com.project.enums.Specialization;
 import com.project.enums.SpokenLanguage;
@@ -24,6 +26,11 @@ public class ProfessionalViewDTO {
 	 private BigDecimal consultationFee;
 	 private SpokenLanguage spokenLanguage;
 	 private boolean isVerified;
+	 
+	 private Long availabilityId;
+	 private DayOfWeekEnum dayOfWeek;
+	 private LocalTime startTime;
+	 private LocalTime endTime;
 }
 
 
