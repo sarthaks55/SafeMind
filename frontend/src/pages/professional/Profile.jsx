@@ -146,6 +146,7 @@ const Profile = () => {
     try {
       const response = await updateProfessionalProfile(profile);
       if (response.success) {
+        console.log("************************"+response);
         alert(response.message || "Profile updated successfully");
       } else {
         alert(response.message || "Profile update failed");
