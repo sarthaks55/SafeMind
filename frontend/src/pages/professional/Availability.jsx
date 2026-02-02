@@ -236,14 +236,14 @@ const Availability = () => {
                           </td>
                           <td className="py-3 px-4">
                             <div className="d-flex gap-2">
-                              <button 
+                              {/* <button 
                                 className="btn btn-sm px-3" 
                                 style={{ backgroundColor: "#B39DDB", color: "white", border: "none" }}
                                 onClick={() => handleEdit(a)}
                               >
                                 <i className="fas fa-edit me-1"></i>
                                 Edit
-                              </button>
+                              </button> */}
                               <button 
                                 className="btn btn-sm px-3" 
                                 style={{ backgroundColor: "#D9899A", color: "white", border: "none" }}

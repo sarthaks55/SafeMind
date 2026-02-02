@@ -11,7 +11,7 @@ export const registerUserApi = async (data) => {
 };
 
 export const registerProfessionalApi = async (data) => {
-  const res = await api.post("/auth/registerProfessional", data);
+  const res = await api.post("/auth/register-professional", data);
   return res.data;
 };
 
