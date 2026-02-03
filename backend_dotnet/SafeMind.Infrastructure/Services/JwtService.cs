@@ -27,7 +27,8 @@ namespace SafeMind.Infrastructure.Services
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim("userId", user.UserId.ToString()),
-                new Claim("role", user.Role.RoleName)
+                new Claim("role", user.Role.RoleName),
+                new Claim("fullName", user.FullName.ToString())
             };
 
             var token = new JwtSecurityToken(
