@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useNotification } from "../../context/NotificationContext";
 import { useEffect, useState } from "react";
 import { getUnreadCount } from "../../api/notificationService";
 
@@ -8,14 +9,14 @@ import { getUnreadCount } from "../../api/notificationService";
 const Sidebar = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const { refreshTrigger } = useNotification();
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
-
-    const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const loadCount = async () => {
@@ -30,7 +31,7 @@ const Sidebar = () => {
       }
     };
     loadCount();
-  }, []);
+  }, [refreshTrigger]);
 
   return (
     <aside style={{ width: "250px", background: "linear-gradient(180deg, #8E6EC8 0%, #7A5BC7 100%)", color: "#fff", minHeight: "100vh" }}>

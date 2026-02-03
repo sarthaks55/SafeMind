@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { bookAppointment,getProfessionals } from "../../api/appointmentService";
 import {  getAvailability } from "../../api/userService";
+import ErrorMessage from "../../components/ErrorMessage";
+import SuccessMessage from "../../components/SuccessMessage";
 
 const BookAppointment = () => {
   const [professionals, setProfessionals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const [selectedProfessional, setSelectedProfessional] = useState(null);
   const [availability, setAvailability] = useState([]);
@@ -22,10 +26,10 @@ const BookAppointment = () => {
         if (res.success) {
           setProfessionals(res.data);
         } else {
-          alert(res.message || "Failed to load professionals");
+          setErrorMessage(res.message || "Failed to load professionals");
         }
       } catch (err) {
-        alert(err.response?.data?.message || "Failed to load professionals");
+        setErrorMessage(err.response?.data?.message || "Failed to load professionals");
       } finally {
         setLoading(false);
       }
@@ -50,10 +54,10 @@ const BookAppointment = () => {
           setAvailability(res.data);
           setStartTime("");
         } else {
-          alert(res.message || "Failed to load availability");
+          setErrorMessage(res.message || "Failed to load availability");
         }
       } catch (err) {
-        alert(err.response?.data?.message || "Failed to load availability");
+        setErrorMessage(err.response?.data?.message || "Failed to load availability");
       } finally {
         setAvailabilityLoading(false);
       }
@@ -66,11 +70,13 @@ const BookAppointment = () => {
 
   const submitBooking = async () => {
     if (!startTime) {
-      alert("Please select date & time");
+      setErrorMessage("Please select date & time");
       return;
     }
 
     setBookingLoading(true);
+    setErrorMessage("");
+    setSuccessMessage("");
     try {
       const res = await bookAppointment({
         professionalId: selectedProfessional.professionalId,
@@ -78,13 +84,13 @@ const BookAppointment = () => {
       });
 
       if (res.success) {
-        alert(res.message || "Appointment booked successfully");
+        setSuccessMessage(res.message || "Appointment booked successfully");
         closeModal();
       } else {
-        alert(res.message || "Failed to book appointment");
+        setErrorMessage(res.message || "Failed to book appointment");
       }
     } catch (err) {
-      alert(
+      setErrorMessage(
         err.response?.data?.message ||
           "Failed to book appointment. Please try again."
       );
@@ -127,6 +133,8 @@ const BookAppointment = () => {
       {/* HEADER */}
       <div className="row mb-4">
         <div className="col-12">
+          <ErrorMessage error={errorMessage} onClose={() => setErrorMessage("")} />
+          <SuccessMessage message={successMessage} onClose={() => setSuccessMessage("")} />
           <div
             className="card border-0 shadow-sm text-center"
             style={{

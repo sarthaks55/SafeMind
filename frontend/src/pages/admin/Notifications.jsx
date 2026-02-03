@@ -3,9 +3,13 @@ import {
   getNotifications,
   markAsRead,
 } from "../../api/notificationService";
+import { useNotification } from "../../context/NotificationContext";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { triggerRefresh } = useNotification();
 
   const loadNotifications = async () => {
     try {
@@ -27,11 +31,12 @@ const Notifications = () => {
       const response = await markAsRead(id);
       if (response.success) {
         loadNotifications();
+        triggerRefresh(); // Trigger sidebar refresh
       } else {
-        alert(response.message || "Failed to mark as read");
+        setErrorMessage(response.message || "Failed to mark as read");
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to mark as read");
+      setErrorMessage(err.response?.data?.message || "Failed to mark as read");
     }
   };
 
@@ -41,6 +46,7 @@ const Notifications = () => {
 
   return (
     <div className="admin-card" style={{ padding: "30px", backgroundColor: "#FFFFFF", borderRadius: "12px", boxShadow: "0 4px 20px rgba(0,0,0,0.1)" }}>
+      <ErrorMessage error={errorMessage} onClose={() => setErrorMessage("")} />
       <h2 style={{ color: "#7A5BC7", marginBottom: "25px", fontSize: "28px", fontWeight: "600" }}>Notifications</h2>
 
       {notifications.length === 0 && (

@@ -4,6 +4,7 @@ import { getAssessmentById, submitAssessment } from "../../api/assessmentService
 import ProgressBar from "../../components/assessments/ProgressBar";
 import QuestionCard from "../../components/assessments/QuestionCard";
 import PublicNavbar from "../../components/PublicNavbar";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const AssessmentDetail = () => {
   const { id } = useParams();
@@ -14,6 +15,7 @@ const AssessmentDetail = () => {
   const [answers, setAnswers] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const loadAssessment = async () => {
@@ -93,10 +95,10 @@ const AssessmentDetail = () => {
           state: response.data
         });
       } else {
-        alert(response.message || "Failed to submit assessment");
+        setErrorMessage(response.message || "Failed to submit assessment");
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to submit assessment");
+      setErrorMessage(err.response?.data?.message || "Failed to submit assessment");
     } finally {
       setSubmitting(false);
     }
@@ -106,6 +108,7 @@ const AssessmentDetail = () => {
     <>
       <PublicNavbar />
       <div style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px", paddingTop: "100px" }}>
+      <ErrorMessage error={errorMessage} onClose={() => setErrorMessage("")} />
       <div style={{ maxWidth: "800px", margin: "0 auto" }}>
         <h2 style={{ color: "#8E6EC8", marginBottom: "20px", fontWeight: "bold" }}>{assessment.title}</h2>
 

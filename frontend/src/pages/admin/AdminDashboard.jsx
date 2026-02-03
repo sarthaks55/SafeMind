@@ -1,11 +1,13 @@
 // src/pages/admin/AdminDashboard.jsx
 import { Outlet, NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useNotification } from "../../context/NotificationContext";
 import { useEffect, useState } from "react";
 import { getUnreadCount } from "../../api/notificationService";
 
 const AdminDashboard = () => {
   const { logout } = useAuth();
+  const { refreshTrigger } = useNotification();
 
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -15,7 +17,7 @@ const AdminDashboard = () => {
       setUnreadCount(res.data);
     };
     loadCount();
-  }, []);
+  }, [refreshTrigger]);
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", backgroundColor: "#FAF9F7" }}>

@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { getUnreadCount } from "../../api/notificationService";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useNotification } from "../../context/NotificationContext";
   
   
 
 const Sidebar = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const { refreshTrigger } = useNotification();
 
   const handleLogout = () => {
     logout();
@@ -24,7 +26,7 @@ const Sidebar = () => {
       setUnreadCount(res.data);
     };
     loadCount();
-  }, []);
+  }, [refreshTrigger]);
 
    return (
     <aside style={{ width: "250px", background: "linear-gradient(180deg, #8E6EC8 0%, #7A5BC7 100%)", color: "#fff", minHeight: "100vh" }}>
