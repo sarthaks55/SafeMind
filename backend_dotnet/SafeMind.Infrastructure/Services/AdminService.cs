@@ -102,10 +102,10 @@ namespace SafeMind.Infrastructure.Services
             var professional = await _context.Professionals
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(p => p.UserId == userId);
-
+                 Console.WriteLine(professional.ToString() + "********");
             if (professional == null) throw new Exception("Professional not found");
 
-            professional.IsVerified = isVerified;
+            professional.IsVerified =  isVerified;
             await _context.SaveChangesAsync();
 
             /* NOTIFY PROFESSIONAL */
