@@ -3,6 +3,7 @@ package com.project.entities;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.enums.Specialization;
 import com.project.enums.SpokenLanguage;
 
@@ -45,10 +46,11 @@ public class Professional extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long professionalId;
 
-    
-    @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore   // ⭐ MOST IMPORTANT LINE
     private User user;
+
 
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -76,6 +78,7 @@ public class Professional extends BaseEntity {
 		    cascade = CascadeType.ALL,
 		    orphanRemoval = true
 		)
+		@JsonIgnore
 		private List<ProfessionalAvailability> availabilities;
 
 	public Professional(User user,  @NotNull SpokenLanguage spokenLanguage,

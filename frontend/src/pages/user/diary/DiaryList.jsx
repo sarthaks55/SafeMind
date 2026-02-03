@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { deleteDiary, getAllDiaries } from "../../../api/diaryService";
+import { useDiary } from "../../../context/DiaryContext";
+import ErrorMessage from "../../../components/ErrorMessage";
 //import { deleteDiary, getAllDiaries } from "../../../api/diaryService";
 
 const DiaryList = ({ onEdit }) => {
   const [entries, setEntries] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { refreshTrigger } = useDiary();
 
   const load = async () => {
     try {
@@ -20,7 +24,7 @@ const DiaryList = ({ onEdit }) => {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [refreshTrigger]);
 
   const remove = async (id) => {
     if (!window.confirm("Delete this entry?")) return;
@@ -29,15 +33,16 @@ const DiaryList = ({ onEdit }) => {
       if (response.success) {
         load();
       } else {
-        alert(response.message || "Failed to delete diary");
+        setErrorMessage(response.message || "Failed to delete diary");
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete diary");
+      setErrorMessage(err.response?.data?.message || "Failed to delete diary");
     }
   };
 
   return (
     <div className="card p-3">
+      <ErrorMessage error={errorMessage} onClose={() => setErrorMessage("")} />
       <h5>Past Entries</h5>
 
       {entries.length === 0 && <p>No entries yet.</p>}

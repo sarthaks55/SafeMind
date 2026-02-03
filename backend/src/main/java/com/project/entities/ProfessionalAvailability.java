@@ -2,6 +2,7 @@ package com.project.entities;
 
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.enums.DayOfWeekEnum;
 
 import jakarta.persistence.Entity;
@@ -30,6 +31,7 @@ public class ProfessionalAvailability {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professional_id", nullable = false)
+    @JsonIgnore
     private Professional professional;
 
     @Enumerated(EnumType.STRING)

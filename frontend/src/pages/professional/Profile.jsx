@@ -4,8 +4,12 @@ import {
   updateProfessionalProfile,
   changeProfessionalPassword,
 } from "../../api/professionalService";
+import ErrorMessage from "../../components/ErrorMessage";
+import SuccessMessage from "../../components/SuccessMessage";
 
 const Profile = () => {
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   /* ================= PROFILE ================= */
   const [profile, setProfile] = useState({
     fullName: "",
@@ -143,16 +147,18 @@ const Profile = () => {
     e.preventDefault();
     if (!validateProfile()) return;
     
+    setErrorMessage("");
+    setSuccessMessage("");
     try {
       const response = await updateProfessionalProfile(profile);
       if (response.success) {
         console.log("************************"+response);
-        alert(response.message || "Profile updated successfully");
+        setSuccessMessage(response.message || "Profile updated successfully");
       } else {
-        alert(response.message || "Profile update failed");
+        setErrorMessage(response.message || "Profile update failed");
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Profile update failed");
+      setErrorMessage(err.response?.data?.message || "Profile update failed");
     }
   };
 
@@ -219,21 +225,25 @@ const Profile = () => {
     e.preventDefault();
     if (!validatePassword()) return;
     
+    setErrorMessage("");
+    setSuccessMessage("");
     try {
       const response = await changeProfessionalPassword(password);
       if (response.success) {
-        alert(response.message || "Password updated successfully");
+        setSuccessMessage(response.message || "Password updated successfully");
         setPassword({ oldPassword: "", newPassword: "" });
       } else {
-        alert(response.message || "Password update failed");
+        setErrorMessage(response.message || "Password update failed");
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Password update failed");
+      setErrorMessage(err.response?.data?.message || "Password update failed");
     }
   };
 
   return (
     <div className="container-fluid" style={{ backgroundColor: "#FAF9F7", minHeight: "100vh", padding: "20px" }}>
+      <ErrorMessage error={errorMessage} onClose={() => setErrorMessage("")} />
+      <SuccessMessage message={successMessage} onClose={() => setSuccessMessage("")} />
       <div className="row mb-4">
         <div className="col-12">
           <div className="card border-0 shadow-lg" style={{ background: "linear-gradient(135deg, #E8A1B0 0%, #D9899A 100%)", color: "white", borderRadius: "20px", overflow: "hidden" }}>

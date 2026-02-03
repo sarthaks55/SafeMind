@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createDiary, updateDiary } from "../../../api/diaryService";
+import { useDiary } from "../../../context/DiaryContext";
 import ErrorMessage from "../../../components/ErrorMessage";
 import SuccessMessage from "../../../components/SuccessMessage";
 
@@ -7,6 +8,7 @@ const DiaryEditor = ({ selected, onSaved }) => {
   const [text, setText] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const { triggerRefresh } = useDiary();
 
   useEffect(() => {
     if (selected) setText(selected.text);
@@ -38,6 +40,7 @@ const DiaryEditor = ({ selected, onSaved }) => {
 
       setText("");
       onSaved();
+      triggerRefresh(); // Trigger diary list refresh
     } catch (err) {
       setErrorMessage(err.response?.data?.message || "Operation failed");
     }

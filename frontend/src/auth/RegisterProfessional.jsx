@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { registerProfessionalApi } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
+import SuccessMessage from "../components/SuccessMessage";
 
 const RegisterProfessional = ({ onBack }) => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const RegisterProfessional = ({ onBack }) => {
     spokenLanguage: "ENGLISH"
   });
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
 
   const validateForm = () => {
     const newErrors = {};
@@ -101,10 +103,12 @@ const RegisterProfessional = ({ onBack }) => {
     try {
       const response = await registerProfessionalApi(form);
       if (response.success) {
-        alert(response.message || "Professional registered successfully.\nWaiting for admin verification.");
-        navigate("/verify-otp", {
-          state: { userId: response.data.userId }
-        });
+        setSuccessMessage(response.message || "Professional registered successfully.\nWaiting for admin verification.");
+        setTimeout(() => {
+          navigate("/verify-otp", {
+            state: { userId: response.data.userId }
+          });
+        }, 2000);
       } else {
         setErrors({ general: response.message || "Registration failed. Please try again." });
       }
@@ -122,6 +126,7 @@ const RegisterProfessional = ({ onBack }) => {
           <p className="mb-0 opacity-90">Join SafeMind as a mental health professional</p>
         </div>
         <div className="card-body p-4">
+          <SuccessMessage message={successMessage} onClose={() => setSuccessMessage("")} />
           <form onSubmit={submit}>
             {errors.general && (
               <div className="alert alert-danger mb-3" style={{ backgroundColor: "#D9899A", color: "white", border: "none" }}>
