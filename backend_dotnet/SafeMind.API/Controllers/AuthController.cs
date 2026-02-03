@@ -42,7 +42,7 @@ namespace SafeMind.API.Controllers
             }
         }
 
-        [HttpPost("registerProfessional")]
+        [HttpPost("register-professional")]
         public async Task<IActionResult> RegisterProfessional([FromBody] RegisterProfessionalDTO dto)
         {
              try
